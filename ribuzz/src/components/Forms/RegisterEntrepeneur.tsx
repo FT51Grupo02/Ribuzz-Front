@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc'; // Importar ícono de Google de react-icons
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Importar íconos de mostrar/ocultar contraseña
+import Image from 'next/image';
 
 // Definir la interfaz para los valores del formulario
 interface FormValues {
@@ -33,17 +34,32 @@ const RegisterEntrepreneur = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      {/* Imagen para pantallas pequeñas */}
-      <div className="block md:hidden flex-shrink-0 bg-[url('/assets/0.png')] bg-cover bg-center h-[45vh] w-full bg-no-repeat"></div>
       
-      {/* Imagen para pantallas grandes */}
-      <div className="hidden md:flex md:w-1/2 flex-shrink-0 bg-[url('/assets/0.png')] bg-cover bg-center bg-no-repeat h-full"></div>
+     {/* Imagen para pantallas grandes */}
+     <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative">
+        <Image 
+          src="/0.png" 
+          alt="Imagen de fondo" 
+          layout="fill" 
+          style={{ objectFit: 'cover' }} 
+        />
+      </div>
+
       
       {/* Sección del Formulario */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black text-white">
+       <div className="md:hidden relative w-full h-40 mb-4 bg-black flex items-center justify-center">
+          <Image 
+            src="/5.png" 
+            alt="Logo" 
+            layout="fill" 
+            style={{ objectFit: 'contain' }} 
+            className="rounded-lg"
+          />
+        </div>
         <div className="w-full max-w-md p-8 bg-[#000000] rounded-xl shadow-lg border-b border-[#C877A9]">
-          <h1 className="text-4xl font-bold mb-8 font-poppins">Logueate</h1>
-          <h3 className="text-md font-medium mb-6 font-poppins">Logueate con tu cuenta de email</h3>
+          <h1 className="text-4xl font-bold mb-8 font-poppins">INICIA SESION</h1>
+          <h3 className="text-md font-medium mb-6 font-poppins">Ingresa con tu cuenta de email</h3>
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
@@ -56,7 +72,7 @@ const RegisterEntrepreneur = () => {
                     type="email"
                     name="email"
                     placeholder="Your email"
-                    className="w-full p-4 mb-2 rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
+                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
                   />
                   {errors.email && touched.email && (
                     <div className="text-red-500 text-sm">{errors.email}</div>
@@ -67,14 +83,14 @@ const RegisterEntrepreneur = () => {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    className="w-full p-4 mb-2 rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
+                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
                   >
-                    {showPassword ? <AiOutlineEyeInvisible className="w-5 h-5" /> : <AiOutlineEye className="w-5 h-5" />}
+                    {showPassword ? <AiOutlineEyeInvisible className="w-4 h-4 md:w-5 md:h-5" /> : <AiOutlineEye className="w-4 h-4 md:w-5 md:h-5" />}
                   </button>
                   {errors.password && touched.password && (
                     <div className="text-red-500 text-sm">{errors.password}</div>
@@ -82,7 +98,7 @@ const RegisterEntrepreneur = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full p-4 mb-4 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow"
+                   className="w-full p-3 md:p-4 mb-4 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow text-sm md:text-base"
                 >
                   Ingresa
                 </button>
@@ -90,13 +106,13 @@ const RegisterEntrepreneur = () => {
             )}
           </Formik>
         </div>
-        <div className="flex flex-col items-center mt-6">
-          <h5 className="text-sm font-poppins mb-2">O continúa con:</h5>
+        <div className="flex flex-col items-center mt-4 md:mt-6">
+          <h5 className="text-xs md:text-sm font-poppins mb-2">O continua con:</h5>
           <button
             type="button"
-            className="flex items-center bg-gray-800 text-white p-2 rounded-lg border border-gray-600"
+              className="flex items-center bg-gray-800 text-white p-2 rounded-lg border border-gray-600 text-xs md:text-sm"
           >
-            <FcGoogle className="w-6 h-6" />
+            <FcGoogle className="w-4 h-4 md:w-6 md:h-6"  />
             <span className="ml-2">Google</span>
           </button>
         </div>
