@@ -16,9 +16,9 @@ const RegisterOption = () => {
 
   const handleSubmit = (values: FormValues) => {
     if (values.userType === 'emprendedor') {
-      router.push('/entrepeneurlogin');
+      router.push('/login/entrepeneur');
     } else if (values.userType === 'cliente') {
-      router.push('/clientlogin');
+      router.push('/login/user');
     }
   };
 
