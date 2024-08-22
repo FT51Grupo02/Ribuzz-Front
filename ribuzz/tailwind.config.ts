@@ -10,11 +10,18 @@ const config: Config = {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      screens: {
+        '870': '870px', // Responsive personalizado
+      },
+      dropShadow: {
+        'custom-light': '0 4px 6px rgba(0, 0, 0, 0.1)',
+        'custom-dark': '0 4px 6px rgba(0, 0, 0, 0.7)',
       },
     },
   },
   plugins: [],
 };
+
 export default config;

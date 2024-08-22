@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar/Navbar";
-import { FooterWithSitemap } from "./components/Footer/Footer";
+import Navbar from "@/components/Navbar/Navbar";
+import { FooterWithSitemap } from "@/components/Footer/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,10 +23,12 @@ export default function RootLayout({
         <meta name="description" content="RiBuzz" />
         <title>RiBuzz</title>
       </head>
-      <body>
-        <Navbar/>
-        {children}
-        <FooterWithSitemap/>
+      <body className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <FooterWithSitemap />
       </body>
     </html>
   );
