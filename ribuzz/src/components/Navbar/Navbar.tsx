@@ -74,7 +74,7 @@ const Navbar = () => {
             href="/" 
             className={`transition duration-300 hover:scale-105 ease-in-out px-4 py-2 rounded-xl ${isActive('/') ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`}
           >
-            Home
+            Inicio
           </Link>
           <Link 
             href="/marketplace" 
@@ -86,19 +86,19 @@ const Navbar = () => {
             href="/products" 
             className={`transition duration-300 hover:scale-105 ease-in-out px-4 py-2 rounded-xl ${isActive('/products') ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`}
           >
-            Products
+            Productos
           </Link>
           <Link 
             href="/events" 
             className={`transition duration-300 hover:scale-105 ease-in-out px-4 py-2 rounded-xl ${isActive('/events') ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`}
           >
-            Events
+            Eventos
           </Link>
           <Link 
             href="/about" 
             className={`transition duration-300 hover:scale-105 ease-in-out px-4 py-2 rounded-xl ${isActive('/about') ? 'bg-white text-black' : 'hover:bg-white hover:text-black'}`}
           >
-            About
+            Nosotros
           </Link>
         </div>
 

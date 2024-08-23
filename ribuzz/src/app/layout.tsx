@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import { FooterWithSitemap } from "@/components/Footer/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+// Cargar la fuente Poppins
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export const metadata: Metadata = {
   title: "RiBuzz",
@@ -17,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={poppins.className}>
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <meta name="description" content="RiBuzz" />
