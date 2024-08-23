@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc'; // Importar ícono de Google de react-icons
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'; // Importar íconos de mostrar/ocultar contraseña
 import Image from 'next/image';
 
 // Definir la interfaz para los valores del formulario
@@ -15,12 +14,12 @@ interface FormValues {
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
-    email: Yup.string().email('Invalid email address').required('Required'),
+    email: Yup.string().email('Cuenta de email invalida').required('Requerido'),
     password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
-      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
-      .matches(/[!@#$%^&*]/, 'Password must contain at least one special character')
-      .required('Required'),
+      .min(8, 'La contraseña debe poseer 8 caracteres minimo')
+      .matches(/[A-Z]/, 'La contraseña debe poseer al menos una mayuscula')
+      .matches(/[!@#$%^&*]/, 'La contraseña debe poseer al menos un caracter especial')
+      .required('Requerido'),
 });
 
 const RegisterEntrepreneur = () => {
@@ -40,7 +39,7 @@ const RegisterEntrepreneur = () => {
         <Image 
           src="/0.png" 
           alt="Imagen de fondo" 
-          layout="fill" 
+          fill
           style={{ objectFit: 'cover' }} 
         />
       </div>
@@ -48,11 +47,11 @@ const RegisterEntrepreneur = () => {
       
       {/* Sección del Formulario */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black text-white">
-       <div className="md:hidden relative w-full h-40 mb-4 bg-black flex items-center justify-center">
+       <div className="md:hidden relative w-full mb-4 bg-black flex items-center justify-center">
           <Image 
             src="/5.png" 
             alt="Logo" 
-            layout="fill" 
+            fill 
             style={{ objectFit: 'contain' }} 
             className="rounded-lg"
           />
@@ -71,8 +70,8 @@ const RegisterEntrepreneur = () => {
                   <Field
                     type="email"
                     name="email"
-                    placeholder="Your email"
-                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
+                    placeholder="Email"
+                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-[#FFFFFF]"
                   />
                   {errors.email && touched.email && (
                     <div className="text-red-500 text-sm">{errors.email}</div>
@@ -82,16 +81,9 @@ const RegisterEntrepreneur = () => {
                   <Field
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="Password"
-                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-gray-950 text-white border border-gray-900 placeholder-gray-600"
+                    placeholder="*******"
+                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-[#FFFFFF]"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
-                  >
-                    {showPassword ? <AiOutlineEyeInvisible className="w-4 h-4 md:w-5 md:h-5" /> : <AiOutlineEye className="w-4 h-4 md:w-5 md:h-5" />}
-                  </button>
                   {errors.password && touched.password && (
                     <div className="text-red-500 text-sm">{errors.password}</div>
                   )}

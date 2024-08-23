@@ -3,9 +3,18 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+
+
 *body {
 font-family: 'Poppins', sans-serif;
 }
+
+@font-face {
+    font-family: 'Moonhouse';
+    src: url('/fonts/moonhouse.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
 
 /* -----> Estilos para la barra de desplazamiento <----- */
 

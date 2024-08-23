@@ -8,18 +8,18 @@ import { usePathname } from 'next/navigation';
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const startY = useRef(null);
+  const startY = useRef<number | null>(null);
   const menuRef = useRef(null);
 
-  const isActive = (href) => pathname === href;
+  const isActive = (href: string) => pathname === href;
 
   const toggleMenu = () => setIsMenuOpen(prevState => !prevState);
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY;
   };
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: React.TouchEvent) => {
     if (startY.current === null) return;
 
     const currentY = e.touches[0].clientY;
@@ -43,7 +43,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-black text-white flex items-center justify-between p-5 w-full font-poppins sticky top-0 z-50 relative overflow-x-hidden">
+      <nav className="bg-black text-white flex items-center justify-between p-5 w-full font-poppins sticky top-0 z-50 overflow-x-hidden">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" passHref>
