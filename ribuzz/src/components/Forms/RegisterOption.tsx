@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import { FormValues } from '../../types/FormValues';
 import Image from 'next/image';
 
+
+
+
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
   userType: Yup.string().oneOf(['emprendedor', 'cliente'], 'Selecciona una opción').required('Selecciona una opción'),
@@ -23,25 +26,26 @@ const RegisterOption = () => {
   };
 
   return (
+   
     <div className="flex flex-col md:flex-row h-screen">
-         
+      
       {/* Imagen para pantallas grandes */}
       <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative">
         <Image 
           src="/0.png" 
           alt="Imagen de fondo" 
-          layout="fill" 
+          fill 
           style={{ objectFit: 'cover' }} 
         />
       </div>
      
      {/* Sección del Formulario */}
-    <div className="flex-1 flex-col items-center justify-center p-1 md:p-6 bg-black text-white">
-        <div className="md:hidden relative w-full h-40 mb-4 bg-black flex items-center justify-center">
+    <div className="flex-1 flex flex-col items-center justify-center p-1 md:p-6 bg-black text-white">
+        <div className="md:hidden relative w-full mb-4 bg-black flex items-center justify-center">
           <Image 
             src="/5.png" 
             alt="Logo" 
-            layout="fill" 
+            fill 
             style={{ objectFit: 'contain' }} 
             className="rounded-lg"
           />
