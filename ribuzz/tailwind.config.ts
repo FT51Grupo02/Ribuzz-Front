@@ -19,6 +19,9 @@ const config: Config = {
         'custom-light': '0 4px 6px rgba(0, 0, 0, 0.1)',
         'custom-dark': '0 4px 6px rgba(0, 0, 0, 0.7)',
       },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
     },
   },
   plugins: [],
