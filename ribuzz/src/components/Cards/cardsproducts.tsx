@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from '../Cards/card';
+import Card from './card';
 
 interface Product {
   name: string;

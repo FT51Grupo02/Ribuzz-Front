@@ -43,7 +43,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-black text-white flex items-center justify-between p-5 w-full font-poppins sticky top-0 z-50 overflow-x-hidden">
+      <nav className="bg-black text-white flex items-center justify-between p-5 w-full sticky top-0 z-50 overflow-x-hidden">
         {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" passHref>
