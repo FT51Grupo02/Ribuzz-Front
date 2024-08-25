@@ -1,4 +1,4 @@
-import RegisterEntrepreneur from '../../../components/Forms/RegisterEntrepeneur'
+import RegisterEntrepreneur from '../../../components/Forms/Login/LoginEntrepeneur'
 import React from 'react'
 
 const RegisterEntrepeneurs:React.FC = () => {

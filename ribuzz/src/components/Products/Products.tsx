@@ -21,6 +21,7 @@ export interface ProductProps {
   reviews?: Review[];
   ribuzzRating: number;
   price: number;
+  stock: number;
 }
 
 const Product: FC<ProductProps> = ({
