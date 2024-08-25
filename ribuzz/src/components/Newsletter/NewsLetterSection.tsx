@@ -10,7 +10,7 @@ const NewsletterSection = () => {
                 borderTopRightRadius: '0.5rem', 
                 borderBottomLeftRadius: '0.5rem', 
                 borderBottomRightRadius: '5rem',
-                fontFamily: 'Moonhouse, sans-serif' 
+                fontFamily: 'Poppins, sans-serif' 
             }}
         >
             <div className="max-w-sm mx-auto text-center"> 
