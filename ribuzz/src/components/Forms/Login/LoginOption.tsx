@@ -3,11 +3,8 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { FormValues } from '../../types/FormValues';
+import { FormValues } from '../../../interfaces/FormValues';
 import Image from 'next/image';
-
-
-
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
@@ -51,7 +48,7 @@ const RegisterOption = () => {
           />
         </div>
       <div className="w-full max-w-md p-8 bg-[#000000] rounded-xl shadow-lg border-b border-[#C877A9]">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-10 font-poppins text-white">REGISTRATE</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 md:mb-10 font-poppins text-white">INICIAR SESIÓN</h1>
         <h3 className="text-sm md:text-md font-small mb-4 md:mb-6 font-poppins text-white">Elige una opcion:</h3>
         <Formik
           initialValues={{ userType: '' }}

@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc'; // Importar ícono de Google de react-icons
+import { FcGoogle } from 'react-icons/fc';
 import Image from 'next/image';
 
 // Definir la interfaz para los valores del formulario
@@ -57,7 +57,7 @@ const RegisterEntrepreneur = () => {
           />
         </div>
         <div className="w-full max-w-md p-8 bg-[#000000] rounded-xl shadow-lg border-b border-[#C877A9]">
-          <h1 className="text-4xl font-bold mb-8 font-poppins">INICIA SESION</h1>
+          <h1 className="text-4xl font-bold mb-8 font-poppins">INICIAR SESIÓN</h1>
           <h3 className="text-md font-medium mb-6 font-poppins">Ingresa con tu cuenta de email</h3>
           <Formik
             initialValues={{ email: '', password: '' }}
