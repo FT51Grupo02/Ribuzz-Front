@@ -7,15 +7,21 @@ import { GiPencil, GiReceiveMoney, GiSandsOfTime   } from "react-icons/gi";
 import { BsBuildings } from "react-icons/bs";
 import NewsletterSection from '../Newsletter/NewsLetterSection';
 
-
-
 const HomeContainer: React.FC = () => {
   return (
-    <div className="bg-[#090909] p-8">
+    <div 
+        className="bg-[#090909] p-8" 
+        style={{ 
+            backgroundImage: `url('/10.png')`, 
+            backgroundRepeat: 'repeat', 
+            backgroundSize: 'auto' 
+        }}
+        >
       
        {/* Primera Sección */}
         <section className="flex flex-col md:flex-row items-center justify-center mb-16">
-            <div className="md:w-1/2 mb-4 md:mb-0 flex justify-center">
+        <div className="md:w-1/2 mb-4 md:mb-0 flex justify-center relative">
+            {/* Imagen de fondo */}
             <Image 
                 src="/3.png" 
                 alt="Imagen descriptiva" 
@@ -23,6 +29,17 @@ const HomeContainer: React.FC = () => {
                 height={500} 
                 className="rounded-lg shadow-lg" 
             />
+
+            {/* Imagen superpuesta */}
+            <div className="absolute inset-0 flex items-center justify-center">
+                <Image 
+                src="/card.png" 
+                alt="Imagen superpuesta" 
+                width={200} 
+                height={200} 
+                className="rounded-lg" 
+                />
+            </div>
             </div>
             <div className="md:w-1/2 flex flex-col justify-center items-center">
             <div className="w-full flex justify-center mb-4">
