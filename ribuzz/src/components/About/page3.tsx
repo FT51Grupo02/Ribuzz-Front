@@ -13,6 +13,7 @@ const Page3 = () => {
             alt="Background Image"
             layout="fill"
             objectFit="cover"
+            quality={100}
             priority
           />
         </div>
@@ -22,6 +23,7 @@ const Page3 = () => {
             alt="Logo RiBuzz"
             width={300}
             height={200}
+            quality={100}
             className="object-contain"
           />
         </div>

@@ -1,0 +1,11 @@
+@media (max-width: 768px) {
+    .custom-card-height {
+      height: 25rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .custom-card-height {
+      height: 18rem;
+    }
+}

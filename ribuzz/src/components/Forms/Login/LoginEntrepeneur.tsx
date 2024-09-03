@@ -2,115 +2,136 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useState } from 'react';
 import Image from 'next/image';
-
-// Definir la interfaz para los valores del formulario
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { useAuth } from '@/components/Context/AuthContext'; // Importar el contexto de autenticación
+import { ILoginPropsEntrep } from '@/interfaces/Types';
+import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
-    email: Yup.string().email('Cuenta de email invalida').required('Requerido'),
-    password: Yup.string()
-      .min(8, 'La contraseña debe poseer 8 caracteres minimo')
-      .matches(/[A-Z]/, 'La contraseña debe poseer al menos una mayuscula')
-      .matches(/[!@#$%^&*]/, 'La contraseña debe poseer al menos un caracter especial')
-      .required('Requerido'),
+  email: Yup.string().email('Cuenta de email invalida').required('Requerido'),
+  password: Yup.string()
+    .min(8, 'La contraseña debe poseer 8 caracteres minimo')
+    .matches(/[A-Z]/, 'La contraseña debe poseer al menos una mayuscula')
+    .matches(/[!@#$%^&*]/, 'La contraseña debe poseer al menos un caracter especial')
+    .required('Requerido'),
 });
 
-const RegisterEntrepreneur = () => {
-  const [showPassword, setShowPassword] = useState(false); 
+const LoginEntrepeneur = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { setUser, setToken, loginEntrepeneurE } = useAuth(); // Obtener la función de login del contexto
 
-  const handleSubmit = (values: FormValues) => {
-    console.log(values);
-    // Implementar lógica de registro aquí
+  const handleSubmit = async (values: ILoginPropsEntrep) => {
+    try {
+      console.log("Valores enviados al backendEntrepreneur:", values);
+      
+      const isSuccess = await loginEntrepeneurE(values); // Llamar a la función de login con los valores del formulario
+      if (isSuccess) {
+        router.push('/'); // Redirigir al usuario después de un login exitoso
+      } else {
+        // Manejar el caso de login fallido aquí (mostrar mensajes, etc.)
+        console.error("Login fallido, no se pudo redirigir");
+        // Puedes agregar aquí código para mostrar un mensaje al usuario, por ejemplo:
+        // alert("Email o contraseña incorrectos");
+      }
+    } catch (error) {
+      console.error("Error en el login:", error);
+      // Manejar errores de login aquí (mostrar mensajes, etc.)
+    }
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      
-     {/* Imagen para pantallas grandes */}
-     <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative">
+    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden">
+      <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image 
-          src="/0.png" 
+          src="/14.png" 
           alt="Imagen de fondo" 
           fill
-          style={{ objectFit: 'cover' }} 
+          style={{ objectFit: 'cover' }}
+          quality={100}
         />
       </div>
 
-      
-      {/* Sección del Formulario */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black text-white">
-       <div className="md:hidden relative w-full mb-4 bg-black flex items-center justify-center">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black text-white relative z-10">
+        {/* Imagen en la parte superior solo en móviles */}
+        <div className="md:hidden relative w-full mb-6">
           <Image 
             src="/5.png" 
             alt="Logo" 
-            fill 
-            style={{ objectFit: 'contain' }} 
-            className="rounded-lg"
+            width={200} 
+            height={100}
+            className="mx-auto"
+            quality={100}
           />
         </div>
-        <div className="w-full max-w-md p-8 bg-[#000000] rounded-xl shadow-lg border-b border-[#C877A9]">
-          <h1 className="text-4xl font-bold mb-8 font-poppins">INICIAR SESIÓN</h1>
-          <h3 className="text-md font-medium mb-6 font-poppins">Ingresa con tu cuenta de email</h3>
+        
+        <div className="w-full max-w-md md:max-w-md p-6 md:p-8 bg-[#000000] rounded-xl shadow-lg mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 md:mb-6 lg:text-7xl">INGRESAR</h1>
+          <h3 className="text-base md:text-lg font-medium mb-4 md:mb-6">Ingresa con tu cuenta de emprendedor</h3>
           <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ email: '', password: '', rol: 'emprendedor' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ errors, touched }) => (
+            {({ errors, touched, handleChange, values, setFieldTouched }) => (
               <Form className="w-full">
                 <div className="mb-4">
                   <Field
                     type="email"
                     name="email"
-                    placeholder="Email"
-                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-[#FFFFFF]"
+                    placeholder="tucorreo@mail.com"
+                    className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleChange(e);
+                      setFieldTouched('email', true, true);
+                    }}
                   />
                   {errors.email && touched.email && (
-                    <div className="text-red-500 text-sm">{errors.email}</div>
+                    <div className="text-pink-300 text-sm pt-2">{errors.email}</div>
                   )}
                 </div>
                 <div className="mb-4 relative">
                   <Field
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    placeholder="*******"
-                    className="w-full p-2 md:p-4 mb-2 text-sm md:text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-[#FFFFFF]"
+                    placeholder="●●●●●●●●●"
+                    className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      handleChange(e);
+                      setFieldTouched('password', true, true);
+                    }}
                   />
-                  {errors.password && touched.password && (
-                    <div className="text-red-500 text-sm">{errors.password}</div>
+                  {touched.password && (
+                    <div className="text-pink-300 text-sm pt-2">
+                      {!values.password.match(/[A-Z]/) && 'Debe incluir al menos una mayúscula. '}
+                      {!values.password.match(/[!@#$%^&*]/) && 'Debe incluir al menos un carácter especial. '}
+                      {values.password.length < 8 && 'Debe tener al menos 8 caracteres. '}
+                    </div>
                   )}
                 </div>
                 <button
                   type="submit"
-                   className="w-full p-3 md:p-4 mb-4 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow text-sm md:text-base"
+                  className="w-full p-3 mb-6 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow"
                 >
-                  Ingresa
+                  <span className="transition duration-300 hover:scale-110 inline-block text-lg md:text-xl">
+                    Ingresar
+                  </span>
                 </button>
+                <hr className="border-t-1 border-pink-400 border-opacity-60 mb-2 pb-4" />
               </Form>
             )}
           </Formik>
-        </div>
-        <div className="flex flex-col items-center mt-4 md:mt-6">
-          <h5 className="text-xs md:text-sm font-poppins mb-2">O continua con:</h5>
-          <button
-            type="button"
-              className="flex items-center bg-gray-800 text-white p-2 rounded-lg border border-gray-600 text-xs md:text-sm"
-          >
-            <FcGoogle className="w-4 h-4 md:w-6 md:h-6"  />
-            <span className="ml-2">Google</span>
-          </button>
+          <div className="flex flex-col items-center">
+            <h5 className="text-sm md:text-base mb-2">O continúa con:</h5>
+            <GoogleLoginButton /> 
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default RegisterEntrepreneur;
+export default LoginEntrepeneur;

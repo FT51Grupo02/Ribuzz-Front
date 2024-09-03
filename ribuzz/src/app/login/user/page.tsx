@@ -1,10 +1,10 @@
 import React from 'react'
-import RegisterClient from '../../../components/Forms/RegisterClient'
+import LoginUser from '../../../components/Forms/Login/LoginUser'
 
-const RegisterClients: React.FC = () => {
+const LoginUserPage: React.FC = () => {
   return (
-    <RegisterClient/>
+    <LoginUser/>
   )
 }
 
-export default RegisterClients
+export default LoginUserPage

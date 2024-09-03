@@ -1,5 +1,5 @@
-'use client'
-import { Typography } from "@material-tailwind/react";
+'use client';
+import { FC } from "react";
 
 const SITEMAP = [
   {
@@ -22,45 +22,38 @@ const SITEMAP = [
 
 const currentYear = new Date().getFullYear();
 
-export function FooterWithSitemap() {
+export const FooterWithSitemap: FC = () => {
   return (
     <footer className="relative w-full bg-black">
-      <div className="mx-auto w-full max-w-7xl px-8 text-gray-300 ">
-        <div className="mx-auto grid w-full grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-4 ">
-          {SITEMAP.map(({ title, links }, key) => (
-            <div key={key} className="w-full ">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-4 font-bold uppercase text-white"
-              >
+      <div className="mx-auto w-full max-w-7xl px-8 text-gray-300">
+        <div className="mx-auto grid w-full grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-4">
+          {SITEMAP.map(({ title, links }, index) => (
+            <div key={index} className="w-full">
+              <h6 className="mb-4 font-bold uppercase text-white">
                 {title}
-              </Typography>
-              <ul className="space-y-1 ">
-                {links.map((link, key) => (
-                  <Typography key={key} as="li" color="blue-gray" className="font-normal">
+              </h6>
+              <ul className="space-y-1">
+                {links.map((link, index) => (
+                  <li key={index}>
                     <a
                       href="#"
-                      className="inline-block py-1 pr-2 transition-transform hover:scale-105"
+                      className="inline-block py-1 pr-2 text-blue-gray-300 transition-transform hover:scale-105"
                     >
                       {link}
                     </a>
-                  </Typography>
+                  </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
         <div className="flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
-          <Typography
-            variant="small"
-            className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0 "
-          >
-            &copy; {currentYear} <a href="#">RiBuzz</a>. Todos
+          <p className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0">
+            Desarrollado por C.D.N.L.S &copy; {currentYear} <a href="#">RiBuzz</a>. Todos
             los Derechos Reservados.
-          </Typography>
+          </p>
           <div className="flex gap-4 text-blue-gray-900 sm:justify-center">
-            <Typography as="a" href="#" className="opacity-80 transition-opacity hover:opacity-100">
+            <a href="#" className="opacity-80 transition-opacity hover:opacity-100">
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fillRule="evenodd"
@@ -68,8 +61,8 @@ export function FooterWithSitemap() {
                   clipRule="evenodd"
                 />
               </svg>
-            </Typography>
-            <Typography as="a" href="#" className="opacity-80 transition-opacity hover:opacity-100">
+            </a>
+            <a href="#" className="opacity-80 transition-opacity hover:opacity-100">
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fillRule="evenodd"
@@ -77,7 +70,7 @@ export function FooterWithSitemap() {
                   clipRule="evenodd"
                 />
               </svg>
-            </Typography>
+            </a>
           </div>
         </div>
       </div>
