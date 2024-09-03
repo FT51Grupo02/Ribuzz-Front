@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { notFound } from 'next/navigation';
 import Service from '@/components/ServiceDetail/Services';
@@ -12,7 +12,7 @@ interface Props {
 
 const fetchService = async (serviceId: string): Promise<ServiceType | null> => {
   try {
-    const response = await fetch(`/api/search/services/${serviceId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services/${serviceId}`, {
       cache: 'no-store',
       method: 'GET',
     });
@@ -23,13 +23,6 @@ const fetchService = async (serviceId: string): Promise<ServiceType | null> => {
     }
 
     const service: ServiceType = await response.json();
-
-    // Verifica que el servicio incluye la propiedad 'stock'
-    if (!('stock' in service)) {
-      console.error('Service data is missing the stock property');
-      return null;
-    }
-
     return service;
   } catch (error) {
     console.error('Error fetching service:', error);
