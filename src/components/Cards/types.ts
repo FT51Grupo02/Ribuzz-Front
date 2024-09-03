@@ -25,6 +25,7 @@ export interface Product {
     details?: string[];
     stock: number;
     rating: number;
+    reviews?: Review[];
 }
 
 export interface Service {
@@ -38,7 +39,6 @@ export interface Service {
     reviews?: Review[];
     rating: number;
     publicationDate: string;
-    stock: number;
 }
 
 export interface Event {

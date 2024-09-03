@@ -26,7 +26,7 @@ const Services: React.FC = () => {
       try {
         const { search, rating, publicationDate, popularity, location } = filters;
 
-        const response = await axios.get(`/api/search/services`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/search/services`, {
           params: {
             name: search || undefined,
             rating: rating !== 'all' ? rating : undefined,

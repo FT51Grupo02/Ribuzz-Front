@@ -26,7 +26,6 @@ export interface ServiceProps {
     details?: string[];
     reviews?: Review[];
     price: number;
-    stock: number;  // Propiedad agregada
 }
 
 const Service: FC<ServiceProps> = ({
@@ -38,7 +37,6 @@ const Service: FC<ServiceProps> = ({
     details = [],
     reviews = [],
     price,
-    stock,  // Propiedad agregada
 }) => {
     const { addToCart } = useCart();
     const router = useRouter();
@@ -52,15 +50,16 @@ const Service: FC<ServiceProps> = ({
         const serviceToAdd = {
             name,
             price,
-            image: images[0], 
+            image: images[0],
             description,
-            categoryId: 0,  // Placeholder, cambiar si es necesario
-            id: Date.now(),  // Placeholder, cambiar si es necesario
-            stock,  // Propiedad agregada
-            quantity: 1  // Añadida con valor predeterminado
+            // Asegúrate de que no se incluyan propiedades que no son necesarias para los servicios
+            // categoryId: 0, 
+            // id: Date.now(), 
+            // quantity: 1 
         };
 
-        addToCart(serviceToAdd);
+        // Aquí puedes ajustar el método addToCart si es necesario para los servicios
+        // addToCart(serviceToAdd);
         router.push('/cart');
     };
 
@@ -215,9 +214,9 @@ const Service: FC<ServiceProps> = ({
                         <button
                             type="button"
                             onClick={closeModal}
-                            className="absolute top-2 right-2 bg-black text-white p-2 rounded-full shadow-lg"
+                            className="absolute top-2 right-2 bg-black text-white p-2 rounded-full"
                         >
-                            &times;
+                            <span className="text-2xl">&times;</span>
                         </button>
                     </div>
                 </div>
