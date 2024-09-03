@@ -147,5 +147,3 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 }
 
 export const useAuth = () => useContext(AuthContext);
-
-

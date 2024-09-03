@@ -23,7 +23,7 @@ const LoginOption = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden font-poppins">
+    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden ">
       
       {/* Imagen para pantallas grandes */}
       <div className="hidden md:block md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
