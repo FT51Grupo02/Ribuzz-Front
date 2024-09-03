@@ -34,7 +34,7 @@ const Events: React.FC = () => {
           limit: eventsPerPage
         };
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/search/events`, { params });
+        const response = await axios.get(`/api/search/events`, { params });
         setEvents(response.data || []);
       } catch (error) {
         console.error("Error al obtener los eventos:", error);

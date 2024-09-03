@@ -12,7 +12,7 @@ interface Props {
 
 const fetchProduct = async (productId: string): Promise<ProductType | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, {
+    const response = await fetch(`/api/products/${productId}`, {
       cache: 'no-store',
       method: 'GET',
     });
