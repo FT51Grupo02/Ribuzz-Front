@@ -20,7 +20,15 @@ const config: Config = {
         'custom-dark': '0 4px 6px rgba(0, 0, 0, 0.7)',
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
+        'poppins-regular': ['Poppins-Regular', 'sans-serif'],
+        'poppins-bold': ['Poppins-Bold', 'sans-serif'],
+        'poppins-italic': ['Poppins-Italic', 'sans-serif'],
+        'poppins-bold-italic': ['Poppins-BoldItalic', 'sans-serif'],
+        'poppins-extra-bold': ['Poppins-ExtraBold', 'sans-serif'],
+        'poppins-extra-light': ['Poppins-ExtraLight', 'sans-serif'],
+        'poppins-medium': ['Poppins-Medium', 'sans-serif'],
+        'poppins-thin': ['Poppins-Thin', 'sans-serif'],
+        'moonhouse': ['Moonhouse', 'sans-serif'],
       },
       maxWidth: {
         '4.5xl': '64rem', // max-w-4.5xl
