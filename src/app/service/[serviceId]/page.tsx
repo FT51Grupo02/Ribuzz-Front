@@ -12,7 +12,7 @@ interface Props {
 
 const fetchService = async (serviceId: string): Promise<ServiceType | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services/${serviceId}`, {
+    const response = await fetch(`/api/search/services/${serviceId}`, {
       cache: 'no-store',
       method: 'GET',
     });

@@ -26,7 +26,7 @@ const Products: React.FC = () => {
       try {
         const { search, rating, category, price, popularity } = filters;
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/search/products`, {
+        const response = await axios.get(`/api/search/products`, {
           params: {
             name: search || undefined,
             rating: rating !== 'all' ? rating : undefined,

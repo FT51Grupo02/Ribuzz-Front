@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Card from './card'; // Asume que tienes un componente Card para servicios
-import { Service } from '@/components/Cards/types'; 
+import Card from './card';
+import { Service } from '@/components/Cards/types';
 
 interface CardServicesProps {
   services?: Service[];
