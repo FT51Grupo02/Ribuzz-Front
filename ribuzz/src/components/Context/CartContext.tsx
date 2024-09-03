@@ -1,16 +1,18 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
-import Swal from 'sweetalert2'; 
 
-export  interface IProduct{
-    name: string,
-    price: number,
-    image: string,
-    description?: string,
-    stock: number,
-    categoryId: number
-    id: number
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useAuth } from './AuthContext';
+import Swal from 'sweetalert2';
+
+export interface IProduct {
+  name: string;
+  price: number;
+  image: string;
+  description?: string;
+  stock: number;
+  categoryId: number;
+  id: number;
+  quantity: number;
 }
 
 interface CartContextProps {
@@ -18,6 +20,8 @@ interface CartContextProps {
   addToCart: (product: IProduct) => void;
   removeFromCart: (productId: number) => void;
   clearCart: () => void;
+  increaseQuantity: (productId: number) => void;
+  decreaseQuantity: (productId: number) => void;
 }
 
 const CartContext = createContext<CartContextProps>({
@@ -31,50 +35,59 @@ const CartContext = createContext<CartContextProps>({
   clearCart: () => {
     console.warn('clearCart not implemented');
   },
+  increaseQuantity: () => {
+    console.warn('increaseQuantity not implemented');
+  },
+  decreaseQuantity: () => {
+    console.warn('decreaseQuantity not implemented');
+  },
 });
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [cart, setCart] = useState<IProduct[]>([]);
 
-  useEffect(() => {
-    if (user?.email) {
-      loadGlobalCart();
-    } else {
-      setCart([]);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user?.email && cart.length > 0) {
-      saveCartForUser();
-    }
-  }, [cart]);
-
-  const loadGlobalCart = () => {
-    if (typeof window !== 'undefined' && user?.email) {
-      const storedCart = localStorage.getItem(`cart_${user.email}`);
+  const loadGlobalCart = useCallback(() => {
+    if (typeof window !== 'undefined' && token) {
+      const storedCart = localStorage.getItem(`cart_${token}`);
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       } else {
         setCart([]);
       }
     }
-  };
+  }, [token]);
 
-  const saveCartForUser = () => {
-    if (typeof window !== 'undefined' && user?.email) {
-      localStorage.setItem(`cart_${user.email}`, JSON.stringify(cart));
+  const saveCartForUser = useCallback(() => {
+    if (typeof window !== 'undefined' && token) {
+      localStorage.setItem(`cart_${token}`, JSON.stringify(cart));
     }
-  };
+  }, [token, cart]);
+
+  useEffect(() => {
+    if (token) {
+      loadGlobalCart();
+    } else {
+      setCart([]);
+    }
+  }, [token, loadGlobalCart]);
+
+  useEffect(() => {
+    if (token && cart.length > 0) {
+      saveCartForUser();
+    }
+  }, [cart, token, saveCartForUser]);
 
   const addToCart = (product: IProduct) => {
-    if (!user?.email) {
+    if (!token) {
       Swal.fire({
-        title: 'Log in, Please!',
-        text: 'You need to log in to make a purchase.',
+        title: 'Por favor, inicia sesión!',
+        text: 'Debes iniciar sesión para realizar una compra.',
         icon: 'error',
-        confirmButtonText: 'Login'
+        confirmButtonText: 'Inicia Sesión',
+        customClass: {
+          container: 'swal-container',
+        },
       }).then(() => {
         window.location.href = '/login';
       });
@@ -84,42 +97,81 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isProductInCart = cart.some(cartItem => cartItem.id === product.id);
     if (isProductInCart) {
       Swal.fire({
-        title: 'Warning!',
-        text: 'This product is already in the cart.',
+        title: 'Ojo!',
+        text: 'Este producto ya se encuentra en el carrito.',
         icon: 'warning',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        customClass: {
+          container: 'swal-container',
+        },
       });
       return;
     }
 
     setCart(prevCart => {
-      const updatedCart = [...prevCart, product].sort((a, b) => a.price - b.price);
+      const productIndex = prevCart.findIndex(item => item.id === product.id);
+
+      if (productIndex > -1) {
+        Swal.fire({
+          title: 'Ojo!',
+          text: 'Este producto ya se encuentra en el carrito.',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+          customClass: {
+            container: 'swal-container',
+          },
+        });
+        return prevCart;
+      }
+
+      const updatedCart = [...prevCart, { ...product, quantity: 1 }].sort((a, b) => a.price - b.price);
       return updatedCart;
     });
+
     Swal.fire({
-      title: 'Success!',
-      text: 'Product added to the cart.',
+      title: 'Éxito!',
+      text: 'Producto añadido al carrito.',
       icon: 'success',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
+      customClass: {
+        container: 'swal-container',
+      },
     });
   };
 
   const removeFromCart = (productId: number) => {
-    setCart(prevCart => {
-      const updatedCart = prevCart.filter(product => product.id !== productId);
-      return updatedCart;
-    });
+    setCart(prevCart => prevCart.filter(product => product.id !== productId));
+  };
+
+  const increaseQuantity = (productId: number) => {
+    setCart(prevCart =>
+      prevCart.map(product =>
+        product.id === productId && product.quantity < product.stock
+          ? { ...product, quantity: product.quantity + 1 }
+          : product
+      )
+    );
+  };
+
+  const decreaseQuantity = (productId: number) => {
+    setCart(prevCart =>
+      prevCart.map(product =>
+        product.id === productId && product.quantity > 1
+          ? { ...product, quantity: product.quantity - 1 }
+          : product
+      )
+    );
   };
 
   const clearCart = () => {
-    if (typeof window !== 'undefined' && user?.email) {
-      localStorage.removeItem(`cart_${user.email}`);
+    if (typeof window !== 'undefined' && token) {
+      localStorage.removeItem(`cart_${token}`);
       setCart([]);
     }
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,10 +1,10 @@
 import React from 'react'
-import RegisterOption from '../../components/Forms/Login/LoginOption'
+import LoginOption from '../../components/Forms/Login/LoginOption'
 
-const OptionLogin: React.FC = () => {
+const LoginContainer: React.FC = () => {
   return (
-    <RegisterOption/>
+    <LoginOption/>
   )
 }
 
-export default OptionLogin
+export default LoginContainer

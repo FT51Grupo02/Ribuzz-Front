@@ -1,17 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-*body {
-    font-family: 'Poppins', sans-serif;
-}
 
 @font-face {
     font-family: 'Moonhouse';
     src: url('/fonts/moonhouse.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/poppins-regular.woff2') format('woff2'),
+         url('/fonts/poppins-regular.woff') format('woff'),
+         url('/fonts/poppins-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/poppins-bold.woff2') format('woff2'),
+         url('/fonts/poppins-bold.woff') format('woff'),
+         url('/fonts/poppins-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.cursor-pointer-custom {
+    cursor: pointer;
 }
 
 /* -----> Estilos para la barra de desplazamiento <----- */
@@ -29,12 +50,44 @@
     border-radius: 10px;
 }
 
-/* -----> **************************************** <----- */
+/* -----> *******************  Estilos para alertas ********************* <----- */
 
-/* Cursor para links del footer (TEMPORAL) */
-
-.cursor-pointer-custom {
-    cursor: pointer;
+.swal2-popup {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    color: #ffffff !important;
 }
 
-/* -----> **************************************** <----- */
+.swal2-title {
+    color: #ec4899 !important;
+}
+
+.swal2-html-container {
+    color: #ffffff !important;
+}
+
+.swal2-confirm, .swal2-cancel {
+    background-color: #ff56ab !important;
+    border-color: #ff56ab !important;
+    color: white !important;
+    transition: background-color 0.3s, border-color 0.3s;
+    position: relative;
+}
+
+.swal2-confirm:hover, .swal2-cancel:hover {
+    background-color: #f53696 !important;
+    border-color: #f53696 !important;
+}
+
+.swal2-confirm:hover .swal2-styled, .swal2-cancel:hover .swal2-styled {
+    transform: scale(1.05);
+}
+
+.swal2-styled {
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+/* Elimina el padding derecho del body cuando se muestra el alert */
+.swal2-shown {
+    padding-right: 0 !important;
+}

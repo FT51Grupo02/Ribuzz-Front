@@ -1,10 +1,10 @@
-import RegisterEntrepreneur from '../../../components/Forms/Login/LoginEntrepeneur'
+import LoginEntrepeneur from '../../../components/Forms/Login/LoginEntrepeneur'
 import React from 'react'
 
-const RegisterEntrepeneurs:React.FC = () => {
+const LoginEntrepeneurPage:React.FC = () => {
   return (
-    <RegisterEntrepreneur/>
+    <LoginEntrepeneur/>
   )
 }
 
-export default RegisterEntrepeneurs
+export default LoginEntrepeneurPage

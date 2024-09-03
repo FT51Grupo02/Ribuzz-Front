@@ -22,6 +22,10 @@ const config: Config = {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
+      maxWidth: {
+        '4.5xl': '64rem', // max-w-4.5xl
+        'screen-lg': '66rem', // max-w-screen-lg
+      },
     },
   },
   plugins: [],

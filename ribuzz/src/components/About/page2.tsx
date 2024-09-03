@@ -40,17 +40,23 @@ const Page2 = () => {
   return (
     <div className="relative flex flex-col items-center justify-center overflow-hidden py-40 max-sm:py-10">
       <div className="absolute inset-0 rotate-180">
-        <Image
-          src="/1.png"
-          alt="Background Image"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          priority
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="/1.png"
+        >
+          <source src="/background2.mp4" type="video/mp4" />
+          <source src="/background3.webm" type="video/webm" />
+          Tu navegador no soporta el video.
+        </video>
       </div>
+
       <div className="relative z-10 text-center px-4">
-        <h1 className="text-white text-3xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-12">La historia de nuestra marca</h1>
+        <h1 className="text-white text-3xl sm:text-5xl md:text-7xl font-bold mb-6 sm:mb-12 drop-shadow-xl">La historia de nuestra marca</h1>
 
         <div className="flex flex-wrap justify-center gap-4 w-full">
           {titles.map((title, index) => (
@@ -83,24 +89,25 @@ const Page2 = () => {
           onClick={handleClose}
         >
           <div
-            className="relative bg-black text-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-lg max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl w-full bg-opacity-80"
+            className="relative bg-black text-white p-4 sm:p-8 md:p-12 lg:p-16 rounded-xl max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl w-full bg-opacity-80 max-sm:pt-10"
             onClick={(e) => e.stopPropagation()} // Evita que el clic dentro del contenido cierre el modal
           >
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-center mb-2 sm:mb-4 md:mb-6 lg:mb-10 text-white">{titles[activeIndex]}</h2>
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-center mb-2 sm:mb-4 md:mb-6 lg:mb-10 text-white max-lg:pt-8">{titles[activeIndex]}</h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6 md:mb-8 text-cyan-100">{content[activeIndex]}</p>
-            <div className="flex justify-center mt-6 sm:mt-8 md:mt-10">
+            <div className="flex justify-center">
               <Image
                 src="/11.png"
                 alt="Logo"
                 width={200}
                 height={50}
                 objectFit="contain"
+                quality={100}
               />
             </div>
           </div>
           <button
             onClick={() => setActiveIndex(null)}
-            className="absolute bottom-10 w-12 h-12 flex items-center justify-center bg-black bg-opacity-80 text-white rounded-full shadow-lg text-2xl transition duration-300 hover:scale-110"
+            className="absolute bottom-10 w-12 h-12 flex items-center justify-center bg-black bg-opacity-80 text-white rounded-full shadow-lg text-2xl transition duration-300 hover:scale-110 max-sm:bottom-0 max-lg:bottom-4"
           >
             <IoMdClose className='transition duration-300 hover:scale-110' size={30} />
           </button>
