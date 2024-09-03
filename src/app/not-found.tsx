@@ -3,7 +3,7 @@ import React from 'react';
 const NotFoundPage = () => {
   return (
     <section
-      className="flex items-center justify-center h-screen p-8 bg-cover bg-center w-full"
+      className="flex items-center justify-center h-screen p-8 bg-cover bg-center w-full font-poppins"
       style={{ backgroundImage: 'url("/3.png")' }}
     >
       <div className="container flex flex-col items-center">

@@ -4,7 +4,7 @@ import React from 'react';
 const NewsletterSection = () => {
     return (
         <section 
-            className="bg-black bg-opacity-80 border-opacity-80 p-8 border-t border-pink-600 mx-auto" 
+            className="bg-black bg-opacity-80 border-opacity-80 p-8 border-t border-pink-600 mx-auto font-poppins" 
             style={{ 
                 borderTopLeftRadius: '5rem', 
                 borderTopRightRadius: '0.5rem', 

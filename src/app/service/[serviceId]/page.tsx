@@ -1,3 +1,5 @@
+'use client'
+
 import { notFound } from 'next/navigation';
 import Service from '@/components/ServiceDetail/Services';
 import { Service as ServiceType } from '@/components/Cards/types';
@@ -21,6 +23,13 @@ const fetchService = async (serviceId: string): Promise<ServiceType | null> => {
     }
 
     const service: ServiceType = await response.json();
+
+    // Verifica que el servicio incluye la propiedad 'stock'
+    if (!('stock' in service)) {
+      console.error('Service data is missing the stock property');
+      return null;
+    }
+
     return service;
   } catch (error) {
     console.error('Error fetching service:', error);

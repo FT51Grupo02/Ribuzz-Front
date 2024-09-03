@@ -39,7 +39,7 @@ const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
   }
 
   return (
-    <div className="max-w-screen-lg mx-auto p-4">
+    <div className="max-w-screen-lg mx-auto p-4 font-poppins">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {products.map((product) => (
           <div 

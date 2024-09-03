@@ -89,7 +89,7 @@ const Product: FC<ProductProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full min-h-screen bg-black text-white">
+    <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
       <div className="absolute inset-0">
         <Image
           src="/0.png"

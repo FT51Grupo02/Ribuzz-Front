@@ -60,7 +60,7 @@ const Events: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative font-poppins">
       <div className="absolute inset-0 -z-10">
         <Image
           src="/12.png"
