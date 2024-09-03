@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div
-      className={`cursor-pointer ${className} flex flex-col bg-black bg-opacity-90 text-white rounded-lg shadow-xl overflow-hidden`}
+      className={`cursor-pointer ${className} flex flex-col bg-black bg-opacity-90 text-white rounded-lg shadow-xl overflow-hidden font-poppins`}
       style={{ width: '300px', height: '450px', minHeight: '450px' }}
       onClick={onClick}
     >

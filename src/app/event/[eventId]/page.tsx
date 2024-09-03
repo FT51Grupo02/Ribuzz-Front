@@ -49,7 +49,7 @@ const EventPage = async ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className='font-poppins'>
       <Event {...event} />
     </div>
   );

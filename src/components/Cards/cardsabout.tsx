@@ -4,7 +4,7 @@ import { FaHeart, FaHandsHoldingChild, FaHandshakeSimple } from "react-icons/fa6
 
 const CardAbout = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40">
+    <div className="font-poppins grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 px-4 sm:px-8 md:px-16 lg:px-32 xl:px-40">
       <div className="p-4 bg-white shadow-md text-center rounded-xl transition duration-300 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-cyan-600 group">
         <div className="flex justify-center items-center mb-4 text-black group-hover:text-white transition-colors duration-300">
           <FaHandsHoldingChild size={50} />

@@ -22,7 +22,7 @@ const HomeContainer: React.FC = () => {
       </div>
       
       {/* Primera Sección */}
-      <section className="flex flex-col md:flex-row items-center justify-center mb-16">
+      <section className="flex flex-col md:flex-row items-center justify-center mb-16 font-poppins">
         <div className="md:w-1/2 mb-4 md:mb-0 flex justify-center relative">
           {/* Imagen de fondo */}
           <Image
@@ -65,18 +65,18 @@ const HomeContainer: React.FC = () => {
         <h2 className="text-center text-2xl md:text-4xl font-extralight mb-5" style={{ fontFamily: 'Moonhouse, sans-serif', color: '#DADDE8' }}>
           Conectando <span style={{ color: '#00e1d4' }}>Emprendedores</span> Apasionados con Oportunidades
         </h2>
-        <p className="text-center text-lg md:text-2xl mt-4 mb-8" style={{ color: '#DADDE8' }}>
+        <p className="text-center text-lg md:text-2xl mt-4 mb-8 font-poppins" style={{ color: '#DADDE8' }}>
           Tu tarea es contar la historia detrás de tu sonrisa,<br />
           RiBuzz <span style={{ color: '#00e1d4' }}>conecta y crea para tí</span>
         </p>
       </section>
       <div className="my-10">
-        <h1 className="text-center text-4xl md:text-7xl font-semibold mt-20" style={{ color: '#DADDE8' }}>
+        <h1 className="text-center text-4xl md:text-7xl font-semibold mt-20 font-poppins" style={{ color: '#DADDE8' }}>
           Plataforma <span style={{ color: '#00e1d4' }}>integral</span>
         </h1>
       </div>
       {/* Segunda Sección */}
-      <section className="text-2xl grid grid-cols-3 gap-4 mb-12 font-extralight hidden md:grid" style={{ color: '#DADDE8' }}>
+      <section className="text-2xl grid grid-cols-3 gap-4 mb-12 font-extralight hidden md:grid font-poppins" style={{ color: '#DADDE8' }}>
         <div className="bg-transparent p-6 rounded-lg flex flex-col items-center">
           <p className="text-[#00e1d4] text-center font-bold mb-4">Marketplace:</p>
           <p className="text-gray-300 text-center mb-4">Escalar ventas</p>
@@ -133,7 +133,7 @@ const HomeContainer: React.FC = () => {
         </div>
       </section>
       {/* Tercera Sección */}
-      <section className="flex flex-col items-center justify-center bg-transparent py-2 px-4 md:px-10 lg:px-16">
+      <section className="flex flex-col items-center justify-center bg-transparent py-2 px-4 md:px-10 lg:px-16 font-poppins">
         <div className="flex flex-row items-center justify-center space-x-10 mb-4 mt-10">
         <BsBuildings className="text-4xl md:text-8xl lg:text-9xl text-white" />
         <GiSandsOfTime className="text-4xl md:text-8xl lg:text-9xl text-white" />
@@ -154,7 +154,7 @@ const HomeContainer: React.FC = () => {
         </h2>
 
         {/* Contenido con flechas e imagen */}
-        <div className="flex flex-col md:flex-row items-center justify-center space-x-6 mb-12 ">
+        <div className="flex flex-col md:flex-row items-center justify-center space-x-6 mb-12 font-poppins">
           <div className="flex items-center">
             <p className="text-[#DADDE8] font-light text-2xl text-pink-500">Emprendimiento</p>
             <FaArrowRight className="text-4xl text-[#DADDE8] ml-4" />
@@ -167,7 +167,7 @@ const HomeContainer: React.FC = () => {
         </div>
 
         {/* Párrafo */}
-        <p className="text-[#DADDE8] font-light text-2xl">
+        <p className="text-[#DADDE8] font-light text-2xl font-poppins">
           Modelo Transacción B2C -&gt; Eventos, mentorías, asesorías
           <br />
           Suscripción -&gt; Acceso especial y anticipado a eventos y oportunidades

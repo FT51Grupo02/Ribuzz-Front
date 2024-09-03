@@ -44,7 +44,7 @@ const LoginEntrepeneur = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden font-poppins">
       <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image 
           src="/14.png" 

@@ -12,7 +12,7 @@ export interface Review {
     rating: number;
 }
 
-export interface SellerInfo {
+export interface ProviderInfo {
     name: string;
     contact: string;
 }
@@ -22,11 +22,11 @@ export interface ServiceProps {
     description: string;
     images: string[];
     videos?: string[];
-    providerInfo?: SellerInfo;
+    providerInfo?: ProviderInfo;
     details?: string[];
     reviews?: Review[];
     price: number;
-    stock: number;
+    stock: number;  // Propiedad agregada
 }
 
 const Service: FC<ServiceProps> = ({
@@ -38,7 +38,7 @@ const Service: FC<ServiceProps> = ({
     details = [],
     reviews = [],
     price,
-    stock,
+    stock,  // Propiedad agregada
 }) => {
     const { addToCart } = useCart();
     const router = useRouter();
@@ -54,9 +54,10 @@ const Service: FC<ServiceProps> = ({
             price,
             image: images[0], 
             description,
-            stock,
-            categoryId: 0, 
-            id: Date.now(), 
+            categoryId: 0,  // Placeholder, cambiar si es necesario
+            id: Date.now(),  // Placeholder, cambiar si es necesario
+            stock,  // Propiedad agregada
+            quantity: 1  // Añadida con valor predeterminado
         };
 
         addToCart(serviceToAdd);
@@ -87,7 +88,7 @@ const Service: FC<ServiceProps> = ({
     };
 
     return (
-        <div className="relative w-full h-full min-h-screen bg-black text-white">
+        <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
             <div className="absolute inset-0">
                 <Image
                     src="/0.png" 
@@ -104,15 +105,12 @@ const Service: FC<ServiceProps> = ({
                         <h1 className="text-4xl font-bold mb-8 text-cyan-400">{name}</h1>
                         <p className="mb-8 text-lg leading-relaxed">{description}</p>
                         <div className="mb-8">
-                            {/* Contenedor cuadrado para video y fotos */}
                             <div className="relative w-full h-auto min-h-[400px] sm:min-h-[600px] lg:min-h-[600px]">
-                                {/* Video en la parte superior */}
                                 {videos.length > 0 && (
                                     <video controls className="absolute inset-0 w-full h-1/2 object-cover rounded-lg">
                                         <source src={videos[0]} type="video/mp4" />
                                     </video>
                                 )}
-                                {/* Imágenes en la parte inferior */}
                                 <div className="absolute bottom-0 left-0 right-0 h-1/2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 md:grid-cols-4 gap-4 p-2">
                                     {images.length > 0 && images.map((img, idx) => (
                                         <div key={idx} className="relative w-full h-full mt-2 hover:scale-105 transition duration-300">
@@ -122,7 +120,7 @@ const Service: FC<ServiceProps> = ({
                                                 layout="fill"
                                                 objectFit="cover"
                                                 className="rounded-lg cursor-pointer"
-                                                onClick={() => openModal(img)} // Abre el modal al hacer clic
+                                                onClick={() => openModal(img)}
                                             />
                                         </div>
                                     ))}
@@ -153,7 +151,7 @@ const Service: FC<ServiceProps> = ({
                                             <li key={idx} className="bg-opacity-80 bg-gradient-to-r from-cyan-700 to-cyan-500 p-6 rounded-lg hover:scale-105 transition duration-300">
                                                 <p className="text-lg"><strong>{review.username}:</strong></p>
                                                 <p className="text-lg mb-2">{review.comment}</p>
-                                                <StarRating rating={review.rating} />
+                                                <StarRating rating={review.rating} onChange={() => {}} /> {/* Placeholder para onChange */}
                                             </li>
                                         ))}
                                     </ul>
@@ -177,7 +175,6 @@ const Service: FC<ServiceProps> = ({
                     </div>
                 </div>
 
-                {/* Sección de comentarios */}
                 <div className="">
                     <div className="flex flex-col sm:flex-row items-start max-sm:items-center justify-between mb-4">
                         <h2 className="text-2xl sm:text-3xl font-semibold text-cyan-400 text-center sm:text-left">Dejanos tu opinión:</h2>
@@ -203,28 +200,25 @@ const Service: FC<ServiceProps> = ({
                     </button>
                 </div>
             </div>
-            
-            {isModalOpen && (
-                <div 
-                    className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-                    onClick={closeModal} // Cierra el modal al hacer clic fuera del contenido
-                >
-                    <div className="relative max-w-3xl mx-auto" onClick={(e) => e.stopPropagation()}> {/* Detiene la propagación del evento */}
-                        <button
-                            type="button"
-                            onClick={closeModal}
-                            className="absolute top-4 right-4 text-white text-3xl font-bold"
-                        >
-                            &times;
-                        </button>
+
+            {isModalOpen && selectedImage && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+                    <div className="relative w-full max-w-3xl">
                         <Image
-                            src={selectedImage!}
+                            src={selectedImage}
                             alt="Selected Image"
-                            layout="intrinsic"
+                            layout="responsive"
                             width={1200}
                             height={800}
                             className="rounded-lg"
                         />
+                        <button
+                            type="button"
+                            onClick={closeModal}
+                            className="absolute top-2 right-2 bg-black text-white p-2 rounded-full shadow-lg"
+                        >
+                            &times;
+                        </button>
                     </div>
                 </div>
             )}

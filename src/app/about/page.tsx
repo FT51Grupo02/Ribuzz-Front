@@ -5,7 +5,7 @@ import Page2 from '@/components/About/page2';
 
 const About: React.FC = () => {
   return (
-    <div>
+    <div className='font-poppins'>
     <Page1/>
     <Page2/>
     <Page3/>
