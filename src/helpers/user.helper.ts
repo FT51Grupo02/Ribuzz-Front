@@ -87,4 +87,3 @@ export const updateUserProfile = async (
       throw error;  // Propagar el error para que pueda ser manejado por el componente
     }
   };
-

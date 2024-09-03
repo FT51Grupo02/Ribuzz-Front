@@ -7,7 +7,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext'; // Importar el contexto de autenticación
 import { ILoginPropsEntrep } from '@/interfaces/Types';
-import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
@@ -44,7 +43,7 @@ const LoginEntrepeneur = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden font-poppins">
+    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden">
       <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image 
           src="/14.png" 
@@ -124,10 +123,18 @@ const LoginEntrepeneur = () => {
               </Form>
             )}
           </Formik>
-          <div className="flex flex-col items-center">
-            <h5 className="text-sm md:text-base mb-2">O continúa con:</h5>
-            <GoogleLoginButton /> 
-          </div>
+        <div className="flex flex-col items-center">
+          <h5 className="text-sm md:text-base mb-2">O continúa con:</h5>
+          <button
+            type="button"
+            className="flex items-center bg-[#303030] text-white p-3 rounded-lg text-base md:text-lg"
+          >
+            <FcGoogle className="w-6 h-6 md:w-7 md:h-7 mr-2 transition duration-300 hover:scale-110" />
+            <span className="transition duration-300 hover:scale-110 inline-block text-lg">
+              Google
+            </span>
+          </button>
+        </div>
         </div>
       </div>
     </div>
