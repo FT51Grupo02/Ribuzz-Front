@@ -27,6 +27,10 @@
     font-style: normal;
 }
 
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
 .cursor-pointer-custom {
     cursor: pointer;
 }
