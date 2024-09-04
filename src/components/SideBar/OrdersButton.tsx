@@ -1,22 +1,18 @@
+'use client'
 import { GetUserById } from '@/helpers/user.helper';
 import { fetchOrders } from '@/helpers/orders.helper';
 import React, { useState } from 'react';
 import { useAuth } from '@/components/Context/AuthContext';
 
 const FetchOrdersButton: React.FC = () => {
-  const { user, token } = useAuth();
+  const { user } = useAuth(); // Ya no necesitas el token
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<any | null>(null);
 
   const handleFetchOrders = async () => {
-    if (user && token) {
+    if (user) { // Solo necesitas verificar que user exista
       try {
-        const userData = await GetUserById(
-          user.id, 
-          { name: user.name, email: user.email, password: '' }, // Ajusta esto según sea necesario
-          token, 
-          [] // Asumiendo que no tienes órdenes inicialmente
-        );
+        const userData = await GetUserById(user.id);
   
         if (userData && Array.isArray(userData.orders)) {
           setOrders(userData.orders);
@@ -62,7 +58,6 @@ const FetchOrdersButton: React.FC = () => {
           <p>ID: {selectedOrderDetails.id}</p>
           <p>Fecha: {selectedOrderDetails.date}</p>
           <p>Pago: {selectedOrderDetails.pay ? selectedOrderDetails.pay : 'No pagado'}</p>
-        
         </div>
       )}
     </div>
