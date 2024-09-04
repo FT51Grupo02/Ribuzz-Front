@@ -9,6 +9,11 @@ import Swal from 'sweetalert2';
 import { Elements } from '@stripe/react-stripe-js';
 import { useStripeContext } from '../Context/StripeContext'; // Ajusta la ruta según tu estructura
 
+interface SelectableItem {
+  id: string;
+  // Otros campos opcionales si es necesario
+}
+
 const Checkout: React.FC = () => {
   const { user, token } = useAuth();
   const { cart, clearCart } = useCart();
@@ -17,6 +22,9 @@ const Checkout: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [orderDate, setOrderDate] = useState<string>('');
   const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
+  const [selectedServices, setSelectedServices] = useState<SelectableItem[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<SelectableItem[]>([]);
+  const [selectedEvents, setSelectedEvents] = useState<SelectableItem[]>([]);
 
   const router = useRouter();
 
@@ -38,39 +46,42 @@ const Checkout: React.FC = () => {
   const handlePlaceOrder = async (paymentIntent: any) => {
     setLoading(true);
     setPaymentSuccess(false);
-  
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          cart: sanitizedCart,
-          total,
-          paymentIntentId: paymentIntent.id,
-        }),
-      });
-  
-      const result = await response.json();
-  
-      if (result.error) {
-        setError(result.error);
-        Swal.fire('Error', result.error, 'error');
-      } else {
-        setPaymentSuccess(true);
-        Swal.fire('Éxito', 'Compra realizada con éxito', 'success');
-        clearCart();
-        router.push('/cart');
-      }
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userId: user?.id,
+                products: selectedProducts.map(item => ({ id: item.id })), 
+                service: selectedServices.map(item => ({ id: item.id })), 
+                events: selectedEvents.map(item => ({ id: item.id })), 
+                totalAmount: total,
+                paymentIntentId: paymentIntent.id,
+                orderDate: orderDate,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+            setError(result.error);
+            Swal.fire('Error', result.error, 'error');
+        } else {
+            setPaymentSuccess(true);
+            Swal.fire('Éxito', 'Compra realizada con éxito', 'success');
+            clearCart();
+            router.push('/cart');
+        }
     } catch (err) {
-      console.error('Error:', err);
-      setError('Error al realizar la compra.');
-      Swal.fire('Error', 'Error al realizar la compra.', 'error');
+        console.error('Error:', err);
+        setError('Error al realizar la compra.');
+        Swal.fire('Error', 'Error al realizar la compra.', 'error');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
@@ -86,89 +97,48 @@ const Checkout: React.FC = () => {
             </h2>
             {user ? (
               <div className="space-y-4">
-                <div className="py-2">
-                  <p className="text-sm font-medium">Nombre:</p>
-                  <p className="text-lg font-semibold">{user.name}</p>
+                <div className="flex flex-col">
+                  <span className="font-bold">Nombre:</span>
+                  <span>{user.name}</span>
                 </div>
-                <div className="py-2">
-                  <p className="text-sm font-medium">Email:</p>
-                  <p className="text-lg font-semibold">{user.email}</p>
+                <div className="flex flex-col">
+                  <span className="font-bold">Correo:</span>
+                  <span>{user.email}</span>
                 </div>
               </div>
             ) : (
-              <p className="text-gray-400">Información de usuario no encontrada.</p>
+              <p>Por favor, inicie sesión para proceder con el pago.</p>
             )}
-            <div className="mt-6 pt-4 border-t border-gray-600">
-              <p className="text-sm font-medium">Día y hora de la orden:</p>
-              <p className="text-lg font-semibold">{orderDate}</p>
-            </div>
           </div>
 
-          <div className="bg-transparent p-4 rounded-lg shadow-lg border border-transparent mb-6">
-            <h2 className="text-2xl font-bold mb-2 text-pink-400 max-md:text-center">Productos</h2>
-            {sanitizedCart.length === 0 ? (
-              <p>No hay productos.</p>
-            ) : (
-              <div className="space-y-4">
-                {sanitizedCart.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b py-2 border-gray-600"
-                  >
-                    <div className="flex items-center mb-2 sm:mb-0 w-full sm:w-auto">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover mr-4 rounded-lg flex-shrink-0"
-                      />
-                      <div className="flex flex-col">
-                        <span className="text-sm sm:text-base truncate text-pink-300">{product.name}</span>
-                        <div className="flex flex-col sm:flex-row mt-2 sm:mt-0">
-                          <span className="text-sm sm:text-base">Unidades: {product.quantity}</span>
-                          <span className="text-sm sm:text-base sm:ml-4">${(product.price * product.quantity).toFixed(2)}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          <div className="bg-transparent p-6 rounded-lg shadow-lg border border-transparent">
+            <h2 className="text-2xl font-bold mb-4 border-b border-gray-600 pb-2 text-pink-400">
+              Carrito de compras
+            </h2>
+            <div className="space-y-4">
+              {sanitizedCart.map((item, index) => (
+                <div key={index} className="flex justify-between">
+                  <span>{item.name}</span>
+                  <span>${item.price.toFixed(2)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-bold">
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
-        {/* Componente de pago y resumen */}
-        <div className="lg:w-1/3 flex flex-col lg:sticky lg:top-0 lg:space-y-6 lg:ml-8">
-          <div className="bg-transparent p-4 rounded-lg shadow-lg border border-transparent mb-6">
-            <Elements stripe={stripe}>
-              <PayCard onPaymentSuccess={handlePlaceOrder} />
-            </Elements>
-          </div>
-
-          <div className="bg-transparent p-4 rounded-lg shadow-lg border border-transparent flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div className="mb-4 lg:mb-0">
-              <h2 className="text-xl font-bold mb-2 text-pink-400 max-md:text-center">Resumen de la orden</h2>
-              <p className="text-lg sm:text-xl max-md:text-center">
-                <strong>Total:</strong> ${total.toFixed(2)}
-              </p>
-            </div>
-            {/* <div className="mt-4 lg:mt-0">
-              {error && <p className="text-red-500 mb-4">{error}</p>}
-              <button
-                onClick={() => handlePlaceOrder({ id: 'payment-intent-id' })}
-                className={`w-full p-3 md:p-4 mb-4 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow text-sm md:text-base ${
-                  loading || !paymentSuccess ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                disabled={loading || !paymentSuccess}
-              >
-                <span className="inline-block transition duration-300 hover:scale-110">
-                  {loading ? 'Procesando...' : 'Realizar compra'}
-                </span>
-              </button>
-            </div> */}
-          </div>
+        {/* Componente de pago */}
+        <div className="flex-1 lg:w-1/3">
+          <Elements stripe={stripe}>
+            <PayCard onPaymentSuccess={handlePlaceOrder} />
+          </Elements>
         </div>
       </div>
     </div>
   );
 };
+
 export default Checkout;

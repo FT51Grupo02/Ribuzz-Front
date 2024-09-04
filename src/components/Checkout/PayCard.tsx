@@ -3,8 +3,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CardElement, useElements } from '@stripe/react-stripe-js';
-import { useStripeContext } from '../Context/StripeContext';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { useCart } from '../Context/CartContext';
 import { useAuth } from '../Context/AuthContext';
 
@@ -13,7 +12,7 @@ interface PayCardProps {
 }
 
 const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
-  const stripe = useStripeContext();
+  const stripe = useStripe();
   const elements = useElements();
   const { cart } = useCart();
   const { token } = useAuth();
@@ -78,6 +77,7 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
         }
 
         onPaymentSuccess(paymentIntent);
+        
       } catch (error) {
         console.error('Error en la solicitud al backend:', error);
       }
@@ -142,4 +142,4 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
   );
 };
 
-export default PayCard
+export default PayCard;
