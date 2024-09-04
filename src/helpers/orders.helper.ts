@@ -2,7 +2,7 @@
 
 export const fetchOrders = async (id: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, { // Asegúrate de que esta ruta sea la correcta para obtener las órdenes del usuario
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, { 
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -14,15 +14,12 @@ export const fetchOrders = async (id: string) => {
     }
 
     const data = await response.json();
-    return data.orders; // Asumiendo que la respuesta contiene un array de órdenes en `orders`
+    return data
   } catch (error) {
     console.error('Error en la solicitud de órdenes:', error);
     throw error;
   }
 };
-
-
-
 
 // helpers/orderHelper.ts
 export const createOrder = async (

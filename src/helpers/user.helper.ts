@@ -89,9 +89,7 @@ export const updateUserProfile = async (
   };
 
 
-  export const GetUserById = async (
-    id: string
-  ) => {
+  export const GetAllUsers = async () => {
     try {
       const response = await fetch(`${APIURL}/users`, {
         method: 'GET',
@@ -101,14 +99,15 @@ export const updateUserProfile = async (
       });
   
       if (!response.ok) {
-        throw new Error('Error al obtener los datos del usuario. Por favor, intenta de nuevo.');
+        throw new Error('Error al obtener la lista de usuarios. Por favor, intenta de nuevo.');
       }
   
       const responseData = await response.json();
-      console.log('Datos de respuesta:', responseData); // Agregado para ver qué datos se están retornando
+      console.log('Datos de respuesta (todos los usuarios):', responseData);
       return responseData;
     } catch (error) {
       console.error('Error en la solicitud:', error);
       throw error;  // Propagar el error para que pueda ser manejado por el componente
     }
   };
+  
