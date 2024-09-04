@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image';
-import { FC, useState } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
@@ -40,11 +40,13 @@ const Service: FC<ServiceProps> = ({
 }) => {
     const { addToCart } = useCart();
     const router = useRouter();
-    
+
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedRating, setSelectedRating] = useState<number>(0);
     const [comment, setComment] = useState<string>('');
+
+    const modalRef = useRef<HTMLDivElement>(null);
 
     const handleAddToCart = () => {
         const serviceToAdd = {
@@ -52,14 +54,8 @@ const Service: FC<ServiceProps> = ({
             price,
             image: images[0],
             description,
-            // Asegúrate de que no se incluyan propiedades que no son necesarias para los servicios
-            // categoryId: 0, 
-            // id: Date.now(), 
-            // quantity: 1 
         };
 
-        // Aquí puedes ajustar el método addToCart si es necesario para los servicios
-        // addToCart(serviceToAdd);
         router.push('/cart');
     };
 
@@ -86,11 +82,26 @@ const Service: FC<ServiceProps> = ({
         }
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            closeModal();
+        }
+    };
+
+    useEffect(() => {
+        if (isModalOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isModalOpen]);
+
     return (
         <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
             <div className="absolute inset-0">
                 <Image
-                    src="/0.png" 
+                    src="/0.png"
                     alt="Background Image"
                     layout="fill"
                     objectFit="cover"
@@ -161,7 +172,7 @@ const Service: FC<ServiceProps> = ({
                                     </p>
                                     <button
                                         type="button"
-                                        onClick={handleAddToCart} 
+                                        onClick={handleAddToCart}
                                         className="w-full sm:w-2/3 lg:w-1/2 p-3 text-white font-semibold rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-700 shadow-md hover:shadow-lg transition-shadow text-sm md:text-base"
                                     >
                                         <span className="inline-block transition duration-300 hover:scale-110">
@@ -191,7 +202,7 @@ const Service: FC<ServiceProps> = ({
                     <button
                         type="button"
                         onClick={handleAddComment}
-                        className="p-2 bg-gradient-to-r from-cyan-700 to-cyan-500 text-white shadow-md w-full duration-800 ease-in-out transform rounded-lg"
+                        className="w-full p-2 bg-gradient-to-r from-cyan-600 to-cyan-500 text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
                     >
                         <span className="inline-block text-white hover:scale-110 transition duration-300">
                             Enviar mensaje
@@ -202,7 +213,7 @@ const Service: FC<ServiceProps> = ({
 
             {isModalOpen && selectedImage && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-                    <div className="relative w-full max-w-3xl">
+                    <div ref={modalRef} className="relative w-full max-w-3xl">
                         <Image
                             src={selectedImage}
                             alt="Selected Image"
@@ -214,9 +225,9 @@ const Service: FC<ServiceProps> = ({
                         <button
                             type="button"
                             onClick={closeModal}
-                            className="absolute top-2 right-2 bg-black text-white p-2 rounded-full"
+                            className="absolute top-2 right-2 text-white p-2 rounded-full"
                         >
-                            <span className="text-2xl">&times;</span>
+                            <span className="text-5xl">&times;</span>
                         </button>
                     </div>
                 </div>

@@ -55,9 +55,9 @@ const HomeContainer: React.FC = () => {
           </div>
           <p className="text-gray-300 text-center mb-6 text-2xl">
             Escalabilidad y acceso al mercado <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Entorno para hacer negocios <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Errores en gestión <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Acceso a capital
+            Entorno para hacer negocios <br />
+            Errores en gestión <br />
+            Acceso a capital <br />
           </p>
         </div>
       </section>

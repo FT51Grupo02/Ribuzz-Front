@@ -13,7 +13,7 @@ const Page1 = () => {
 
   return (
     <div className="relative w-full flex flex-col items-center justify-start overflow-hidden">
-      <div className="relative w-full flex flex-col md:flex-row md:py-32 sm:py-10">
+      <div className="relative w-full flex flex-col md:flex-row md:py-32 sm:py-10 min-h-screen">
         <div className="absolute inset-0">
           <video
             autoPlay

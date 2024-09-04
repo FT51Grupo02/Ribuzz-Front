@@ -20,7 +20,7 @@ export interface Product {
     description: string;
     price: number;
     images: string[];
-    sellerInfo: SellerInfo;
+    SellerInfo: SellerInfo;
     categories: string[];
     details?: string[];
     stock: number;
@@ -34,7 +34,7 @@ export interface Service {
     description: string;
     price: number;
     images: string[];
-    providerInfo: ProviderInfo;
+    ProviderInfo: ProviderInfo;
     details?: string[];
     reviews?: Review[];
     rating: number;
@@ -47,7 +47,7 @@ export interface Event {
     description: string;
     price: number;
     images: string[];
-    providerInfo: ProviderInfo;
+    ProviderInfo: ProviderInfo;
     duration: string;
     location: string;
     rating: number;

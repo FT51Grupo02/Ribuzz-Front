@@ -60,7 +60,7 @@ const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
           <div className="flex flex-col justify-between w-full md:w-2/3 lg:w-3/4 p-4 flex-grow">
             <div className="flex flex-col flex-grow">
               <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-cyan-500 drop-shadow-md">{event.name}</h2>
-              <p className="text-white mt-2 text-sm md:text-base lg:text-lg">{event.publicationDate} | {event.location}</p>
+              <p className="text-white mt-2 text-sm md:text-base lg:text-lg">{event.date} | {event.location}</p>
               <p className="text-gray-200 mt-4 text-sm md:text-base lg:text-lg leading-relaxed flex-grow overflow-hidden text-ellipsis">
                 {event.description}
               </p>
