@@ -3,7 +3,7 @@ export const fetchOrders = async (token: string, userId: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${userId}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        
         'Content-Type': 'application/json',
       },
     });
