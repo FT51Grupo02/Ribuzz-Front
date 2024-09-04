@@ -27,13 +27,12 @@ export const createOrder = async (
     productIds: string[],
     eventIds: string[],
    /*  paymentMethodId: string, */
-    token: string
+  /*   token: string */
   ) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

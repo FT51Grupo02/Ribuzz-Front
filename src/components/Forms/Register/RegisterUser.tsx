@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
     .required('Fecha requerida')
     .typeError('Fecha inválida')
     .transform(value => (isNaN(value.getTime()) ? new Date() : value)),
-  rol: Yup.string().oneOf(['emprendedor', 'client', 'admin'], 'Rol inválido').optional(),
+  rol: Yup.string().oneOf(['emprendedor', 'cliente', 'admin'], 'Rol inválido').optional(),
 });
 
 const RegisterUser = () => {
