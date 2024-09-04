@@ -1,6 +1,6 @@
-export const fetchOrders = async (token: string, userId: string) => {
+export const fetchOrders = async (token: string, id: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${userId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
       method: 'GET',
       headers: {
         
@@ -16,7 +16,7 @@ export const fetchOrders = async (token: string, userId: string) => {
     return data;
   } catch (error) {
     console.error('Error en la solicitud de órdenes:', error);
-    throw error;  // Propagar el error para que pueda ser manejado por el componente
+    throw error;
   }
 };
 
