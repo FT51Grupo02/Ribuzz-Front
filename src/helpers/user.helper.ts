@@ -97,7 +97,7 @@ export const updateUserProfile = async (
   ) => {
     try {
       const response = await fetch(`${APIURL}/users/${id}`, {
-        method: 'PUT',
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

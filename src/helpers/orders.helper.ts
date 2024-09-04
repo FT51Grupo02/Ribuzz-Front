@@ -2,7 +2,7 @@
 
 export const fetchOrders = async (id: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}/orders`, { // Asegúrate de que esta ruta sea la correcta para obtener las órdenes del usuario
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, { // Asegúrate de que esta ruta sea la correcta para obtener las órdenes del usuario
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -20,28 +20,6 @@ export const fetchOrders = async (id: string) => {
     throw error;
   }
 };
-
-export const fetchOrderDetails = async (orderId: string) => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al obtener los detalles de la orden. Por favor, intenta de nuevo.');
-    }
-
-    const data = await response.json();
-    return data; // Asegúrate de que esta respuesta sea correcta según la estructura que necesitas
-  } catch (error) {
-    console.error('Error en la solicitud de detalles de la orden:', error);
-    throw error;
-  }
-};
-
 
 
 // helpers/orderHelper.ts
