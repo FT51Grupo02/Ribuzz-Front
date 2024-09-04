@@ -63,7 +63,7 @@ const Events: React.FC = () => {
     <div className="relative font-poppins">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/12.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481346/12_vrxcte.png"
           alt="Background Image"
           layout="fill"
           objectFit="cover"

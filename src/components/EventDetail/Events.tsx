@@ -69,7 +69,7 @@ const EventComponent: FC<Event> = ({
         <div className="relative w-full h-full min-h-screen bg-black text-white flex items-center justify-center">
           <div className="absolute inset-0">
             <Image
-              src="/0.png"
+              src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png"
               alt="Background Image"
               layout="fill"
               objectFit="cover"

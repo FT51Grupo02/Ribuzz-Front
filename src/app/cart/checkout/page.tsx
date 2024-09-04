@@ -17,7 +17,7 @@ const CheckoutP: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       <Image
-        src="/10.png" 
+        src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/1_s2zijs.jpg" 
         alt="Background"
         layout="fill" 
         objectFit="cover"  

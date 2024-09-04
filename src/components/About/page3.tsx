@@ -9,7 +9,7 @@ const Page3 = () => {
       <div className="relative w-full">
         <div className="absolute inset-0 z-[-1]">
           <Image
-            src="/10.png"
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/10_izka5b.png"
             alt="Background Image"
             layout="fill"
             objectFit="cover"
@@ -19,7 +19,7 @@ const Page3 = () => {
         </div>
         <div className="flex justify-center mt-4 mb-6 z-10">
           <Image
-            src="/11.png"
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/11_quhnta.png"
             alt="Logo RiBuzz"
             width={300}
             height={200}

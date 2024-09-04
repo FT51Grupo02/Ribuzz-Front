@@ -31,7 +31,7 @@ const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
         popularity,
         location,
       });
-    }, 300),
+    }, 0),
     [search, rating, publicationDate, popularity, location] // Dependencias de useCallback
   );
 

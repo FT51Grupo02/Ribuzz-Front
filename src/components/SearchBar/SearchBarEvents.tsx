@@ -30,7 +30,7 @@ const SearchBarEvents: React.FC<SearchBarEventsProps> = ({ onFiltersChange }) =>
         popularity,
         location,
       });
-    }, 300),
+    }, 0),
     [search, rating, publicationDate, popularity, location]
   );
 

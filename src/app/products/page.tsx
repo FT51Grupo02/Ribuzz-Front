@@ -68,7 +68,7 @@ const Products: React.FC = () => {
     <div className="relative font-poppins">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/3.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/3_pg8yhj.png"
           alt="Background Image"
           layout="fill"
           objectFit="cover"

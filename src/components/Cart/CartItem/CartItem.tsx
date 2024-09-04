@@ -34,7 +34,7 @@ const CartItem: React.FC = () => {
   );
 
   return (
-    <div className="relative bg-black bg-opacity-70 rounded-xl mx-auto max-w-4xl p-6">
+    <div className="relative bg-black bg-opacity-30 rounded-xl mx-auto max-w-4xl p-6">
       {/* Contenido principal */}
       <div className="relative z-10">
         {isCartEmpty ? (

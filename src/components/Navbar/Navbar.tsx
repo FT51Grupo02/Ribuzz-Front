@@ -77,7 +77,7 @@ const Navbar = () => {
             <div>
               {/* Logo para pantallas mayores a 425px */}
               <Image 
-                src="/4.png" 
+                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/4_pdauvh.png" 
                 alt="Logo" 
                 width={200} 
                 height={60} 
@@ -86,7 +86,7 @@ const Navbar = () => {
               />
               {/* Logo para pantallas menores a 425px */}
               <Image 
-                src="/5.png" 
+                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" 
                 alt="Logo" 
                 width={50} 
                 quality={100}
