@@ -8,7 +8,7 @@ const Cart: React.FC = () => {
       {/* Imagen de fondo */}
       <div className="absolute inset-0 z-[-1]">
         <Image
-          src="/1.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/1_s2zijs.jpg"
           alt="Background"
           layout="fill"
           objectFit="cover"

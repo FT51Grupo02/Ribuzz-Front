@@ -20,7 +20,7 @@ const UpdateProfileSchema = Yup.object().shape({
 
 const UpdateProfile: React.FC = () => {
     const { token } = useAuth();
-    const [imagePreview, setImagePreview] = useState<string>('/0.png');
+    const [imagePreview, setImagePreview] = useState<string>('https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png');
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -190,4 +190,3 @@ const UpdateProfile: React.FC = () => {
 };
 
 export default UpdateProfile;
-

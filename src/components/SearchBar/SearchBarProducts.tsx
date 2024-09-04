@@ -30,7 +30,7 @@ const SearchBarProducts: React.FC<SearchBarProductsProps> = ({ onFiltersChange }
         price,
         popularity,
       });
-    }, 300),
+    }, 0),
     [search, rating, category, price, popularity]
   );
 

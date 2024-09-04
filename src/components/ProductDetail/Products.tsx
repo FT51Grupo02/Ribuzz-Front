@@ -47,7 +47,7 @@ const Product: FC<ProductProps> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
-  const [currentReviews, setCurrentReviews] = useState<Review[]>(reviews);
+  const [currentReviews, setCurrentReviews] = useState<Review[]>(reviews || []);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleAddToCart = () => {
@@ -73,7 +73,7 @@ const Product: FC<ProductProps> = ({
         comment: comment,
         rating: selectedRating
       };
-      setCurrentReviews([...currentReviews, newReview]);
+      setCurrentReviews(prevReviews => [...prevReviews, newReview]);
       setComment('');
       setSelectedRating(0);
     }
@@ -89,7 +89,6 @@ const Product: FC<ProductProps> = ({
     setIsModalOpen(false);
   };
 
-  // Close modal when clicking outside the image
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -110,7 +109,7 @@ const Product: FC<ProductProps> = ({
     <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
       <div className="absolute inset-0">
         <Image
-          src="/0.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png"
           alt="Background Image"
           layout="fill"
           objectFit="cover"
@@ -166,12 +165,16 @@ const Product: FC<ProductProps> = ({
               <div className="flex flex-col">
                 <div className="flex-grow">
                   <ul className="space-y-4 lg:space-y-6">
-                    {currentReviews.map((review, idx) => (
-                      <li key={idx} className="bg-opacity-80 bg-gradient-to-r from-[#cc1184] to-[#a80054] p-4 lg:p-6 rounded-lg hover:scale-105 transition duration-300">
-                        <p className="text-base lg:text-lg"><strong>{review.username}:</strong> {review.comment}</p>
-                        <StarRating rating={review.rating} onChange={() => {}} /> {/* Provide a dummy onChange handler */}
-                      </li>
-                    ))}
+                    {currentReviews && currentReviews.length > 0 ? (
+                      currentReviews.map((review, idx) => (
+                        <li key={idx} className="bg-opacity-80 bg-gradient-to-r from-[#cc1184] to-[#a80054] p-4 lg:p-6 rounded-lg hover:scale-105 transition duration-300">
+                          <p className="text-base lg:text-lg"><strong>{review.username}:</strong> {review.comment}</p>
+                          <StarRating rating={review.rating} onChange={() => {}} />
+                        </li>
+                      ))
+                    ) : (
+                      <p className="text-base lg:text-lg text-white">No hay reseñas disponibles.</p>
+                    )}
                   </ul>
                 </div>
                 <div className="flex flex-col items-center lg:flex-row lg:items-center gap-4 mt-6 lg:mt-8">
@@ -214,9 +217,9 @@ const Product: FC<ProductProps> = ({
             type="button"
             onClick={handleAddComment}
             className="w-full p-2 bg-gradient-to-r from-[#cc1184] to-[#a80054] text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
-                  >
+          >
             <span className="inline-block text-white hover:scale-110 transition duration-300">
-                Enviar mensaje
+              Enviar mensaje
             </span>
           </button>
         </div>

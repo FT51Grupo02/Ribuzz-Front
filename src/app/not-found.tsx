@@ -1,12 +1,20 @@
 import React from 'react';
+import Image from 'next/image';
 
 const NotFoundPage = () => {
   return (
-    <section
-      className="flex items-center justify-center h-screen p-8 bg-cover bg-center w-full font-poppins"
-      style={{ backgroundImage: 'url("/3.png")' }}
-    >
-      <div className="container flex flex-col items-center">
+    <section className="relative flex items-center justify-center h-screen p-8 w-full font-poppins">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/3_pg8yhj.png"
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          className="object-center"
+        />
+      </div>
+      <div className="relative z-10 container flex flex-col items-center">
         <div className="flex flex-col gap-6 max-w-md text-center">
           <h2 className="font-extrabold text-6xl md:text-9xl text-gray-100 drop-shadow-custom-dark">
             <span className="sr-only">Error</span> 404
