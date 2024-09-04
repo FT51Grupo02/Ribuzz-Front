@@ -6,7 +6,7 @@ import { useAuth } from '@/components/Context/AuthContext';
 import Swal from 'sweetalert2';
 
 const FetchOrdersButton: React.FC = () => {
-  const { token, user } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
@@ -54,14 +54,14 @@ const FetchOrdersButton: React.FC = () => {
         disabled={loading}
       >
         <FaBox className="flex text-xl mr-2" />
-        {loading ? 'Cargando...' : 'Mis Ordenes'}
+        {loading ? 'Cargando...' : 'Mis Órdenes'}
       </button>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       {orders.length === 0 && !loading && <p className="text-gray-500 text-center mb-4">Todavía no hay órdenes.</p>}
       <ul className="list-disc text-center">
         {orders.map(order => (
           <li key={order.id} onClick={() => handleViewOrderDetails(order.id)} className="cursor-pointer">
-            {order.description} - {order.date}
+            {order.date} - {order.id}
           </li>
         ))}
       </ul>
@@ -70,12 +70,31 @@ const FetchOrdersButton: React.FC = () => {
         <div className="mt-6">
           <h3>Detalles de la Orden</h3>
           <p>ID: {selectedOrder.id}</p>
-          <p>Descripción: {selectedOrder.description}</p>
           <p>Fecha: {selectedOrder.date}</p>
-          <p>Items:</p>
+          <p>Detalles:</p>
+          <p>Total: {selectedOrder.Details.total}</p>
+          <p>Productos:</p>
           <ul>
-            {selectedOrder.items.map((item: any) => (
-              <li key={item.id}>{item.name} - {item.quantity}</li>
+            {selectedOrder.Details.products.map((item: any) => (
+              <li key={item.id}>
+                {item.name} - {item.price}
+              </li>
+            ))}
+          </ul>
+          <p>Servicios:</p>
+          <ul>
+            {selectedOrder.Details.service.map((service: any) => (
+              <li key={service.id}>
+                {service.name} - {service.price}
+              </li>
+            ))}
+          </ul>
+          <p>Eventos:</p>
+          <ul>
+            {selectedOrder.Details.events.map((event: any) => (
+              <li key={event.id}>
+                {event.name} - {event.date} - {event.price}
+              </li>
             ))}
           </ul>
         </div>

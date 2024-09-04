@@ -1,9 +1,10 @@
-export const fetchOrders = async ( id: string) => {
+// helpers/orders.helper.ts
+
+export const fetchOrders = async (id: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}/orders`, { // Asegúrate de que esta ruta sea la correcta para obtener las órdenes del usuario
       method: 'GET',
       headers: {
-        
         'Content-Type': 'application/json',
       },
     });
@@ -13,7 +14,7 @@ export const fetchOrders = async ( id: string) => {
     }
 
     const data = await response.json();
-    return data;
+    return data.orders; // Asumiendo que la respuesta contiene un array de órdenes en `orders`
   } catch (error) {
     console.error('Error en la solicitud de órdenes:', error);
     throw error;
@@ -34,12 +35,13 @@ export const fetchOrderDetails = async (orderId: string) => {
     }
 
     const data = await response.json();
-    return data;
+    return data; // Asegúrate de que esta respuesta sea correcta según la estructura que necesitas
   } catch (error) {
     console.error('Error en la solicitud de detalles de la orden:', error);
     throw error;
   }
 };
+
 
 
 // helpers/orderHelper.ts
