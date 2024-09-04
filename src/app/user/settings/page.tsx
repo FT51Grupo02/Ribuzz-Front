@@ -5,7 +5,7 @@ const Settings = () => {
 
   return (
     
-      <UserSettings />
+      <div>Estoy en construccion</div>
     
   );
 };

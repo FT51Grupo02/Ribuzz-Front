@@ -78,7 +78,7 @@ const RegisterUser = () => {
             Crea una nueva cuenta
           </h3>
           <Formik
-            initialValues={{ name: '', email: '', password: '', date: new Date(), rol: 'client' }}
+            initialValues={{ name: '', email: '', password: '', date: new Date(), rol: 'cliente' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             validateOnChange={true}

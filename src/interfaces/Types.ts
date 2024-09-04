@@ -25,7 +25,7 @@ export interface IRegisterProps {
     rol: UserRole; // Hacerlo opcional si el rol no siempre es requerido
 }
 
-export type UserRole = 'entrepreneur' | 'client' | 'admin';
+export type UserRole = 'entrepreneur' | 'cliente' | 'admin';
 
 
 export type IRegisterError = Partial<IRegisterProps>

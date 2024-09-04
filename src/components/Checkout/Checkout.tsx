@@ -8,7 +8,6 @@ import PayCard from './PayCard';
 import Swal from 'sweetalert2';
 import { Elements } from '@stripe/react-stripe-js';
 import { useStripeContext } from '../Context/StripeContext'; // Ajusta la ruta según tu estructura
-import Image from 'next/image'; // Importar el componente Image de Next.js
 
 const Checkout: React.FC = () => {
   const { user, token } = useAuth();
@@ -117,16 +116,12 @@ const Checkout: React.FC = () => {
                     className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b py-2 border-gray-600"
                   >
                     <div className="flex items-center mb-2 sm:mb-0 w-full sm:w-auto">
-                      <div className="relative w-16 h-16 flex-shrink-0">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-lg"
-                        />
-                      </div>
-                      <div className="flex flex-col ml-4">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover mr-4 rounded-lg flex-shrink-0"
+                      />
+                      <div className="flex flex-col">
                         <span className="text-sm sm:text-base truncate text-pink-300">{product.name}</span>
                         <div className="flex flex-col sm:flex-row mt-2 sm:mt-0">
                           <span className="text-sm sm:text-base">Unidades: {product.quantity}</span>
@@ -176,5 +171,4 @@ const Checkout: React.FC = () => {
     </div>
   );
 };
-
 export default Checkout;
