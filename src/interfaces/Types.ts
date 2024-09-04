@@ -51,6 +51,7 @@ export type IRegisterError = Partial<IRegisterProps>
         email: string;
         date: string;
         photo: string | null;
+        orders: []
     }
 /*  export interface IUserSession {
     token: string;
