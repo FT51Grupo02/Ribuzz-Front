@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { GetAllUsers } from '@/helpers/user.helper';
+import { fetchUsers } from '@/helpers/user.helper';
 import { fetchOrders } from '@/helpers/orders.helper';
 import { useAuth } from '@/components/Context/AuthContext';
 
@@ -14,7 +14,7 @@ const FetchOrdersButton: React.FC = () => {
       if (user) {
         try {
           // Obtén todos los usuarios
-          const allUsers = await GetAllUsers();
+          const allUsers = await fetchUsers();
           
           // Encuentra el usuario específico por ID
           const currentUser = allUsers.find((u: any) => u.id === user.id);

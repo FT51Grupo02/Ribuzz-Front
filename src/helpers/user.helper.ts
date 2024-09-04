@@ -30,7 +30,7 @@ export const parseJwt = (token: string) => {
 };
 
 // Función para obtener todos los usuarios
-const fetchUsers = async (page: number = 1, limit: number = 100): Promise<IUser[]> => {  
+export const fetchUsers = async (page: number = 1, limit: number = 100): Promise<IUser[]> => {  
     try {
         const response = await fetch(`${APIURL}/users?page=${page}&limit=${limit}`);
         if (!response.ok) {
@@ -89,25 +89,4 @@ export const updateUserProfile = async (
   };
 
 
-  export const GetAllUsers = async () => {
-    try {
-      const response = await fetch(`${APIURL}/users`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error al obtener la lista de usuarios. Por favor, intenta de nuevo.');
-      }
-  
-      const responseData = await response.json();
-      console.log('Datos de respuesta (todos los usuarios):', responseData);
-      return responseData;
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      throw error;  // Propagar el error para que pueda ser manejado por el componente
-    }
-  };
-  
+ 
