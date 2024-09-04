@@ -5,7 +5,9 @@ const OrdersPage = () => {
 
 
   return (
-    <FetchOrdersButton/>
+    <div className="bg-black min-h-screen text-white p-4">
+      <FetchOrdersButton />
+    </div>
   );
 };
 

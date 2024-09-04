@@ -47,9 +47,9 @@ const fetchUsers = async (page: number = 1, limit: number = 100): Promise<IUser[
 export const getAuthenticatedUser = async (token: string): Promise<IUser | null> => {
     try {
         const decodedToken: { id: string } = parseJwt(token);
-        console.log('ID decodificado:', decodedToken.id); 
+      
         const users = await fetchUsers();
-        console.log('Usuarios obtenidos:', users);
+        
         // Encuentra el usuario que coincide con el ID del token
         const user = users.find(user => user.id === decodedToken.id); 
         return user || null;
