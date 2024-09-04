@@ -1,18 +1,19 @@
 'use client';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { FaBox } from 'react-icons/fa';
-import { fetchOrders } from '@/helpers/orders.helper';
-import {  useAuth } from '@/components/Context/AuthContext'; 
+import { fetchOrders, fetchOrderDetails } from '@/helpers/orders.helper'; // Asegúrate de tener esta función en helpers
+import { useAuth } from '@/components/Context/AuthContext';
 import Swal from 'sweetalert2';
 
 const FetchOrdersButton: React.FC = () => {
   const { token, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFetchOrders = async () => {
-    if (!token || !user?.id) {
+    if (!user?.id) {
       setError('Falta información de autenticación.');
       Swal.fire('Error', 'Falta información de autenticación.', 'error');
       return;
@@ -22,7 +23,7 @@ const FetchOrdersButton: React.FC = () => {
     setError(null);
 
     try {
-      const data = await fetchOrders(token, user.id);
+      const data = await fetchOrders(user.id);
       console.log('Órdenes obtenidas:', data); // Log de las órdenes obtenidas
       setOrders(data);
       Swal.fire('Éxito', 'Órdenes obtenidas exitosamente.', 'success');
@@ -35,10 +36,18 @@ const FetchOrdersButton: React.FC = () => {
     }
   };
 
+  const handleViewOrderDetails = async (orderId: string) => {
+    try {
+      const orderDetails = await fetchOrderDetails(orderId);
+      setSelectedOrder(orderDetails);
+    } catch (error) {
+      console.error('Error al obtener detalles de la orden:', error);
+      Swal.fire('Error', 'Error al obtener detalles de la orden.', 'error');
+    }
+  };
+
   return (
-    <div className="flex flex-col
-     items-center justify-center
-     mt-6 ">
+    <div className="flex flex-col items-center justify-center mt-6">
       <button
         onClick={handleFetchOrders}
         className="flex text-xl hover:text-pink-400 cursor-pointer mb-4"
@@ -51,11 +60,26 @@ const FetchOrdersButton: React.FC = () => {
       {orders.length === 0 && !loading && <p className="text-gray-500 text-center mb-4">Todavía no hay órdenes.</p>}
       <ul className="list-disc text-center">
         {orders.map(order => (
-          <li key={order.id}>
+          <li key={order.id} onClick={() => handleViewOrderDetails(order.id)} className="cursor-pointer">
             {order.description} - {order.date}
-          </li> 
+          </li>
         ))}
       </ul>
+
+      {selectedOrder && (
+        <div className="mt-6">
+          <h3>Detalles de la Orden</h3>
+          <p>ID: {selectedOrder.id}</p>
+          <p>Descripción: {selectedOrder.description}</p>
+          <p>Fecha: {selectedOrder.date}</p>
+          <p>Items:</p>
+          <ul>
+            {selectedOrder.items.map((item: any) => (
+              <li key={item.id}>{item.name} - {item.quantity}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
