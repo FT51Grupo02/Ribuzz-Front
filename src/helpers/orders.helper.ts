@@ -1,9 +1,10 @@
-export const fetchOrders = async ( id: string) => {
+// helpers/orders.helper.ts
+
+export const fetchOrders = async (id: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, { 
       method: 'GET',
       headers: {
-        
         'Content-Type': 'application/json',
       },
     });
@@ -13,34 +14,12 @@ export const fetchOrders = async ( id: string) => {
     }
 
     const data = await response.json();
-    return data;
+    return data
   } catch (error) {
     console.error('Error en la solicitud de órdenes:', error);
     throw error;
   }
 };
-
-export const fetchOrderDetails = async (orderId: string) => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al obtener los detalles de la orden. Por favor, intenta de nuevo.');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error en la solicitud de detalles de la orden:', error);
-    throw error;
-  }
-};
-
 
 // helpers/orderHelper.ts
 export const createOrder = async (

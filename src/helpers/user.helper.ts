@@ -89,31 +89,25 @@ export const updateUserProfile = async (
   };
 
 
-  export const GetUserById = async (
-    id: string, 
-    data: { name: string; email: string; password: string; }, 
-    token: string,
-    _orders: [],
-  ) => {
+  export const GetAllUsers = async () => {
     try {
-      const response = await fetch(`${APIURL}/users/${id}`, {
-        method: 'PUT',
+      const response = await fetch(`${APIURL}/users`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
       });
   
       if (!response.ok) {
-        throw new Error('Error al actualizar el perfil. Por favor, intenta de nuevo.');
+        throw new Error('Error al obtener la lista de usuarios. Por favor, intenta de nuevo.');
       }
   
       const responseData = await response.json();
-      console.log('Datos de respuesta:', responseData); // Agregado para ver qué datos se están retornando
+      console.log('Datos de respuesta (todos los usuarios):', responseData);
       return responseData;
     } catch (error) {
-      console.error('Error en la solicitud de actualización:', error);
+      console.error('Error en la solicitud:', error);
       throw error;  // Propagar el error para que pueda ser manejado por el componente
     }
   };
+  

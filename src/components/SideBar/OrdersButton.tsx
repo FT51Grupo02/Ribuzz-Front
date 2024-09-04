@@ -1,83 +1,83 @@
 'use client';
-import { useState } from 'react';
-import { FaBox } from 'react-icons/fa';
-import { fetchOrders, fetchOrderDetails } from '@/helpers/orders.helper'; // Asegúrate de tener esta función en helpers
+import React, { useState, useEffect } from 'react';
+import { GetAllUsers } from '@/helpers/user.helper';
+import { fetchOrders } from '@/helpers/orders.helper';
 import { useAuth } from '@/components/Context/AuthContext';
-import Swal from 'sweetalert2';
 
 const FetchOrdersButton: React.FC = () => {
-  const { token, user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedOrderDetails, setSelectedOrderDetails] = useState<any | null>(null);
 
-  const handleFetchOrders = async () => {
-    if (!user?.id) {
-      setError('Falta información de autenticación.');
-      Swal.fire('Error', 'Falta información de autenticación.', 'error');
-      return;
-    }
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      if (user) {
+        try {
+          // Obtén todos los usuarios
+          const allUsers = await GetAllUsers();
+          
+          // Encuentra el usuario específico por ID
+          const currentUser = allUsers.find((u: any) => u.id === user.id);
+          
+          if (currentUser && Array.isArray(currentUser.orders)) {
+            setOrders(currentUser.orders);
+          } else {
+            console.error('Usuario no encontrado o sin órdenes.');
+          }
+        } catch (error) {
+          console.error('Error al obtener los usuarios o las órdenes:', error);
+        }
+      }
+    };
 
-    setLoading(true);
-    setError(null);
+    fetchUserOrders();
+  }, [user]);
 
+  const handleFetchOrderDetails = async (orderId: string) => {
     try {
-      const data = await fetchOrders(user.id);
-      console.log('Órdenes obtenidas:', data); // Log de las órdenes obtenidas
-      setOrders(data);
-      Swal.fire('Éxito', 'Órdenes obtenidas exitosamente.', 'success');
+      const orderDetails = await fetchOrders(orderId);
+      setSelectedOrderDetails(orderDetails);
     } catch (error) {
-      console.error('Error al obtener órdenes:', error);
-      setError('Error al obtener las órdenes');
-      Swal.fire('Error', 'Error al obtener las órdenes.', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleViewOrderDetails = async (orderId: string) => {
-    try {
-      const orderDetails = await fetchOrderDetails(orderId);
-      setSelectedOrder(orderDetails);
-    } catch (error) {
-      console.error('Error al obtener detalles de la orden:', error);
-      Swal.fire('Error', 'Error al obtener detalles de la orden.', 'error');
+      console.error('Error al obtener los detalles de la orden:', error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-6">
-      <button
-        onClick={handleFetchOrders}
-        className="flex text-xl hover:text-pink-400 cursor-pointer mb-4"
-        disabled={loading}
-      >
-        <FaBox className="flex text-xl mr-2" />
-        {loading ? 'Cargando...' : 'Mis Ordenes'}
+    <div>
+      {/* Botón para obtener órdenes */}
+      <button onClick={() => { /* Lógica para recargar órdenes */ }}>
+        Fetch Orders
       </button>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      {orders.length === 0 && !loading && <p className="text-gray-500 text-center mb-4">Todavía no hay órdenes.</p>}
-      <ul className="list-disc text-center">
-        {orders.map(order => (
-          <li key={order.id} onClick={() => handleViewOrderDetails(order.id)} className="cursor-pointer">
-            {order.description} - {order.date}
-          </li>
-        ))}
-      </ul>
 
-      {selectedOrder && (
-        <div className="mt-6">
-          <h3>Detalles de la Orden</h3>
-          <p>ID: {selectedOrder.id}</p>
-          <p>Descripción: {selectedOrder.description}</p>
-          <p>Fecha: {selectedOrder.date}</p>
-          <p>Items:</p>
+      {/* Lista de órdenes */}
+      <div>
+        {orders.length > 0 && (
           <ul>
-            {selectedOrder.items.map((item: any) => (
-              <li key={item.id}>{item.name} - {item.quantity}</li>
+            {orders.map((order) => (
+              <li key={order.id}>
+                <button onClick={() => handleFetchOrderDetails(order.id)}>
+                  Orden ID: {order.id}
+                </button>
+                <p>Nombre: {order.name}</p>
+                <p>Email: {order.email}</p>
+                <p>Fecha: {new Date(order.date).toLocaleDateString()}</p>
+                {order.photo && (
+                  <img src={order.photo} alt={`Foto de ${order.name}`} />
+                )}
+              </li>
             ))}
           </ul>
+        )}
+      </div>
+
+      {/* Detalles de la orden seleccionada */}
+      {selectedOrderDetails && (
+        <div>
+          <h3>Detalles de la Orden:</h3>
+          <p>ID: {selectedOrderDetails.id}</p>
+          <p>Fecha: {new Date(selectedOrderDetails.date).toLocaleDateString()}</p>
+          <p>Pago: {selectedOrderDetails.pay ? selectedOrderDetails.pay : 'No pagado'}</p>
+          {/* Aquí puedes agregar más detalles específicos de la orden */}
         </div>
       )}
     </div>
