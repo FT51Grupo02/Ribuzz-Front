@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image';
-import { FC, useState } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
@@ -48,6 +48,7 @@ const Product: FC<ProductProps> = ({
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
   const [currentReviews, setCurrentReviews] = useState<Review[]>(reviews);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleAddToCart = () => {
     const productToAdd = {
@@ -87,6 +88,23 @@ const Product: FC<ProductProps> = ({
     setSelectedImage(null);
     setIsModalOpen(false);
   };
+
+  // Close modal when clicking outside the image
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        closeModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   return (
     <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
@@ -195,26 +213,36 @@ const Product: FC<ProductProps> = ({
           <button
             type="button"
             onClick={handleAddComment}
-            className="p-2 bg-gradient-to-r from-[#cc1184] to-[#a80054] text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
-          >
-            Enviar comentario
+            className="w-full p-2 bg-gradient-to-r from-[#cc1184] to-[#a80054] text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
+                  >
+            <span className="inline-block text-white hover:scale-110 transition duration-300">
+                Enviar mensaje
+            </span>
           </button>
         </div>
       </div>
 
       {isModalOpen && selectedImage && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <Image
-            src={selectedImage}
-            alt="Selected Image"
-            layout="intrinsic"
-            width={800}
-            height={600}
-            className="rounded-lg"
-          />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+          <div ref={modalRef} className="relative w-full max-w-3xl">
+            <div className="relative w-full">
+              <Image
+                src={selectedImage}
+                alt="Selected Image"
+                layout="responsive"
+                width={1200}
+                height={800}
+                className="rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-white p-2 rounded-full"
+              >
+                <span className="text-5xl">&times;</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

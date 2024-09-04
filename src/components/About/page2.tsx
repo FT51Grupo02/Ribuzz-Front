@@ -38,7 +38,7 @@ const Page2 = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden py-40 max-sm:py-10">
+    <div className="relative flex flex-col items-center justify-center overflow-hidden py-40 max-sm:py-10 min-h-screen">
       <div className="absolute inset-0 rotate-180">
         <video
           autoPlay

@@ -5,7 +5,7 @@ import CardAbout from '../Cards/cardsabout'
 
 const Page3 = () => {
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-start overflow-hidden">
+    <div className="relative w-full flex flex-col items-center justify-start overflow-hidden min-h-screen">
       <div className="relative w-full">
         <div className="absolute inset-0 z-[-1]">
           <Image

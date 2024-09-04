@@ -19,7 +19,7 @@ const Events: React.FC = () => {
     popularity: 'all',
     location: 'all',
   });
-  const eventsPerPage = 3;
+  const eventsPerPage = 2;
 
   useEffect(() => {
     const fetchEvents = async () => {
