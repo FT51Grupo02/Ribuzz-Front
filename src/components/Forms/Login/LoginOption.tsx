@@ -28,7 +28,7 @@ const LoginOption = () => {
       {/* Imagen para pantallas grandes */}
       <div className="hidden md:block md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image 
-          src="/14.png" 
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481346/14_mq20yl.png" 
           alt="Imagen de fondo" 
           fill 
           style={{ objectFit: 'cover' }} 
@@ -41,7 +41,7 @@ const LoginOption = () => {
         {/* Imagen en la parte superior solo en móviles */}
         <div className="md:hidden relative w-full mb-4">
           <Image 
-            src="/5.png" 
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" 
             alt="Logo" 
             width={200} 
             height={100}
@@ -79,7 +79,7 @@ const LoginOption = () => {
                 {/* Imagen debajo de los botones solo en pantallas pequeñas */}
                 <div className="md:hidden flex justify-center mt-14">
                   <Image 
-                    src="/9.png" 
+                    src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/9_wt9yis.png" 
                     alt="Imagen adicional" 
                     width={180} 
                     height={100}

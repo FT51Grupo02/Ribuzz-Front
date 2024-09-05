@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { FooterWithSitemap } from "@/components/Footer/Footer";
 import { AuthProvider } from "@/components/Context/AuthContext";
 import { CartProvider } from "@/components/Context/CartContext";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "RiBuzz",
@@ -32,7 +33,7 @@ export default function RootLayout({
                 <FooterWithSitemap />
               </CartProvider>
             </AuthProvider>
-          
+            <Script src="/node_modules/flowbite/dist/flowbite.min.js" strategy="beforeInteractive" />
       </body>
     </html>
   );
