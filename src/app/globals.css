@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'flowbite/dist/flowbite.css';
 
 @font-face {
     font-family: 'Moonhouse';

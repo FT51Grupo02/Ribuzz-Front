@@ -42,7 +42,7 @@ const LoginUser = () => {
     <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden">
       <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image 
-          src="/14.png" 
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481346/14_mq20yl.png" 
           alt="Imagen de fondo" 
           fill
           style={{ objectFit: 'cover' }}
@@ -54,7 +54,7 @@ const LoginUser = () => {
         {/* Imagen en la parte superior solo en móviles */}
         <div className="md:hidden relative w-full mb-6">
           <Image 
-            src="/5.png" 
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" 
             alt="Logo" 
             width={200} 
             height={100}
