@@ -78,7 +78,7 @@ const RegisterUser = () => {
             Crea una nueva cuenta
           </h3>
           <Formik
-            initialValues={{ name: '', email: '', password: '', date: new Date(), rol: 'cliente' }}
+            initialValues={{ name: '', email: '', password: '', date: new Date(), rol: 'emprendedor' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
             validateOnChange={true}
@@ -158,7 +158,7 @@ const RegisterUser = () => {
                       <span className="ml-2 text-lg">Emprendedor</span>
                     </label>
                     <label className="mr-4 flex items-center">
-                      <Field type="radio" name="rol" value="client" />
+                      <Field type="radio" name="rol" value="cliente" />
                       <span className="ml-2 text-lg">Cliente</span>
                     </label>
                   </div>
