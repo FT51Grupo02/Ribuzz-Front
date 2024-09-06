@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
-import { FiSearch } from "react-icons/fi";
-import debounce from "lodash/debounce";
+import React, { useState, useEffect, useCallback } from 'react';
+import { FiSearch } from 'react-icons/fi';
+import debounce from 'lodash/debounce';
 
 interface SearchBarServicesProps {
-  onSearch: (filters: {
+  onFiltersChange: (filters: {
     search: string;
     rating: string;
     publicationDate: string;
@@ -14,34 +14,36 @@ interface SearchBarServicesProps {
   }) => void;
 }
 
-const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
-  const [search, setSearch] = useState<string>("");
-  const [rating, setRating] = useState<string>("all");
-  const [publicationDate, setPublicationDate] = useState<string>("all");
-  const [popularity, setPopularity] = useState<string>("all");
-  const [location, setLocation] = useState<string>("all");
+const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onFiltersChange }) => {
+  const [search, setSearch] = useState<string>('');
+  const [rating, setRating] = useState<string>('all');
+  const [publicationDate, setPublicationDate] = useState<string>('all');
+  const [popularity, setPopularity] = useState<string>('all');
+  const [location, setLocation] = useState<string>('all');
 
-  const debouncedSearch = useCallback(
+  // Usamos debounce para retrasar la llamada a onFiltersChange cuando cambian los filtros
+  const debouncedFiltersChange = useCallback(
     debounce(() => {
-      onSearch({
+      onFiltersChange({
         search,
         rating,
         publicationDate,
         popularity,
         location,
       });
-    }, 300),
-    [search, rating, publicationDate, popularity, location] // Dependencias de useCallback
+    }, 300), // Tiempo de espera para evitar el refresco continuo
+    [search, rating, publicationDate, popularity, location] // Dependencias del debounce
   );
 
+  // Llamamos a debouncedFiltersChange cada vez que cambian los filtros
   useEffect(() => {
-    debouncedSearch(); // Ejecutar la función de búsqueda con debounce
+    debouncedFiltersChange();
 
-    // Limpiar el debounce al desmontar el componente
+    // Limpiar el debounce cuando el componente se desmonte
     return () => {
-      debouncedSearch.cancel();
+      debouncedFiltersChange.cancel();
     };
-  }, [debouncedSearch]); // Asegurarse de que el useEffect depende de debouncedSearch
+  }, [debouncedFiltersChange]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -81,7 +83,6 @@ const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
           </div>
         </div>
 
-        {/* Filtros */}
         <div className="flex flex-col gap-4 w-full items-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
             <select
@@ -115,8 +116,8 @@ const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
               className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-ellipsis text-overflow-hidden"
             >
               <option value="all">Popularidad</option>
-              <option value="mostPopular">Más vendido</option>
-              <option value="leastPopular">Menos vendido</option>
+              <option value="mostPopular">Más popular</option>
+              <option value="leastPopular">Menos popular</option>
             </select>
 
             <select

@@ -20,17 +20,18 @@ export interface Category {
 }
 
 export interface Product {
-id: string;
-name: string;
-description: string;
-price: number;
-images: string[];
-SellerInfo: SellerInfo;
-categories: Category[];
-details?: string[];
-stock: number;
-reviews?: Review[];
-rating?: number;
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    videos?: string[];
+    images: string[];
+    sellerInfo: SellerInfo; 
+    categories: Category[];
+    details?: string[];
+    stock: number;
+    reviews?: Review[];
+    rating?: number;
 }
 
 export interface Service {
@@ -39,8 +40,9 @@ export interface Service {
     description: string;
     price: number;
     images: string[];
-    ProviderInfo: ProviderInfo;
+    providerInfo: ProviderInfo;
     details?: string[];
+    videos?: string[];
     reviews?: Review[];
     publicationDate: string;
     rating?: number;
@@ -52,7 +54,7 @@ export interface Event {
     description: string;
     price: number;
     images: string[];
-    ProviderInfo: ProviderInfo;
+    providerInfo: ProviderInfo;
     duration: string;
     location: string;
     reviews?: Review[];
@@ -67,7 +69,7 @@ export interface Event {
 
 // Función para calcular el rating promedio
 
-function calculateAverageRating(reviews: Review[]): number {
+export function calculateAverageRating(reviews: Review[]): number {
     if (reviews.length === 0) return 0;
     
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
@@ -76,19 +78,19 @@ function calculateAverageRating(reviews: Review[]): number {
 
 // Funciones para actualizar el rating
 
-function updateProductRating(product: Product): void {
+export function updateProductRating(product: Product): void {
     if (product.reviews) {
         product.rating = calculateAverageRating(product.reviews);
     }
 }
 
-function updateServiceRating(service: Service): void {
+export function updateServiceRating(service: Service): void {
     if (service.reviews) {
         service.rating = calculateAverageRating(service.reviews);
     }
 }
 
-function updateEventRating(event: Event): void {
+export function updateEventRating(event: Event): void {
     if (event.reviews) {
         event.rating = calculateAverageRating(event.reviews);
     }

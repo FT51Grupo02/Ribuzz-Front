@@ -1,47 +1,26 @@
-'use client'
+'use client';
 
 import Image from 'next/image';
 import { FC, useState, useRef, useEffect } from 'react';
 import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
+import type { Product as ProductType, Review } from '@/components/Cards/types';
 
-export interface Review {
-  username: string;
-  comment: string;
-  rating: number;
-}
-
-export interface SellerInfo {
-  name: string;
-  contact: string;
-}
-
-export interface ProductProps {
-  name: string;
-  description: string;
-  images: string[];
-  videos?: string[];
-  sellerInfo?: SellerInfo;
-  details?: string[];
-  reviews?: Review[];
-  price: number;
-  stock: number;
-}
-
-const Product: FC<ProductProps> = ({
+const ProductDetail: FC<ProductType> = ({
+  id,
   name,
   description,
   images = [],
   videos = [],
-  sellerInfo = { name: 'Desconocido', contact: 'No disponible' },
+  sellerInfo,
   details = [],
   reviews = [],
   price,
   stock
 }) => {
   const { addToCart } = useCart();
-  const router = useRouter(); 
+  const router = useRouter();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -52,13 +31,13 @@ const Product: FC<ProductProps> = ({
 
   const handleAddToCart = () => {
     const productToAdd = {
+      id: Number(id), // Convertir id a número
       name,
       price,
       image: images[0], 
       description,
       stock,
       categoryId: 0, 
-      id: Date.now(),
       quantity: 1 
     };
 
@@ -148,8 +127,14 @@ const Product: FC<ProductProps> = ({
           </div>
           <div className="lg:w-2/5">
             <h2 className="text-2xl lg:text-3xl font-semibold mb-4 lg:mb-6 text-pink-400">Vendedor:</h2>
-            <p className="mb-4 text-base lg:text-lg"><strong>Nombre:</strong> {sellerInfo.name}</p>
-            <p className="mb-6 text-base lg:text-lg"><strong>Contacto:</strong> {sellerInfo.contact}</p>
+            {sellerInfo ? (
+              <>
+                <p className="mb-4 text-base lg:text-lg"><strong>Nombre:</strong> {sellerInfo.name}</p>
+                <p className="mb-6 text-base lg:text-lg"><strong>Contacto:</strong> {sellerInfo.contact}</p>
+              </>
+            ) : (
+              <p className="mb-4 text-base lg:text-lg">Información del vendedor no disponible.</p>
+            )}
             {details?.length > 0 && (
               <div className="mb-6 lg:mb-8">
                 <h2 className="text-2xl lg:text-3xl font-semibold mb-4 lg:mb-6 text-pink-400">Detalles:</h2>
@@ -165,7 +150,7 @@ const Product: FC<ProductProps> = ({
               <div className="flex flex-col">
                 <div className="flex-grow">
                   <ul className="space-y-4 lg:space-y-6">
-                    {currentReviews && currentReviews.length > 0 ? (
+                    {currentReviews.length > 0 ? (
                       currentReviews.map((review, idx) => (
                         <li key={idx} className="bg-opacity-80 bg-gradient-to-r from-[#cc1184] to-[#a80054] p-4 lg:p-6 rounded-lg hover:scale-105 transition duration-300">
                           <p className="text-base lg:text-lg"><strong>{review.username}:</strong> {review.comment}</p>
@@ -199,57 +184,30 @@ const Product: FC<ProductProps> = ({
           </div>
         </div>
 
-        <div className="">
-          <div className="flex flex-col sm:flex-row items-start max-sm:items-center justify-between mb-4">
-            <h2 className="text-2xl sm:text-3xl font-semibold text-pink-500 text-center sm:text-left">Déjanos tu opinión:</h2>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 max-sm:items-center">
-              <StarRating rating={selectedRating} onChange={setSelectedRating} />
-            </div>
-          </div>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="w-full p-4 mb-4 rounded-lg bg-black text-white border border-pink-600 bg-opacity-80"
-            rows={4}
-            placeholder="Escribe tu comentario aquí..."
-          />
-          <button
-            type="button"
-            onClick={handleAddComment}
-            className="w-full p-2 bg-gradient-to-r from-[#cc1184] to-[#a80054] text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
-          >
-            <span className="inline-block text-white hover:scale-110 transition duration-300">
-              Enviar mensaje
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {isModalOpen && selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-          <div ref={modalRef} className="relative w-full max-w-3xl">
-            <div className="relative w-full">
+        {isModalOpen && selectedImage && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
+            <div ref={modalRef} className="relative bg-white p-4 rounded-lg max-w-lg mx-4">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 bg-gray-700 text-white p-2 rounded-full"
+              >
+                X
+              </button>
               <Image
                 src={selectedImage}
-                alt="Selected Image"
+                alt="Enlarged view"
                 layout="responsive"
-                width={1200}
-                height={800}
+                width={1000}
+                height={1000}
+                objectFit="contain"
                 className="rounded-lg"
               />
-              <button
-                type="button"
-                onClick={closeModal}
-                className="absolute top-2 right-2 text-white p-2 rounded-full"
-              >
-                <span className="text-5xl">&times;</span>
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default Product;
+export default ProductDetail;

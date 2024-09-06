@@ -3,27 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from './card';
-import { Service, Review } from '@/components/Cards/types';
-
-// Función para calcular el rating promedio
-const calculateAverageRating = (reviews: Review[]): number => {
-  if (reviews.length === 0) return 0;
-  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-  return totalRating / reviews.length;
-};
+import { Service } from '@/components/Cards/types';
 
 interface CardServicesProps {
   services?: Service[];
+  loading: boolean;
+  placeholder?: React.ReactNode; 
 }
 
-const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
+const CardServices: React.FC<CardServicesProps> = ({ services = [], loading, placeholder }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleCardClick = (serviceId: number) => {
     router.push(`/service/${serviceId}`);
@@ -32,6 +21,7 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
+        {/* Spinner de carga */}
         <div className="w-16 h-16 border-4 border-t-4 border-t-cyan-500 border-gray-200 rounded-full animate-spin"></div>
       </div>
     );
@@ -40,9 +30,7 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
   if (services.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen px-4">
-        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">
-          No hay servicios disponibles
-        </h2>
+        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">No hay servicios disponibles</h2>
       </div>
     );
   }
@@ -59,9 +47,9 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
               name={service.name}
               price={service.price.toString()}
               image={service.images[0]} 
-              rating={calculateAverageRating(service.reviews || [])} // Calcular el rating promedio de todas las reseñas
+              rating={service.rating || 0} 
               description={service.description}
-              onClick={() => handleCardClick(Number(service.id))} // Convertir el id a number
+              onClick={() => handleCardClick(Number(service.id))}
             />
           </div>
         ))}
