@@ -7,6 +7,10 @@ import PaginatorProducts from "@/components/Paginator/PaginatorProducts";
 import SearchBarProducts from "@/components/SearchBar/SearchBarProducts";
 import axios from "axios";
 import { Product, Review } from "@/components/Cards/types";
+import useDebounce from '@/hooks/useDebounce';
+
+// Cache de productos
+const cache: { [key: string]: Product } = {}; // Usa string como clave
 
 // Calcula el rating promedio de las reviews
 const calculateAverageRating = (reviews: Review[]): number => {
@@ -15,10 +19,19 @@ const calculateAverageRating = (reviews: Review[]): number => {
   return totalRating / reviews.length;
 };
 
+// Fetch de detalles de productos con cache
+const fetchProductDetails = async (id: string): Promise<Product> => { // Cambia el tipo del parámetro a string
+  if (cache[id]) return cache[id];
+  const { data } = await axios.get<Product>(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`);
+  cache[id] = data;
+  return data;
+};
+
 const Products: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     search: "",
     rating: "all",
@@ -26,15 +39,17 @@ const Products: React.FC = () => {
     price: "all",
     popularity: "all",
   });
+  const [debouncedSearch] = useDebounce(filters.search, 300); // Debounce para la búsqueda
   const productsPerPage = 4;
 
   // Fetch products and apply filters
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const { search, category, price, popularity } = filters;
 
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/search/products`, {
+        const response = await axios.get<Product[]>(`${process.env.NEXT_PUBLIC_API_URL}/search/products`, {
           params: {
             name: search || undefined,
             categories: category !== "all" ? category : undefined,
@@ -49,13 +64,10 @@ const Products: React.FC = () => {
         // Fetch detailed product information
         const productsWithDetails = await Promise.all(
           productsData.map(async (product: Product) => {
-            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`);
-            const detailedProduct = data as Product;
-
+            const detailedProduct = await fetchProductDetails(product.id);
             if (detailedProduct.reviews) {
               detailedProduct.rating = calculateAverageRating(detailedProduct.reviews);
             }
-
             return detailedProduct;
           })
         );
@@ -63,6 +75,8 @@ const Products: React.FC = () => {
         setProducts(productsWithDetails);
       } catch (error) {
         console.error("Error al obtener los productos:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,10 +86,11 @@ const Products: React.FC = () => {
   useEffect(() => {
     // Este efecto es solo para el filtrado local después de recibir los productos
     const filtered = products.filter((product) => {
-      const matchesSearch = product.name.toLowerCase().includes(filters.search.toLowerCase());
-      const matchesRating = filters.rating === "all" || (product.rating && product.rating >= parseInt(filters.rating));
+      const productName = product.name || ""; // Proporciona un valor predeterminado si product.name es undefined
+      const searchQuery = debouncedSearch || ""; // Proporciona un valor predeterminado si debouncedSearch es undefined
 
-      // Asegurar que product.categories es un array de objetos y hacer una comparación adecuada
+      const matchesSearch = productName.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesRating = filters.rating === "all" || (product.rating && product.rating >= parseInt(filters.rating));
       const matchesCategory =
         filters.category === "all" ||
         (Array.isArray(product.categories) &&
@@ -95,7 +110,7 @@ const Products: React.FC = () => {
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     setFilteredProducts(filtered.slice(startIndex, endIndex));
-  }, [products, filters, currentPage]);
+  }, [products, filters, currentPage, debouncedSearch]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -129,25 +144,32 @@ const Products: React.FC = () => {
           Los mejores <span style={{ color: "#DF3381" }}>Productos</span> de Emprendedores
         </h2>
         <SearchBarProducts onFiltersChange={handleFiltersChange} />
-        {filteredProducts.length > 0 ? (
-          <>
-            <CardProducts products={filteredProducts} />
-            <PaginatorProducts
-              currentPage={currentPage}
-              totalPages={Math.ceil(products.length / productsPerPage)}
-              onPageChange={handlePageChange}
-            />
-          </>
-        ) : (
-          <div className="flex justify-center items-center h-screen px-4">
-            <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">
-              No hay productos disponibles
-            </h2>
-          </div>
-        )}
+        <CardProducts
+          products={filteredProducts}
+          loading={loading}
+          placeholder={<ProductPlaceholder />} // Placeholder para carga
+        />
+        <PaginatorProducts
+          currentPage={currentPage}
+          totalPages={Math.ceil(products.length / productsPerPage)}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
 };
+
+// Componente de Placeholder
+const ProductPlaceholder: React.FC = () => (
+  <div className="flex flex-wrap">
+    {[...Array(4)].map((_, index) => (
+      <div key={index} className="w-full md:w-1/2 lg:w-1/4 p-4">
+        <div className="bg-gray-200 animate-pulse h-64"></div>
+        <div className="mt-4 bg-gray-200 animate-pulse h-4 w-3/4"></div>
+        <div className="mt-2 bg-gray-200 animate-pulse h-4 w-1/2"></div>
+      </div>
+    ))}
+  </div>
+);
 
 export default Products;

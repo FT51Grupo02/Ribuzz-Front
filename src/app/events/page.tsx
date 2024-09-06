@@ -25,6 +25,7 @@ const Events: React.FC = () => {
     popularity: 'all',
     location: 'all',
   });
+  const [eventsLoaded, setEventsLoaded] = useState(false); // New state for tracking loading status
   const eventsPerPage = 2; // Ajusta según el número de eventos por página
 
   useEffect(() => {
@@ -60,8 +61,10 @@ const Events: React.FC = () => {
         );
 
         setEvents(eventsWithDetails);
+        setEventsLoaded(true); // Update loading status after events are fetched
       } catch (error) {
         console.error('Error al obtener los eventos:', error);
+        setEventsLoaded(true); // Ensure loading status is updated even on error
       }
     };
 
@@ -133,7 +136,7 @@ const Events: React.FC = () => {
           Los mejores <span style={{ color: '#19BDDA' }}>Eventos</span> de Emprendedores
         </h2>
         <SearchBarEvents onFiltersChange={handleFiltersChange} />
-        <CardEvents events={filteredEvents} />
+        <CardEvents events={filteredEvents} eventsLoaded={eventsLoaded} />
         <PaginatorEvents currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>

@@ -8,16 +8,18 @@ import './CardEvents.css';
 
 interface CardEventsProps {
   events?: Event[];
+  eventsLoaded: boolean; // Add eventsLoaded prop
 }
 
-const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
+const CardEvents: React.FC<CardEventsProps> = ({ events, eventsLoaded }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (eventsLoaded) {
+      setLoading(false);
+    }
+  }, [eventsLoaded]);
 
   const handleViewDetails = (eventId: string) => {
     router.push(`/event/${eventId}`);

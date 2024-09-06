@@ -1,7 +1,7 @@
 'use client';
 
 import { notFound } from 'next/navigation';
-import Service from '@/components/ServiceDetail/Services';
+import Service from '@/components/ServiceDetail/ServiceDetail';
 import { Service as ServiceType } from '@/components/Cards/types';
 
 interface Props {

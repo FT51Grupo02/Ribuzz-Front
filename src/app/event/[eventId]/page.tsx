@@ -1,7 +1,7 @@
 'use client'
 
 import { notFound } from 'next/navigation';
-import Event from '@/components/EventDetail/Events'; 
+import Event from '@/components/EventDetail/EventDetail'; 
 import { Event as EventType, Review } from '@/components/Cards/types';
 
 interface Props {

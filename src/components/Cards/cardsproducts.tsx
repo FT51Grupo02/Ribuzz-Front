@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from './card';
 import { Product } from '@/components/Cards/types';
 
 interface CardProductsProps {
   products?: Product[];
+  loading: boolean;
+  placeholder?: React.ReactNode; 
 }
 
-const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
+const CardProducts: React.FC<CardProductsProps> = ({ products = [], loading }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleCardClick = (productId: string) => {
     router.push(`/product/${productId}`);
@@ -25,6 +21,7 @@ const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
+        {/* Spinner de carga */}
         <div className="w-16 h-16 border-4 border-t-4 border-t-cyan-500 border-gray-200 rounded-full animate-spin"></div>
       </div>
     );
