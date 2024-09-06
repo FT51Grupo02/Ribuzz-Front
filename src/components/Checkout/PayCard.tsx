@@ -142,4 +142,4 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
   );
 };
 
-export default PayCard;
+export default PayCard; 

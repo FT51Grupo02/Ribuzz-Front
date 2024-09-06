@@ -46,42 +46,54 @@ const Checkout: React.FC = () => {
   const handlePlaceOrder = async (paymentIntent: any) => {
     setLoading(true);
     setPaymentSuccess(false);
-
+  
+    console.log("Datos para enviar al backend:");
+    console.log({
+      userId: user?.id,
+      products: selectedProducts.map(item => ({ id: item.id })),
+      service: selectedServices.map(item => ({ id: item.id })),
+      events: selectedEvents.map(item => ({ id: item.id })),
+      totalAmount: total,
+      paymentIntentId: paymentIntent.id,
+      orderDate: orderDate,
+    });
+  
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                userId: user?.id,
-                products: selectedProducts.map(item => ({ id: item.id })), 
-                service: selectedServices.map(item => ({ id: item.id })), 
-                events: selectedEvents.map(item => ({ id: item.id })), 
-                totalAmount: total,
-                paymentIntentId: paymentIntent.id,
-                orderDate: orderDate,
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.error) {
-            setError(result.error);
-            Swal.fire('Error', result.error, 'error');
-        } else {
-            setPaymentSuccess(true);
-            Swal.fire('Éxito', 'Compra realizada con éxito', 'success');
-            clearCart();
-            router.push('/cart');
-        }
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          products: selectedProducts.map(item => ({ id: item.id })),
+          service: selectedServices.map(item => ({ id: item.id })),
+          events: selectedEvents.map(item => ({ id: item.id })),
+          totalAmount: total,
+          paymentIntentId: paymentIntent.id,
+          orderDate: orderDate,
+        }),
+      });
+  
+      const result = await response.json();
+      console.log("Resultado de la respuesta del backend:", result);
+      
+      if (result.error) {
+        setError(result.error);
+        Swal.fire('Error', result.error, 'error');
+      } else {
+        setPaymentSuccess(true);
+        Swal.fire('Éxito', 'Compra realizada con éxito', 'success');
+        clearCart();
+        router.push('/cart');
+      }
     } catch (err) {
-        console.error('Error:', err);
-        setError('Error al realizar la compra.');
-        Swal.fire('Error', 'Error al realizar la compra.', 'error');
+      console.error('Error:', err);
+      setError('Error al realizar la compra.');
+      Swal.fire('Error', 'Error al realizar la compra.', 'error');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -89,7 +101,7 @@ const Checkout: React.FC = () => {
     <div className="min-h-screen bg-black text-white p-4 bg-opacity-80">
       <h1 className="text-3xl font-bold mb-4 text-center">Detalles de la orden</h1>
       <div className="flex flex-col lg:flex-row lg:space-x-8">
-        {/* Información del usuario y productos */}
+     
         <div className="flex-1 mb-4 lg:w-2/3">
           <div className="bg-transparent p-6 rounded-lg shadow-lg border border-transparent mb-6">
             <h2 className="text-2xl text-pink-400 font-bold mb-4 border-b border-gray-600 pb-2">
@@ -130,7 +142,6 @@ const Checkout: React.FC = () => {
           </div>
         </div>
 
-        {/* Componente de pago */}
         <div className="flex-1 lg:w-1/3">
           <Elements stripe={stripe}>
             <PayCard onPaymentSuccess={handlePlaceOrder} />
@@ -141,4 +152,4 @@ const Checkout: React.FC = () => {
   );
 };
 
-export default Checkout;
+export default Checkout;   

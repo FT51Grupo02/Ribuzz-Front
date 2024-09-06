@@ -43,7 +43,7 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
         )}
       </button>
 
-      {/* Menú desplegable del carrito - Desactivado */}
+   
       {false && (  // Cambiado a false para ocultar el desplegable
         <div 
           className="absolute right-0 top-full mt-2 w-60 bg-white shadow-lg rounded-lg p-4 border border-gray-200 z-50"
@@ -73,4 +73,4 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
   );
 };
 
-export default CartIcon;
+export default CartIcon; 

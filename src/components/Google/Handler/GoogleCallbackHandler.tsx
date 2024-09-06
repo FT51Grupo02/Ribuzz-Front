@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/Context/AuthContext';
+import { IUser } from '@/interfaces/Types';
 
 const GoogleCallbackHandler = () => {
   const router = useRouter();
@@ -16,18 +17,24 @@ const GoogleCallbackHandler = () => {
       if (code) {
         try {
           // Realiza una solicitud al backend para intercambiar el código por un token
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback`, {
-            method: 'POST',
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?code=${code}`, {
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ code }),
           });
 
           if (response.ok) {
             const data = await response.json();
-            const token = data.token;
-            const user = data.user; // Asegúrate de que el backend te devuelva el usuario
+            const token = data.accessToken;
+            const user: IUser = {
+              id: data.id,
+              email: data.email,
+              name: data.name,
+              date: data.date, // Asegúrate de que el backend devuelva este campo o ajusta si no está disponible
+              photo: data.photo,
+              // No es necesario incluir el campo 'rol' en IUser si no lo usas en tu interfaz
+            };
 
             // Guardar el token y el usuario en el contexto y local storage
             localStorage.setItem('authToken', token);

@@ -35,7 +35,7 @@ const CartItem: React.FC = () => {
 
   return (
     <div className="relative bg-black bg-opacity-30 rounded-xl mx-auto max-w-4xl p-6">
-      {/* Contenido principal */}
+   
       <div className="relative z-10">
         {isCartEmpty ? (
           <div className="text-center">
@@ -85,7 +85,7 @@ const CartItem: React.FC = () => {
                         +
                       </button>
                     </div>
-                    {/* Contenedor con ancho fijo para el precio y el ícono de eliminar */}
+                  
                     <div className="flex items-center ml-4 w-[150px] justify-between">
                       <span className="text-sm md:text-base text-center w-full">${(product.price * product.quantity).toFixed(2)}</span>
                       <button
@@ -120,3 +120,4 @@ const CartItem: React.FC = () => {
 };
 
 export default CartItem;
+ 

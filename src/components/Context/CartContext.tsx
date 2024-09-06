@@ -3,17 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import Swal from 'sweetalert2'; 
-
-export interface IProduct {
-  name: string;
-  price: number;
-  image: string;
-  description?: string;
-  stock: number;
-  categoryId: number;
-  id: number;
-  quantity: number;
-}
+import {IProduct, IService, IEvent} from '../../interfaces/Cart'
 
 interface CartContextProps {
   cart: IProduct[];
@@ -187,4 +177,4 @@ export const useCart = () => {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-};
+};  

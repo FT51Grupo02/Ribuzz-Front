@@ -1,57 +1,60 @@
-// helpers/orders.helper.ts
+export interface Order {
+  id: string;
+  date: string;
+  pay: string;
+  Details: {
+      total: number;
+      products: {
+          id: string;
+          name: string;
+          price: number;
+      }[];
+  };
+}
 
-export const fetchOrders = async (id: string) => {
+// Helper para obtener las órdenes del usuario
+export const fetchUserOrders = async (userId: string): Promise<Order[]> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, { 
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${userId}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+      });
 
-    if (!response.ok) {
-      throw new Error('Error al obtener las órdenes. Por favor, intenta de nuevo.');
-    }
+      if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+      }
 
-    const data = await response.json();
-    return data
+      const orders = await response.json();
+      console.log("Orders from backend:", orders); // Aquí se muestra lo que viene del backend
+      return orders;
   } catch (error) {
-    console.error('Error en la solicitud de órdenes:', error);
-    throw error;
+      console.error("Error fetching orders:", error);
+      return [];
   }
 };
 
-// helpers/orderHelper.ts
-export const createOrder = async (
-    userId: string,
-    serviceIds: string[],
-    productIds: string[],
-    eventIds: string[],
-   /*  paymentMethodId: string, */
-  /*   token: string */
-  ) => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          service: serviceIds.map(id => ({ id: id.toString() })), // Asegúrate de que `id` sea una cadena
-          products: productIds.map(id => ({ id: id.toString() })), // Asegúrate de que `id` sea una cadena
-          events: eventIds.map(id => ({ id: id.toString() })), // Asegúrate de que `id` sea una cadena
-         /*  payment_method_id: paymentMethodId, */
-        }),
+// Helper para obtener los detalles de una orden específica
+export const fetchOrderById = async (orderId: string): Promise<Order | null> => {
+  try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}` // Autenticación, si es necesario
+          }
       });
-  
+
       if (!response.ok) {
-        throw new Error('Error al crear la orden. Por favor, intenta de nuevo.');
+          throw new Error(`Error: ${response.statusText}`);
       }
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Error en la solicitud de creación de orden:', error);
-      throw error; // Propagar el error para que pueda ser manejado por el componente
-    }
-  };
+
+      const orderDetails = await response.json();
+      console.log("Order details from backend:", orderDetails); // Aquí se muestra lo que viene del backend
+      return orderDetails;
+  } catch (error) {
+      console.error("Error fetching order details:", error);
+      return null;
+  }
+};
