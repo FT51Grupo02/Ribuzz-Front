@@ -43,6 +43,19 @@ export const fetchUsers = async (page: number = 1, limit: number = 100): Promise
     }
 };
 
+export const fetchUsersId = async (id: string): Promise<IUser> => {
+  try {
+    const response = await fetch(`${APIURL}/users/${id}`);
+    if (!response.ok) {
+      throw new Error('Error al recuperar el usuario');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error en la solicitud de usuario:', error);
+    throw new Error('No se pudo recuperar el usuario');
+  }
+};
+
 // Función para obtener el usuario autenticado
 export const getAuthenticatedUser = async (token: string): Promise<IUser | null> => {
     try {

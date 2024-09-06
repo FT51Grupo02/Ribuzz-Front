@@ -1,5 +1,3 @@
-import IProduct from "./IProduct";
-
 
 export interface ILoginPropsUSer {
     email: string;
@@ -15,6 +13,15 @@ export interface ILoginError {
     email?: string;
     password?: string;
 }
+
+export interface IProduct {
+    id: string;
+    name: string;
+    price: string;
+    image: string[]; // Asegúrate de que sea un array de strings
+    description: string;
+    stock: number;
+  }
 
 
 export interface IRegisterProps {
@@ -41,17 +48,17 @@ export type IRegisterError = Partial<IRegisterProps>
 
     export interface IUserSession {
         token: string;  // Token JWT
-        user: IUser;    // Usuario autenticado
+        user: IUser; 
+        
     }
-    
-    // Definición de IUser
+
     export interface IUser {
         id: string;
         name: string;
         email: string;
         date: string;
         photo: string | null;
-        orders: []
+       
     }
 /*  export interface IUserSession {
     token: string;

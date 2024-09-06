@@ -1,4 +1,4 @@
-interface IProduct {
+ interface IProduct {
     id: number;
     name: string;
     description: string;
@@ -9,3 +9,5 @@ interface IProduct {
 }
 
 export default IProduct;
+
+

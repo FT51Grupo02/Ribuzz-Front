@@ -1,4 +1,4 @@
-import FetchOrdersButton from '@/components/SideBar/OrdersButton';
+import OrderButton from '@/components/SideBar/OrdersButton';
 
 
 const OrdersPage = () => {
@@ -6,7 +6,7 @@ const OrdersPage = () => {
 
   return (
     <div className="bg-black min-h-screen text-white p-4">
-      <FetchOrdersButton />
+      <OrderButton />
     </div>
   );
 };
