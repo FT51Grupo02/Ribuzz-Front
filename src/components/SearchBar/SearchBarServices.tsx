@@ -21,7 +21,6 @@ const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
   const [popularity, setPopularity] = useState<string>("all");
   const [location, setLocation] = useState<string>("all");
 
-  // Memorizar la función de debounce para evitar recrearla en cada render
   const debouncedSearch = useCallback(
     debounce(() => {
       onSearch({
@@ -31,7 +30,7 @@ const SearchBarServices: React.FC<SearchBarServicesProps> = ({ onSearch }) => {
         popularity,
         location,
       });
-    }, 0),
+    }, 300),
     [search, rating, publicationDate, popularity, location] // Dependencias de useCallback
   );
 

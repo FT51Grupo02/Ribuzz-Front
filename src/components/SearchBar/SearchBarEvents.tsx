@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
-import { FiSearch } from "react-icons/fi";
-import debounce from "lodash/debounce";
+import React, { useState, useEffect, useCallback } from 'react';
+import { FiSearch } from 'react-icons/fi';
+import debounce from 'lodash/debounce';
 
 interface SearchBarEventsProps {
   onFiltersChange: (filters: {
@@ -30,14 +30,13 @@ const SearchBarEvents: React.FC<SearchBarEventsProps> = ({ onFiltersChange }) =>
         popularity,
         location,
       });
-    }, 0),
-    [search, rating, publicationDate, popularity, location]
+    }, 300),
+    [search, rating, publicationDate, popularity, location, onFiltersChange]
   );
 
   useEffect(() => {
     debouncedFiltersChange();
 
-    // Limpiar el debounce al desmontar el componente
     return () => {
       debouncedFiltersChange.cancel();
     };
@@ -81,13 +80,12 @@ const SearchBarEvents: React.FC<SearchBarEventsProps> = ({ onFiltersChange }) =>
           </div>
         </div>
 
-        {/* Filtros */}
         <div className="flex flex-col gap-4 w-full items-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
             <select
               value={rating}
               onChange={handleRatingChange}
-              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-ellipsis text-overflow-hidden"
             >
               <option value="all">Rating</option>
               <option value="5">5 estrellas</option>
@@ -100,7 +98,7 @@ const SearchBarEvents: React.FC<SearchBarEventsProps> = ({ onFiltersChange }) =>
             <select
               value={publicationDate}
               onChange={handlePublicationDateChange}
-              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-ellipsis text-overflow-hidden"
             >
               <option value="all">Fecha de publicación</option>
               <option value="last24h">Últimas 24 horas</option>
@@ -112,17 +110,17 @@ const SearchBarEvents: React.FC<SearchBarEventsProps> = ({ onFiltersChange }) =>
             <select
               value={popularity}
               onChange={handlePopularityChange}
-              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-ellipsis text-overflow-hidden"
             >
               <option value="all">Popularidad</option>
-              <option value="mostPopular">Más vendido</option>
-              <option value="leastPopular">Menos vendido</option>
+              <option value="mostPopular">Más popular</option>
+              <option value="leastPopular">Menos popular</option>
             </select>
 
             <select
               value={location}
               onChange={handleLocationChange}
-              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full px-4 py-2 border border-cyan-700 bg-black bg-opacity-80 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-ellipsis text-overflow-hidden"
             >
               <option value="all">Ubicación</option>
               <option value="nearby">Cerca de mí</option>

@@ -19,7 +19,7 @@ const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleViewDetails = (eventId: string) => {  // Cambia a string si es necesario
+  const handleViewDetails = (eventId: string) => {
     router.push(`/event/${eventId}`);
   };
 
@@ -34,7 +34,9 @@ const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
   if (!events || events.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen px-4">
-        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">No hay eventos disponibles</h2>
+        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">
+          No hay eventos disponibles
+        </h2>
       </div>
     );
   }
@@ -59,17 +61,21 @@ const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
 
           <div className="flex flex-col justify-between w-full md:w-2/3 lg:w-3/4 p-4 flex-grow">
             <div className="flex flex-col flex-grow">
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-cyan-500 drop-shadow-md">{event.name}</h2>
-              <p className="text-white mt-2 text-sm md:text-base lg:text-lg">{event.date} | {event.location}</p>
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-cyan-500 drop-shadow-md">
+                {event.name}
+              </h2>
+              <p className="text-white mt-2 text-sm md:text-base lg:text-lg">
+                {event.date} | {event.location}
+              </p>
               <p className="text-gray-200 mt-4 text-sm md:text-base lg:text-lg leading-relaxed flex-grow overflow-hidden text-ellipsis">
                 {event.description}
               </p>
             </div>
 
-            <div className="flex flex-col mt-4">
+            <div className="flex flex-col mt-4 max-sm:mt-10">
               <div className="flex items-center mb-2">
                 <span className="text-yellow-400 text-sm md:text-base lg:text-lg">
-                  {Array.from({ length: event.rating }).map((_, index) => (
+                  {Array.from({ length: event.rating ?? 0 }).map((_, index) => (
                     <span key={index} className="inline-block">★</span>
                   ))}
                 </span>
@@ -82,7 +88,7 @@ const CardEvents: React.FC<CardEventsProps> = ({ events }) => {
             </div>
 
             <button
-              onClick={() => handleViewDetails(event.id.toString())}  // Convierte el id a string
+              onClick={() => handleViewDetails(event.id.toString())}
               className="absolute bottom-4 right-4 bg-gradient-to-r from-cyan-500 to-cyan-700 text-white py-2 px-4 rounded-lg shadow-md hover:shadow-lg text-sm md:text-base lg:text-lg transition duration-300 transform hover:scale-105"
             >
               Ver detalles
