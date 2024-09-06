@@ -44,8 +44,8 @@ const PaginatorProducts: React.FC<PaginatorProps> = ({ currentPage, totalPages, 
           onClick={() => handlePageClick(page)}
           className={`px-3 py-1 rounded-lg text-white transition duration-300 hover:scale-110 ${
             page === currentPage
-              ? 'bg-pink-400'
-              : 'bg-pink-600 hover:bg-pink-500'
+              ? 'bg-pink-500'
+              : 'bg-pink-700 hover:bg-pink-500'
           }`}
         >
           {page}

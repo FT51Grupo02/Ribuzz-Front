@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 import { notFound } from 'next/navigation';
-import Product from '@/components/ProductDetail/Products'; 
+import Product from '@/components/ProductDetail/Products';
 import { Product as ProductType } from '@/components/Cards/types';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 const fetchProduct = async (productId: string): Promise<ProductType | null> => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, {
-      cache: 'no-store',
+      cache: 'no-store', 
       method: 'GET',
     });
 
@@ -40,7 +40,7 @@ const ProductPage = async ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className="product-page">
       <Product {...product} />
     </div>
   );

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 interface StarRatingProps {
   rating: number;
-  onChange: (rating: number) => void;
+  onChange: (value: number) => void;
 }
 
-const StarRating: FC<StarRatingProps> = ({ rating, onChange }) => {
+const StarRating: React.FC<StarRatingProps> = ({ rating, onChange }) => {
   const handleClick = (value: number) => {
     onChange(value);
   };
@@ -15,7 +15,8 @@ const StarRating: FC<StarRatingProps> = ({ rating, onChange }) => {
       {[1, 2, 3, 4, 5].map((star) => (
         <span
           key={star}
-          className={`cursor-pointer text-3xl ${star <= rating ? 'text-yellow-500' : 'text-gray-400'}`}
+          className={`cursor-pointer ${star <= rating ? 'text-yellow-500' : 'text-gray-400'}`}
+          style={{ fontSize: '1.5rem' }}
           onClick={() => handleClick(star)}
         >
           ★

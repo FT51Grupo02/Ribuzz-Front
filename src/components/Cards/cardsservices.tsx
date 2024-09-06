@@ -3,7 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from './card';
-import { Service } from '@/components/Cards/types';
+import { Service, Review } from '@/components/Cards/types';
+
+// Función para calcular el rating promedio
+const calculateAverageRating = (reviews: Review[]): number => {
+  if (reviews.length === 0) return 0;
+  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return totalRating / reviews.length;
+};
 
 interface CardServicesProps {
   services?: Service[];
@@ -30,10 +37,12 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
     );
   }
 
-  if (!services || services.length === 0) {
+  if (services.length === 0) {
     return (
       <div className="flex justify-center items-center h-screen px-4">
-        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">No hay servicios disponibles</h2>
+        <h2 className="text-white text-3xl md:text-5xl font-semibold drop-shadow-xl text-center">
+          No hay servicios disponibles
+        </h2>
       </div>
     );
   }
@@ -50,9 +59,9 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [] }) => {
               name={service.name}
               price={service.price.toString()}
               image={service.images[0]} 
-              rating={service.reviews?.[0]?.rating || 0} // Usar el rating de la primera reseña o 0 si no hay reseñas
+              rating={calculateAverageRating(service.reviews || [])} // Calcular el rating promedio de todas las reseñas
               description={service.description}
-              onClick={() => handleCardClick(service.id)}
+              onClick={() => handleCardClick(Number(service.id))} // Convertir el id a number
             />
           </div>
         ))}

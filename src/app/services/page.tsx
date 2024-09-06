@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -6,7 +6,13 @@ import CardServices from '@/components/Cards/cardsservices';
 import PaginatorServices from '@/components/Paginator/PaginatorServices';
 import SearchBarServices from '@/components/SearchBar/SearchBarServices';
 import axios from 'axios';
-import { Service } from '@/components/Cards/types';
+import { Service, Review } from '@/components/Cards/types';
+
+const calculateAverageRating = (reviews: Review[]): number => {
+  if (reviews.length === 0) return 0;
+  const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return totalRating / reviews.length;
+};
 
 const Services: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,12 +30,11 @@ const Services: React.FC = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const { search, rating, publicationDate, popularity, location } = filters;
+        const { search, publicationDate, popularity, location } = filters;
 
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/search/services`, {
           params: {
             name: search || undefined,
-            rating: rating !== 'all' ? rating : undefined,
             publicationDate: publicationDate !== 'all' ? publicationDate : undefined,
             popularity: popularity === 'mostPopular' ? 'alta' : popularity === 'leastPopular' ? 'baja' : undefined,
             location: location !== 'all' ? location : undefined,
@@ -38,7 +43,21 @@ const Services: React.FC = () => {
           },
         });
 
-        setServices(response.data || []);
+        const servicesData = response.data || [];
+
+        // Fetch detailed service information
+        const servicesWithDetails = await Promise.all(servicesData.map(async (service: Service) => {
+          const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/services/${service.id}`);
+          const detailedService = data as Service;
+
+          if (detailedService.reviews) {
+            detailedService.rating = calculateAverageRating(detailedService.reviews);
+          }
+
+          return detailedService;
+        }));
+
+        setServices(servicesWithDetails);
       } catch (error) {
         console.error('Error al obtener los servicios:', error);
       }
@@ -48,9 +67,9 @@ const Services: React.FC = () => {
   }, [currentPage, filters]);
 
   useEffect(() => {
-    const filtered = services.filter((service) => {
+    let filtered = services.filter((service) => {
       const matchesSearch = filters.search === '' || service.name.toLowerCase().includes(filters.search.toLowerCase());
-      const matchesRating = filters.rating === 'all' || service.rating === parseInt(filters.rating);
+      const matchesRating = filters.rating === 'all' || (service.rating !== undefined && service.rating >= parseInt(filters.rating));
       const matchesPublicationDate = filters.publicationDate === 'all' || service.publicationDate === filters.publicationDate;
       return matchesSearch && matchesRating && matchesPublicationDate;
     });

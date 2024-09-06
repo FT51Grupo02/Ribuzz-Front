@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from './card';
-import { Product } from '@/components/Cards/types'; 
+import { Product } from '@/components/Cards/types';
 
 interface CardProductsProps {
-  products?: Product[]; 
+  products?: Product[];
 }
 
 const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
@@ -18,7 +18,7 @@ const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleCardClick = (productId: number) => {
+  const handleCardClick = (productId: string) => {
     router.push(`/product/${productId}`);
   };
 
@@ -50,7 +50,7 @@ const CardProducts: React.FC<CardProductsProps> = ({ products = [] }) => {
               name={product.name}
               price={product.price.toString()}
               image={product.images[0]} 
-              rating={product.rating}
+              rating={product.rating || 0} 
               description={product.description}
               onClick={() => handleCardClick(product.id)}
             />

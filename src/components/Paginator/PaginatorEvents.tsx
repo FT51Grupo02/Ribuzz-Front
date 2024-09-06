@@ -24,8 +24,10 @@ const PaginatorEvents: React.FC<PaginatorProps> = ({ currentPage, totalPages, on
     onPageChange(page);
   };
 
-  // Genera los números de página a mostrar
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+  // Calcula el rango de páginas a mostrar
+  const pagesToShow = 4;
+  const startPage = Math.max(1, Math.floor((currentPage - 1) / pagesToShow) * pagesToShow + 1);
+  const endPage = Math.min(totalPages, startPage + pagesToShow - 1);
 
   return (
     <div className="flex justify-center items-center space-x-4 mt-4">
@@ -38,7 +40,7 @@ const PaginatorEvents: React.FC<PaginatorProps> = ({ currentPage, totalPages, on
       </button>
       
       {/* Botones de número de página */}
-      {pageNumbers.map((page) => (
+      {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((page) => (
         <button
           key={page}
           onClick={() => handlePageClick(page)}

@@ -23,6 +23,7 @@ const SearchBarProducts: React.FC<SearchBarProductsProps> = ({ onFiltersChange }
 
   const debouncedFiltersChange = useCallback(
     debounce(() => {
+      console.log("Filters changed:", { search, rating, category, price, popularity }); // Debugging
       onFiltersChange({
         search,
         rating,
@@ -30,7 +31,7 @@ const SearchBarProducts: React.FC<SearchBarProductsProps> = ({ onFiltersChange }
         price,
         popularity,
       });
-    }, 0),
+    }, 300), // Usar 300ms en lugar de 0 para evitar llamadas excesivas
     [search, rating, category, price, popularity]
   );
 
@@ -74,7 +75,7 @@ const SearchBarProducts: React.FC<SearchBarProductsProps> = ({ onFiltersChange }
                 placeholder="Buscar productos..."
                 value={search}
                 onChange={handleSearchChange}
-                className="pl-10 pr-4 py-2 border placeholder:text-gray-300 border-pink-700 bg-black bg-opacity-80 text-white rounded-lg w-full overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500"
+                className="pl-10 pr-4 py-2 border border-pink-700 bg-black bg-opacity-80 text-white rounded-lg w-full overflow-hidden text-ellipsis whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 placeholder:text-gray-300"
               />
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300" />
             </div>

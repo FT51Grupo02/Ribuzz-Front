@@ -1,11 +1,12 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import StarRating from '@/components/StarRating/StarRating';
 
 interface CardProps {
   name: string;
   price: string;
   image: string;
-  rating: number;
+  rating?: number; 
   description: string;
   onClick: () => void;
   className?: string;
@@ -22,8 +23,11 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const pathname = usePathname(); 
 
-
-  const nameColor = pathname === '/products' ? 'text-pink-400' : pathname === '/services' ? 'text-cyan-400' : 'text-white';
+  const nameColor = pathname === '/products' 
+    ? 'text-pink-400' 
+    : pathname === '/services' 
+    ? 'text-cyan-400' 
+    : 'text-white';
 
   return (
     <div
@@ -75,11 +79,7 @@ const Card: React.FC<CardProps> = ({
           >
             ${price}
           </span>
-          <span className="text-yellow-400">
-            {Array.from({ length: rating }).map((_, index) => (
-              <span key={index} className="inline-block text-lg">★</span>
-            ))}
-          </span>
+          <StarRating rating={rating || 0} onChange={() => {}} />
         </div>
       </div>
     </div>
