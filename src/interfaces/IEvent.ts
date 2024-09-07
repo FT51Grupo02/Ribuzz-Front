@@ -1,4 +1,3 @@
-// src/interfaces/IEvent.ts
 import { ProviderInfo, Review } from './types';
 
 export interface IEvent {

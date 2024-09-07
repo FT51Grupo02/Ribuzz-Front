@@ -1,10 +1,17 @@
+import { SellerInfo, Review, Category } from './types';
+
 export interface IProduct {
     id: string;
     name: string;
+    description: string;
     price: number;
+    videos?: string[];
     images: string[];
-    description?: string;
+    sellerInfo: SellerInfo; 
+    categories: Category[];
+    details?: string[];
     stock: number;
-    categoryId: number;
-    quantity: number;
+    reviews?: Review[];
+    rating?: number;
+    type: 'product';
 }

@@ -6,7 +6,7 @@ import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import { Review, Event } from '@/components/Cards/types';
-import { ICartProduct, ICartEventProduct } from '@/interfaces/Cart';
+import { ICartEvent} from '@/interfaces/Cart';
 
 const EventDetail: FC<Event> = ({
     id,
@@ -33,28 +33,27 @@ const EventDetail: FC<Event> = ({
     const modalRef = useRef<HTMLDivElement>(null);
     
     const handleAddToCart = () => {
-        const eventToAdd: ICartEventProduct = {
+        const eventToAdd: ICartEvent = {
             id,
             name,
             price,
-            images: [], // Asigna las imágenes correspondientes
-            description: "", // Asigna la descripción correspondiente
-            stock: 0, // Asigna el stock correspondiente
+            images: images.slice(0, 1),
+            description, // Usa la descripción proporcionada
+            stock, // Usa el stock proporcionado
             categoryId: 0, // Asigna el ID de categoría correspondiente
-            quantity: 1, // Asigna la cantidad correspondiente
+            quantity, // Usa la cantidad seleccionada
             duration: "", // Asigna la duración correspondiente
             publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
-            sellerInfo: { name: "", contact: "" }, // Asigna la información del vendedor correspondiente
-            location: "", // Asigna la ubicación correspondiente
-            date: "", // Asigna la fecha correspondiente
-            time: [], // Asigna la hora correspondiente
+            location, // Usa la ubicación proporcionada
+            date, // Usa la fecha proporcionada
+            time, // Usa el horario proporcionado
             providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
             type: "event", // Ajusta el tipo a "event"
         };
     
         addToCart(eventToAdd);
         router.push('/cart');
-    };
+};
 
     const handleAddComment = () => {
         if (comment.trim() && selectedRating > 0) {
