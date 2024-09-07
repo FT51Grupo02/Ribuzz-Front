@@ -1,5 +1,3 @@
-'use client';
-
 import { notFound } from 'next/navigation';
 import Service from '@/components/ServiceDetail/ServiceDetail';
 import { Service as ServiceType } from '@/components/Cards/types';
@@ -13,7 +11,7 @@ interface Props {
 const fetchService = async (serviceId: string): Promise<ServiceType | null> => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services/${serviceId}`, {
-      cache: 'no-store',
+      cache: 'no-store', 
       method: 'GET',
     });
 
@@ -40,7 +38,7 @@ const ServicePage = async ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className="service-page">
       <Service {...service} />
     </div>
   );

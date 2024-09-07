@@ -31,7 +31,7 @@ const ProductDetail: FC<ProductType> = ({
 
   const handleAddToCart = () => {
     const productToAdd = {
-      id: Number(id), // Convertir id a número
+      id,
       name,
       price,
       image: images[0], 
@@ -184,24 +184,52 @@ const ProductDetail: FC<ProductType> = ({
           </div>
         </div>
 
+        {/* Sección de comentarios */}
+        <div className="max-lg:mt-5">
+          <div className="flex flex-col sm:flex-row items-start max-sm:items-center justify-between mb-4">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-pink-500 text-center sm:text-left">Déjanos tu opinión:</h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 max-sm:items-center">
+              <StarRating rating={selectedRating} onChange={setSelectedRating} />
+            </div>
+          </div>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            className="w-full p-4 mb-4 rounded-lg bg-black text-white border border-pink-600 bg-opacity-80"
+            rows={4}
+            placeholder="Escribe tu comentario aquí..."
+          />
+          <button
+            type="button"
+            onClick={handleAddComment}
+            className="w-full p-2 bg-gradient-to-r from-[#cc1184] to-[#a80054] text-white rounded-lg hover:bg-gradient-to-l transition duration-300"
+          >
+            <span className="inline-block text-white hover:scale-110 transition duration-300">
+              Enviar mensaje
+            </span>
+          </button>
+        </div>
+
         {isModalOpen && selectedImage && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
-            <div ref={modalRef} className="relative bg-white p-4 rounded-lg max-w-lg mx-4">
-              <button
-                onClick={closeModal}
-                className="absolute top-2 right-2 bg-gray-700 text-white p-2 rounded-full"
-              >
-                X
-              </button>
-              <Image
-                src={selectedImage}
-                alt="Enlarged view"
-                layout="responsive"
-                width={1000}
-                height={1000}
-                objectFit="contain"
-                className="rounded-lg"
-              />
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
+            <div ref={modalRef} className="relative w-full max-w-3xl">
+              <div className="relative w-full">
+                <Image
+                  src={selectedImage}
+                  alt="Selected Image"
+                  layout="responsive"
+                  width={1200}
+                  height={800}
+                  className="rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="absolute top-2 right-2 text-white p-2 rounded-full"
+                >
+                  <span className="text-5xl">&times;</span>
+                </button>
+              </div>
             </div>
           </div>
         )}

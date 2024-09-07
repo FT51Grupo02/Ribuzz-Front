@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from './card';
 import { Service } from '@/components/Cards/types';
@@ -11,10 +11,10 @@ interface CardServicesProps {
   placeholder?: React.ReactNode; 
 }
 
-const CardServices: React.FC<CardServicesProps> = ({ services = [], loading, placeholder }) => {
+const CardServices: React.FC<CardServicesProps> = ({ services = [], loading }) => {
   const router = useRouter();
 
-  const handleCardClick = (serviceId: number) => {
+  const handleCardClick = (serviceId: string) => {
     router.push(`/service/${serviceId}`);
   };
 
@@ -49,7 +49,7 @@ const CardServices: React.FC<CardServicesProps> = ({ services = [], loading, pla
               image={service.images[0]} 
               rating={service.rating || 0} 
               description={service.description}
-              onClick={() => handleCardClick(Number(service.id))}
+              onClick={() => handleCardClick(service.id)}
             />
           </div>
         ))}
