@@ -8,7 +8,6 @@ const GoogleLoginButton = () => {
   const router = useRouter();
 
   const handleGoogleLogin = () => {
-    // Redirige al endpoint de Google login en tu backend
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/login`;
   };
 

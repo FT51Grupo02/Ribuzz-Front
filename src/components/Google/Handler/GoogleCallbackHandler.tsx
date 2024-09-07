@@ -16,7 +16,6 @@ const GoogleCallbackHandler = () => {
 
       if (code) {
         try {
-          // Realiza una solicitud al backend para intercambiar el código por un token
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?code=${code}`, {
             method: 'GET',
             headers: {
@@ -31,12 +30,10 @@ const GoogleCallbackHandler = () => {
               id: data.id,
               email: data.email,
               name: data.name,
-              date: data.date, // Asegúrate de que el backend devuelva este campo o ajusta si no está disponible
+              date: data.date,
               photo: data.photo,
-              // No es necesario incluir el campo 'rol' en IUser si no lo usas en tu interfaz
             };
 
-            // Guardar el token y el usuario en el contexto y local storage
             localStorage.setItem('authToken', token);
             localStorage.setItem('user', JSON.stringify(user));
             setToken(token);
