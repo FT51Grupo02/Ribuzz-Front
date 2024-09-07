@@ -25,10 +25,10 @@ export async function getProductsById(id: string): Promise<IProduct> {
     }
 };
 
-export async function getProductsByCategory(categoryId: number): Promise<IProduct[]> {
+export async function getProductsByCategory(categoryId: string): Promise<IProduct[]> {
     try {
         const products: IProduct[] = await getProductsDB();
-        const productsByCategory = products.filter((product) => product.categoryId === categoryId);
+        const productsByCategory = products.filter((product) => product.categories);
         if (!productsByCategory.length) throw new Error(`No se encontró el producto por ${categoryId}`);
         return productsByCategory;
     } catch (error: any) {

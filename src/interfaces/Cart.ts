@@ -44,7 +44,7 @@ export interface ICartProduct extends IProduct {
     images: string[];
     description: string;
     stock: number;
-    categoryId: number;
+    categoryId: string;
     quantity: number;
     publicationDate: string;
     sellerInfo: { name: string; contact: string };

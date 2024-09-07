@@ -6,7 +6,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext'; // Importar el contexto de autenticación
-import { ILoginPropsEntrep } from '@/interfaces/types';
+import { ILoginPropsEntrep } from '@/interfaces/Types';
 import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
 
 // Definir el esquema de validación usando Yup

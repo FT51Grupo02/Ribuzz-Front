@@ -113,7 +113,7 @@ export interface IService {
     type: 'service';
 }
 
-export interface Product {
+export interface IProduct {
     id: string;
     name: string;
     description: string;
