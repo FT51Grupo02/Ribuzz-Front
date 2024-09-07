@@ -1,4 +1,4 @@
-import { SellerInfo, Review, Category } from './types';
+import { SellerInfo, Review, Category } from './Types';
 
 export interface IProduct {
     id: string;

@@ -1,4 +1,4 @@
-import { ProviderInfo, Review } from './types';
+import { ProviderInfo, Review } from './Types';
 
 export interface IService {
     id: string;

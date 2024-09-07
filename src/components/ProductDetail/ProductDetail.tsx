@@ -38,12 +38,13 @@ const ProductDetail: FC<ProductType> = ({
       images: images.slice(0, 1), // Solo toma la primera imagen
       description: description || "", 
       stock: stock || 0,
-      categoryId: 0, 
+      categoryId: "", 
       quantity: 1, 
       duration: "", 
       publicationDate: new Date().toISOString(), 
       sellerInfo: sellerInfo || { name: "", contact: "" }, 
       type: "product", 
+      categories: []
     };
 
     addToCart(productToAdd);
