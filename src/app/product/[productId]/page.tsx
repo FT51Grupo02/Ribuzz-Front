@@ -1,5 +1,3 @@
-'use client';
-
 import { notFound } from 'next/navigation';
 import Product from '@/components/ProductDetail/ProductDetail';
 import { Product as ProductType } from '@/components/Cards/types';

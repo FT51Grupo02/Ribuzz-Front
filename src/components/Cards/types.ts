@@ -68,7 +68,6 @@ export interface Event {
 }
 
 // Función para calcular el rating promedio
-
 export function calculateAverageRating(reviews: Review[]): number {
     if (reviews.length === 0) return 0;
     
@@ -77,7 +76,6 @@ export function calculateAverageRating(reviews: Review[]): number {
 }
 
 // Funciones para actualizar el rating
-
 export function updateProductRating(product: Product): void {
     if (product.reviews) {
         product.rating = calculateAverageRating(product.reviews);

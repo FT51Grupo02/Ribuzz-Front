@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import Swal from 'sweetalert2'; 
-import {IProduct, IService, IEvent} from '../../interfaces/Cart'
+import { IProduct } from '../../interfaces/Cart';
 
 interface CartContextProps {
   cart: IProduct[];
@@ -71,10 +71,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = (product: IProduct) => {
     if (!token) {
       Swal.fire({
-        title: 'Por favor, inicia sesion!',
-        text: 'Debes iniciar sesion para realizar una compra.',
+        title: 'Por favor, inicia sesión!',
+        text: 'Debes iniciar sesión para realizar una compra.',
         icon: 'error',
-        confirmButtonText: 'Inicia Sesion',
+        confirmButtonText: 'Inicia Sesión',
         customClass: {
           container: 'swal-container'
         }
@@ -84,41 +84,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    const isProductInCart = cart.some(cartItem => cartItem.id === product.id);
-    if (isProductInCart) {
-      Swal.fire({
-        title: 'Ojo!',
-        text: 'Este producto ya se encuentra en el carrito.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        customClass: {
-          container: 'swal-container'
-        }
-      });
-      return;
-    }
-
     setCart(prevCart => {
-      const productIndex = prevCart.findIndex(item => item.id === product.id);
+      const existingProductIndex = prevCart.findIndex(item => item.id === product.id);
 
-      if (productIndex > -1) {
-        Swal.fire({
-          title: 'Ojo!',
-          text: 'Este producto ya se encuentra en el carrito.',
-          icon: 'warning',
-          confirmButtonText: 'OK',
-          customClass: {
-            container: 'swal-container'
-          }
-        });
-        return prevCart;
+      if (existingProductIndex >= 0) {
+        const updatedCart = prevCart.map((item, index) =>
+          index === existingProductIndex
+            ? { ...item, quantity: item.quantity + product.quantity }
+            : item
+        );
+
+        return updatedCart;
       }
 
-      const updatedCart = [...prevCart, { ...product, quantity: 1 }].sort((a, b) => a.price - b.price);
-      return updatedCart;
+      const newProduct = { ...product, quantity: product.quantity };
+      return [...prevCart, newProduct];
     });
+
     Swal.fire({
-      title: 'Exito!',
+      title: 'Éxito!',
       text: 'Producto añadido al carrito.',
       icon: 'success',
       confirmButtonText: 'OK',
@@ -177,4 +161,4 @@ export const useCart = () => {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-};  
+};
