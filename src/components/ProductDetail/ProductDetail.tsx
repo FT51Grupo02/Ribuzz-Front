@@ -32,34 +32,30 @@ const ProductDetail: FC<ProductType> = ({
 
   const handleAddToCart = () => {
     const productToAdd: ICartProduct = {
-        id,
-        name,
-        price,
-        images: [], // Asigna las imágenes correspondientes
-        description: "", // Asigna la descripción correspondiente
-        stock: 0, // Asigna el stock correspondiente
-        categoryId: 0, // Asigna el ID de categoría correspondiente
-        quantity: 1, // Asigna la cantidad correspondiente
-        duration: "", // Asigna la duración correspondiente
-        publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
-        sellerInfo: { name: "", contact: "" }, // Asigna la información del vendedor correspondiente
-        location: "", // Asigna la ubicación correspondiente
-        date: "", // Asigna la fecha correspondiente
-        time: [], // Asigna la hora correspondiente
-        providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
-        type: "event", // Ajusta el tipo a "event"
+      id,
+      name,
+      price,
+      images: images.slice(0, 1), // Solo toma la primera imagen
+      description: description || "", 
+      stock: stock || 0,
+      categoryId: 0, 
+      quantity: 1, 
+      duration: "", 
+      publicationDate: new Date().toISOString(), 
+      sellerInfo: sellerInfo || { name: "", contact: "" }, 
+      type: "product", 
     };
 
     addToCart(productToAdd);
     router.push('/cart');
-};
+  };
 
   const handleAddComment = () => {
     if (selectedRating && comment) {
       const newReview: Review = {
         username: 'Anónimo',
         comment: comment,
-        rating: selectedRating
+        rating: selectedRating,
       };
       setCurrentReviews(prevReviews => [...prevReviews, newReview]);
       setComment('');

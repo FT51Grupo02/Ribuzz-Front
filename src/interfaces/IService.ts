@@ -1,4 +1,3 @@
-// src/interfaces/IService.ts
 import { ProviderInfo, Review } from './types';
 
 export interface IService {

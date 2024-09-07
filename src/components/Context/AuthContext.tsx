@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from "react";
-import { IUser, /* ILoginProps, */ IRegisterProps, IRegisterResponse, ILoginPropsUSer, ILoginPropsEntrep } from "@/interfaces/types";
+import { IUser, IRegisterProps, IRegisterResponse, ILoginPropsUSer, ILoginPropsEntrep } from "@/interfaces/types";
 import { loginEntrepreneurH as authLoginE, loginUserH as authLoginU, register as authRegister } from "@/helpers/auth.helper";
 import { getAuthenticatedUser } from "@/helpers/user.helper";
 
@@ -9,11 +9,10 @@ export interface AuthContextProps {
     user: IUser | null;
     setToken: (token: string | null) => void;
     setUser: (user: IUser | null) => void;
-    /* login: (loginData: ILoginProps) => Promise<boolean>; */
     loginEntrepeneurE: (loginData: ILoginPropsEntrep) => Promise<boolean>;
     loginUserC: (loginData: ILoginPropsUSer) => Promise<boolean>;
     logout: () => void;
-    register: (registerData: IRegisterProps) => Promise<IRegisterResponse | null>; // Devuelve solo el token en caso de éxito
+    register: (registerData: IRegisterProps) => Promise<IRegisterResponse | null>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -21,7 +20,6 @@ export const AuthContext = createContext<AuthContextProps>({
     user: null,
     setToken: () => { throw new Error("setToken no inicializado"); },
     setUser: () => { throw new Error("setUser no inicializado"); },
-    /* login: async () => { throw new Error("login no inicializado"); }, */
     loginEntrepeneurE: async () => { throw new Error("login no inicializado"); },
     loginUserC: async () => { throw new Error("login no inicializado"); },
     logout: () => { throw new Error("logout no inicializado"); },
@@ -37,7 +35,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<IUser | null>(null);
 
     useEffect(() => {
-        // Obtener el token del local storage al iniciar
         const storedToken = localStorage.getItem('authToken');
         if (storedToken) {
             setToken(storedToken);
@@ -46,7 +43,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            
             localStorage.setItem('authToken', token);
         }
     }, [token]);
@@ -61,18 +57,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         const fetchUserData = async () => {
             if (token) {
-               
                 try {
                     const authenticatedUser = await getAuthenticatedUser(token);
-                    if (authenticatedUser) { // Verifica si authenticatedUser no es null
-                       
-    
-                        // Guarda la información del usuario en el estado y en el localStorage
+                    if (authenticatedUser) {
                         setUser(authenticatedUser);
-    
-                        // Guardar el ID y otros datos relevantes en el localStorage
                         localStorage.setItem('userId', authenticatedUser.id);
-                        localStorage.setItem('userFullName', authenticatedUser.name); // Guarda otros datos si es necesario
+                        localStorage.setItem('userFullName', authenticatedUser.name);
                     } else {
                         console.error('El usuario autenticado es null');
                     }
@@ -87,9 +77,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const loginEntrepeneurE = async (userData: ILoginPropsEntrep): Promise<boolean> => {
         try {
             const sessionData = await authLoginE(userData);
-           
             setToken(sessionData.token);
-            setUser(sessionData.user);  // Asegúrate de establecer el usuario aquí
+            setUser(sessionData.user);
             return true;
         } catch (error) {
             console.error("Error en el login", error);
@@ -100,9 +89,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const loginUserC = async (userData: ILoginPropsUSer): Promise<boolean> => {
         try {
             const sessionData = await authLoginU(userData);
-           
             setToken(sessionData.token);
-            setUser(sessionData.user);  // Asegúrate de establecer el usuario aquí
+            setUser(sessionData.user);
             return true;
         } catch (error) {
             console.error("Error en el login", error);
@@ -127,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             return userData;
         } catch (error) {
             console.error("Error en el registro", error);
-            return null;  // Devuelve null en caso de error
+            return null;
         }
     };
 

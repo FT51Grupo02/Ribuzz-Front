@@ -1,3 +1,5 @@
+import { ICartProduct } from "./Cart";
+
 export interface ILoginPropsUSer {
     email: string;
     password: string;
@@ -11,17 +13,6 @@ export interface ILoginPropsEntrep {
 export interface ILoginError {
     email?: string;
     password?: string;
-}
-
-export interface IProduct {
-    id: string;
-    name: string;
-    price: string;
-    image: string[]; // Asegúrate de que sea un array de strings
-    description: string;
-    stock: number;
-    reviews?: Review[]; // Agregar la propiedad reviews
-    rating?: number; // Agregar la propiedad rating
 }
 
 export interface IRegisterProps {
@@ -61,7 +52,7 @@ export interface IOrder {
     id: number;
     status: string;
     date: Date;
-    products: IProduct[];
+    products: ICartProduct[];
 }
 
 // Nuevas interfaces basadas en la información proporcionada
@@ -71,10 +62,20 @@ export interface ProviderInfo {
     contact: string;
 }
 
+export interface SellerInfo {
+    name: string;
+    contact: string;
+}
+
 export interface Review {
     username: string;
     comment: string;
     rating: number;
+}
+
+export interface Category {
+    id: string;
+    name: string;
 }
 
 export interface IEvent {
@@ -110,6 +111,22 @@ export interface IService {
     publicationDate: string;
     rating?: number;
     type: 'service';
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    videos?: string[];
+    images: string[];
+    sellerInfo: SellerInfo; 
+    categories: Category[];
+    details?: string[];
+    stock: number;
+    reviews?: Review[];
+    rating?: number;
+    type: 'product';
 }
 
 // Función para calcular el rating promedio

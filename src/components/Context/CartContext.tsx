@@ -10,6 +10,7 @@ interface CartContextProps {
   clearCart: () => void;
   increaseQuantity: (productId: string) => void;
   decreaseQuantity: (productId: string) => void;
+  updateQuantity: (productId: string, newQuantity: number) => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -40,7 +41,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const decreaseQuantity = (productId: string) => {
     setCart(prevCart =>
       prevCart.map(item =>
-        item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+        item.id === productId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
       )
     );
   };
