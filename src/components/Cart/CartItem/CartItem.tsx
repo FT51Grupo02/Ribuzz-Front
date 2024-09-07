@@ -4,17 +4,7 @@ import { FaTrash } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '../../Context/CartContext';
-
-export interface IProduct {
-  name: string;
-  price: number;
-  image: string;
-  description?: string;
-  stock: number;
-  categoryId: number;
-  id: number;
-  quantity: number;
-}
+import { ICartProduct } from '@/interfaces/Cart'; // Asegúrate de que la ruta sea correcta
 
 const CartItem: React.FC = () => {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -58,7 +48,7 @@ const CartItem: React.FC = () => {
                 >
                   <div className="flex items-center w-full md:w-auto mb-4 md:mb-0">
                     <Image
-                      src={product.image}
+                      src={product.images[0]} // Asegúrate de que sea un array de strings
                       alt={product.name}
                       width={64}
                       height={64}

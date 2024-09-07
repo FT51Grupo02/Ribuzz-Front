@@ -6,6 +6,7 @@ import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import { Review, Event } from '@/components/Cards/types';
+import { ICartProduct, ICartEventProduct } from '@/interfaces/Cart';
 
 const EventDetail: FC<Event> = ({
     id,
@@ -30,19 +31,27 @@ const EventDetail: FC<Event> = ({
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedRating, setSelectedRating] = useState<number>(0);
     const modalRef = useRef<HTMLDivElement>(null);
-
+    
     const handleAddToCart = () => {
-        const eventToAdd = {
+        const eventToAdd: ICartEventProduct = {
             id,
             name,
-            price, // Envía el precio base, el cálculo se hará en el contexto
-            image: images[0],
-            description,
-            stock,
-            categoryId: 0,
-            quantity, // Solo envía la cantidad aquí
+            price,
+            images: [], // Asigna las imágenes correspondientes
+            description: "", // Asigna la descripción correspondiente
+            stock: 0, // Asigna el stock correspondiente
+            categoryId: 0, // Asigna el ID de categoría correspondiente
+            quantity: 1, // Asigna la cantidad correspondiente
+            duration: "", // Asigna la duración correspondiente
+            publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
+            sellerInfo: { name: "", contact: "" }, // Asigna la información del vendedor correspondiente
+            location: "", // Asigna la ubicación correspondiente
+            date: "", // Asigna la fecha correspondiente
+            time: [], // Asigna la hora correspondiente
+            providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
+            type: "event", // Ajusta el tipo a "event"
         };
-
+    
         addToCart(eventToAdd);
         router.push('/cart');
     };
@@ -174,27 +183,25 @@ const EventDetail: FC<Event> = ({
                                         </div>
                                     </div>
 
-    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 mt-8 md:justify-center max-sm:justify-center">
-            <p className="text-white text-base sm:text-lg font-bold mb-4 sm:mb-0 w-32 text-right">
-                 Total: ${price * quantity}
-            </p>
-        <button
-                type="button"
-                onClick={handleAddToCart}
-                className="p-3 text-white font-semibold rounded-xl bg-gradient-to-r from-cyan-700 to-cyan-500 shadow-md hover:shadow-lg transition-shadow text-sm sm:text-base whitespace-nowrap"
-            >
-            <span className="inline-block transition duration-300 hover:scale-110">
-                Agregar al carrito
-            </span>
-        </button>
-    </div>
-
-
-                                </div>
-                            </div>
+                        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 mt-8 md:justify-center max-sm:justify-center">
+                                <p className="text-white text-base sm:text-lg font-bold mb-4 sm:mb-0 w-32 text-right">
+                                    Total: ${price * quantity}
+                                </p>
+                            <button
+                                    type="button"
+                                    onClick={handleAddToCart}
+                                    className="p-3 text-white font-semibold rounded-xl bg-gradient-to-r from-cyan-700 to-cyan-500 shadow-md hover:shadow-lg transition-shadow text-sm sm:text-base whitespace-nowrap"
+                                >
+                                <span className="inline-block transition duration-300 hover:scale-110">
+                                    Agregar al carrito
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
                             <div className="flex flex-col sm:flex-row items-start max-sm:items-center justify-between mb-4 ">
                                 <h2 className="text-2xl sm:text-3xl font-semibold text-cyan-400 text-center sm:text-left">Dejanos tu opinión:</h2>

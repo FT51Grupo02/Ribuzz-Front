@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/Context/AuthContext';
-import { IUser } from '@/interfaces/Types';
+import { IUser } from '@/interfaces/types';
 
 const GoogleCallbackHandler = () => {
   const router = useRouter();

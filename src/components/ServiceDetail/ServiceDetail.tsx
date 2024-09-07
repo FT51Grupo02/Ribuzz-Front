@@ -6,6 +6,7 @@ import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import type { Service as ServiceType, Review } from '@/components/Cards/types';
+import { ICartServiceProduct } from '@/interfaces/Cart';
 
 const ServiceDetail: FC<ServiceType> = ({
     id,
@@ -29,18 +30,26 @@ const ServiceDetail: FC<ServiceType> = ({
     const modalRef = useRef<HTMLDivElement>(null);
 
     const handleAddToCart = () => {
-        const serviceToAdd = {
+        const serviceToAdd: ICartServiceProduct = {
             id,
             name,
             price,
-            image: images[0],
-            description,
-            providerInfo,
-            details: [],
-            stock: 1,
-            quantity: 1
+            images: [], // Asigna las imágenes correspondientes
+            description: "", // Asigna la descripción correspondiente
+            providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
+            details: [], // Asigna los detalles correspondientes
+            stock: 0, // Asigna el stock correspondiente
+            quantity: 1, // Asigna la cantidad correspondiente
+            categoryId: 0, // Asigna el ID de categoría correspondiente
+            duration: "", // Asigna la duración correspondiente
+            publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
+            sellerInfo: { name: "", contact: "" }, // Asigna la información del vendedor correspondiente
+            location: "", // Asigna la ubicación correspondiente
+            date: "", // Asigna la fecha correspondiente
+            time: [], // Asigna la hora correspondiente
+            type: "service", // Ajusta el tipo a "service"
         };
-
+    
         addToCart(serviceToAdd);
         router.push('/cart');
     };

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext';
 import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
-import { IRegisterProps } from '@/interfaces/Types';
+import { IRegisterProps } from '@/interfaces/types';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object().shape({

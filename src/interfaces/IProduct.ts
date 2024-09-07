@@ -1,13 +1,10 @@
- interface IProduct {
-    id: number;
+export interface IProduct {
+    id: string;
     name: string;
-    description: string;
     price: number;
+    images: string[];
+    description?: string;
     stock: number;
-    image: string;
     categoryId: number;
+    quantity: number;
 }
-
-export default IProduct;
-
-

@@ -2,16 +2,7 @@ import React, { useState } from 'react';
 import { FaShoppingCart, FaTimes } from 'react-icons/fa';
 import Image from 'next/image';
 import { useCart } from '@/components/Context/CartContext';
-
-export interface IProduct {
-  name: string;
-  price: number;
-  image: string;
-  description?: string;
-  stock: number;
-  categoryId: number;
-  id: number;
-}
+import { ICartProduct } from '@/interfaces/Cart'; // Ensure the path is correct
 
 interface CartIconProps {
   className?: string;
@@ -26,7 +17,7 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
     <div className={`relative ${className}`}>
       <button
         className={`flex items-center rounded-full hover:ring-1 ${isActive ? 'text-black' : 'text-white'}`}
-        onClick={() => setDropdownOpen(prev => !prev)}  // Alterna el estado del desplegable (abierto/cerrado)
+        onClick={() => setDropdownOpen(prev => !prev)}  // Toggle dropdown state
         aria-label="Cart"
       >
         <Image
@@ -43,8 +34,7 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
         )}
       </button>
 
-   
-      {false && (  // Cambiado a false para ocultar el desplegable
+      {/* {dropdownOpen && (  // Show dropdown if open
         <div 
           className="absolute right-0 top-full mt-2 w-60 bg-white shadow-lg rounded-lg p-4 border border-gray-200 z-50"
           role="menu"
@@ -60,7 +50,7 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
             </button>
           </div>
           <ul className="space-y-2">
-            {cart.map((item: IProduct) => (
+            {cart.map((item: ICartProduct) => (
               <li key={item.id} className="flex justify-between text-gray-700">
                 <span>{item.name}</span>
                 <span>x ${Number(item.price).toFixed(2)}</span>
@@ -68,9 +58,9 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
             ))}
           </ul>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
 
-export default CartIcon; 
+export default CartIcon;

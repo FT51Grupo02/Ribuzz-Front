@@ -6,6 +6,7 @@ import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import type { Product as ProductType, Review } from '@/components/Cards/types';
+import { ICartProduct } from '@/interfaces/Cart';
 
 const ProductDetail: FC<ProductType> = ({
   id,
@@ -30,20 +31,28 @@ const ProductDetail: FC<ProductType> = ({
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleAddToCart = () => {
-    const productToAdd = {
-      id,
-      name,
-      price,
-      image: images[0], 
-      description,
-      stock,
-      categoryId: 0, 
-      quantity: 1 
+    const productToAdd: ICartProduct = {
+        id,
+        name,
+        price,
+        images: [], // Asigna las imágenes correspondientes
+        description: "", // Asigna la descripción correspondiente
+        stock: 0, // Asigna el stock correspondiente
+        categoryId: 0, // Asigna el ID de categoría correspondiente
+        quantity: 1, // Asigna la cantidad correspondiente
+        duration: "", // Asigna la duración correspondiente
+        publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
+        sellerInfo: { name: "", contact: "" }, // Asigna la información del vendedor correspondiente
+        location: "", // Asigna la ubicación correspondiente
+        date: "", // Asigna la fecha correspondiente
+        time: [], // Asigna la hora correspondiente
+        providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
+        type: "event", // Ajusta el tipo a "event"
     };
 
     addToCart(productToAdd);
     router.push('/cart');
-  };
+};
 
   const handleAddComment = () => {
     if (selectedRating && comment) {
