@@ -1,4 +1,4 @@
-import { IUser, IUserSession } from "@/interfaces/Types";
+import { IUser, IUserSession } from "@/interfaces/types";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 

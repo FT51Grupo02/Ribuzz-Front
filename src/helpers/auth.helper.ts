@@ -1,5 +1,5 @@
-import { /* ILoginProps,  */ILoginPropsEntrep, ILoginPropsUSer, IRegisterResponse, IUserSession } from "@/interfaces/Types";
-import { IRegisterProps } from "@/interfaces/Types";
+import { /* ILoginProps,  */ILoginPropsEntrep, ILoginPropsUSer, IRegisterResponse, IUserSession } from "@/interfaces/types";
+import { IRegisterProps } from "@/interfaces/types";
 
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
