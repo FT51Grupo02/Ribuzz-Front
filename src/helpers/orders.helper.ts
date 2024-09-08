@@ -15,7 +15,7 @@ export interface Order {
 // Helper para obtener las órdenes del usuario
 export const fetchUserOrders = async (userId: string): Promise<Order[]> => {
   try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${userId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',

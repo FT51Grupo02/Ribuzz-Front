@@ -47,15 +47,17 @@ const Checkout: React.FC = () => {
     setLoading(true);
     setPaymentSuccess(false);
   
+    // Separar los productos, servicios y eventos en base al tipo
+    const products = cart.filter(item => item.type === "product");
+    const services = cart.filter(item => item.type === "service");
+    const events = cart.filter(item => item.type === "event");
+  
     console.log("Datos para enviar al backend:");
     console.log({
       userId: user?.id,
-      products: selectedProducts.map(item => ({ id: item.id })),
-      service: selectedServices.map(item => ({ id: item.id })),
-      events: selectedEvents.map(item => ({ id: item.id })),
-      totalAmount: total,
-      paymentIntentId: paymentIntent.id,
-      orderDate: orderDate,
+      products: products.map(product => ({ id: product.id })),
+      service: services.map(service => ({ id: service.id })),
+      events: events.map(event => ({ id: event.id })),
     });
   
     try {
@@ -67,18 +69,15 @@ const Checkout: React.FC = () => {
         },
         body: JSON.stringify({
           userId: user?.id,
-          products: selectedProducts.map(item => ({ id: item.id })),
-          service: selectedServices.map(item => ({ id: item.id })),
-          events: selectedEvents.map(item => ({ id: item.id })),
-          totalAmount: total,
-          paymentIntentId: paymentIntent.id,
-          orderDate: orderDate,
+          products: products.map(product => ({ id: product.id })),
+          service: services.map(service => ({ id: service.id })),
+          events: events.map(event => ({ id: event.id })),
         }),
       });
   
       const result = await response.json();
       console.log("Resultado de la respuesta del backend:", result);
-      
+  
       if (result.error) {
         setError(result.error);
         Swal.fire('Error', result.error, 'error');

@@ -11,20 +11,33 @@ const GoogleCallbackHandler = () => {
 
   useEffect(() => {
     const fetchToken = async () => {
+      
       const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
+      const accessToken = urlParams.get('accessToken');
+      const role = urlParams.get('rol'); // rol que manda el backend
 
-      if (code) {
+    /*   if (accessToken && role) {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?code=${code}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-          });
+          }); */
+
+          if (accessToken && role) {
+            try {
+              const response = await fetch(`http://localhost:3000/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+
 
           if (response.ok) {
             const data = await response.json();
+
             const token = data.accessToken;
             const user: IUser = {
               id: data.id,
@@ -32,29 +45,31 @@ const GoogleCallbackHandler = () => {
               name: data.name,
               date: data.date,
               photo: data.photo,
+              role: data.rol,  // almacenamos el rol si es necesario
             };
 
+           
             localStorage.setItem('authToken', token);
             localStorage.setItem('user', JSON.stringify(user));
             setToken(token);
             setUser(user);
 
-            router.push('/'); // Redirige a la página principal o a la ruta deseada
+            router.push('/'); 
           } else {
-            console.error('Error al obtener el token desde el backend');
+            console.error('Error al obtener la respuesta del backend');
           }
         } catch (error) {
           console.error('Error en la solicitud al backend:', error);
         }
       } else {
-        console.error('Código de autenticación no encontrado en la URL');
+        console.error('No se encontraron accessToken o rol en la URL');
       }
     };
 
     fetchToken();
   }, [router, setToken, setUser]);
 
-  return <div>Procesando autenticación...</div>;
+  return <div>Procesando autenticación...</div>; //modificar por el loader
 };
 
 export default GoogleCallbackHandler;

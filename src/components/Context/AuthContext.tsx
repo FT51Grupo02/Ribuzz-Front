@@ -34,26 +34,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<IUser | null>(null);
 
+    // Recuperar token y usuario del localStorage al cargar la página
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken');
+        const storedUser = localStorage.getItem('authUser');
         if (storedToken) {
             setToken(storedToken);
         }
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
     }, []);
 
+    // Guardar token en localStorage cuando cambia
     useEffect(() => {
         if (token) {
             localStorage.setItem('authToken', token);
+        } else {
+            localStorage.removeItem('authToken');
         }
     }, [token]);
 
+    // Guardar usuario en localStorage cuando cambia
     useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
-        if (storedToken) {
-            setToken(storedToken);
+        if (user) {
+            localStorage.setItem('authUser', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('authUser');
         }
-    }, []);
+    }, [user]);
 
+    // Obtener datos del usuario autenticado
     useEffect(() => {
         const fetchUserData = async () => {
             if (token) {
@@ -61,8 +72,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     const authenticatedUser = await getAuthenticatedUser(token);
                     if (authenticatedUser) {
                         setUser(authenticatedUser);
-                        localStorage.setItem('userId', authenticatedUser.id);
-                        localStorage.setItem('userFullName', authenticatedUser.name);
                     } else {
                         console.error('El usuario autenticado es null');
                     }
@@ -102,16 +111,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(null);
         setToken(null);
         localStorage.removeItem('authToken');
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            localStorage.removeItem(`cart_${token}`);
-        }
+        localStorage.removeItem('authUser');
     };
 
     const register = async (registerData: IRegisterProps): Promise<IRegisterResponse | null> => {
         try {
             const userData = await authRegister(registerData);
-            console.log('Datos del usuario registrado:', userData);
             return userData;
         } catch (error) {
             console.error("Error en el registro", error);

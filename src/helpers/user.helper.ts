@@ -30,17 +30,23 @@ export const parseJwt = (token: string) => {
 };
 
 // Función para obtener todos los usuarios
-export const fetchUsers = async (page: number = 1, limit: number = 100): Promise<IUser[]> => {  
-    try {
-        const response = await fetch(`${APIURL}/users?page=${page}&limit=${limit}`);
-        if (!response.ok) {
-            throw new Error('Error al recuperar los usuarios');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error en la solicitud de usuarios:', error);
-        throw new Error('No se pudieron recuperar los usuarios');
-    }
+export const fetchUsers = async (token: string, page: number = 1, limit: number = 100): Promise<IUser[]> => {
+  try {
+      const response = await fetch(`${APIURL}/users?page=${page}&limit=${limit}`, {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+          },
+      });
+      if (!response.ok) {
+          throw new Error('Error al recuperar los usuarios');
+      }
+      const users = await response.json();
+      console.log('Usuarios obtenidos en fetchUsers:', users); // Verifica la lista de usuarios
+      return users;
+  } catch (error) {
+      console.error('Error en la solicitud de usuarios:', error);
+      throw new Error('No se pudieron recuperar los usuarios');
+  }
 };
 
 export const fetchUsersId = async (id: string): Promise<IUser> => {
@@ -56,22 +62,28 @@ export const fetchUsersId = async (id: string): Promise<IUser> => {
   }
 };
 
-// Función para obtener el usuario autenticado
-export const getAuthenticatedUser = async (token: string): Promise<IUser | null> => {
-    try {
-        const decodedToken: { id: string } = parseJwt(token);
-      
-        const users = await fetchUsers();
-        
-        // Encuentra el usuario que coincide con el ID del token
-        const user = users.find(user => user.id === decodedToken.id); 
-        return user || null;
-    } catch (error) {
-        console.error('Error al obtener el usuario autenticado:', error);
-        return null;
-    }
-};
+export const getAuthenticatedUser = (token: string): IUser | null => {
+  try {
+      console.log('Token recibido:', token); // Verifica el token recibido
 
+      const decodedToken: { id: string, correo: string, rol: string } = parseJwt(token);
+      console.log('Token decodificado:', decodedToken); // Verifica el contenido decodificado del token
+
+      // Aquí podrías construir el objeto de usuario basado en el token si ya tienes los datos del usuario
+      const user: IUser = {
+          id: decodedToken.id,
+          email: decodedToken.correo,
+          role: decodedToken.rol,
+          // Otros campos necesarios
+      };
+
+      console.log('Usuario creado desde el token:', user); // Verifica el usuario creado
+      return user || null;
+  } catch (error) {
+      console.error('Error al obtener el usuario autenticado:', error);
+      return null;
+  }
+};
 
 //Helper para actualizar informacion
 
