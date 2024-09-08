@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { FaShoppingCart, FaTimes } from 'react-icons/fa';
 import Image from 'next/image';
 import { useCart } from '@/components/Context/CartContext';
-import { ICartProduct } from '@/interfaces/Cart'; // Ensure the path is correct
 
 interface CartIconProps {
   className?: string;
@@ -33,6 +31,13 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
           </span>
         )}
       </button>
+    </div>
+  );
+};
+
+export default CartIcon;
+
+
 
       {/* {dropdownOpen && (  // Show dropdown if open
         <div 
@@ -59,8 +64,3 @@ const CartIcon: React.FC<CartIconProps> = ({ className, isActive }) => {
           </ul>
         </div>
       )} */}
-    </div>
-  );
-};
-
-export default CartIcon;

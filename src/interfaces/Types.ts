@@ -42,10 +42,11 @@ export interface IUserSession {
 
 export interface IUser {
     id: string;
-    name: string;
+    name?: string;
     email: string;
-    date: string;
-    photo: string | null;
+    date?: string;
+    photo?: string | null;
+    role?: string
 }
 
 export interface IOrder {

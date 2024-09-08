@@ -156,7 +156,7 @@ const Navbar = () => {
                 <CartIcon isActive={isActive('/cart')} />
               </Link>
               <div className="relative flex items-center justify-center border w-8 h-8 text-2xl bg-black text-white  rounded-full">
-                {user ? getInitials(user.name) : ''}
+                {user ? getInitials(user.email) : ''}
               </div>
               <button 
                 onClick={handleLogout} 
