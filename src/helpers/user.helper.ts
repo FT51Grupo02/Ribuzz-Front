@@ -64,10 +64,7 @@ export const fetchUsersId = async (id: string): Promise<IUser> => {
 
 export const getAuthenticatedUser = (token: string): IUser | null => {
   try {
-      console.log('Token recibido:', token); // Verifica el token recibido
-
       const decodedToken: { id: string, correo: string, rol: string , name:string} = parseJwt(token);
-      console.log('Token decodificado:', decodedToken); // Verifica el contenido decodificado del token
 
       // Aquí podrías construir el objeto de usuario basado en el token si ya tienes los datos del usuario
       const user: IUser = {

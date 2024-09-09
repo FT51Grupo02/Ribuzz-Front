@@ -1,5 +1,15 @@
 import { ICartProduct } from "./Cart";
 
+export interface IOrderDetail {
+    id: string;
+    date: string;
+    total: number;
+    products?: IProduct[];
+    events?: IEvent[];
+    service?: IService[];
+    pay?: any; // Ajusta según el tipo de datos de 'pay'
+}
+
 export interface ILoginPropsUSer {
     email: string;
     password: string;

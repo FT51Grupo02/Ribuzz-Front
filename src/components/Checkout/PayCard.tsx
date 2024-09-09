@@ -14,7 +14,7 @@ interface PayCardProps {
 const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { cart } = useCart();
+  const { cart, clearCart  } = useCart();
   const { token } = useAuth();
 
   const formik = useFormik({
@@ -75,6 +75,8 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
           console.error('Error del backend:', paymentIntent.error);
           return;
         }
+
+        clearCart();
 
         onPaymentSuccess(paymentIntent);
         

@@ -88,12 +88,12 @@ const CartItem: React.FC = () => {
                         ${(product.price * product.quantity).toFixed(2)}
                       </span>
                       <button
-                        onClick={() => removeFromCart(product.id)}
-                        className="ml-4 text-pink-700 hover:text-white"
-                        aria-label={`Eliminar ${product.name} del carrito`}
-                      >
-                        <FaTrash size={20} />
-                      </button>
+                          onClick={() => removeFromCart(product.id)}
+                          className="ml-4 text-pink-700 hover:text-white"
+                          aria-label={`Eliminar ${product.name} del carrito`}
+                        >
+                          <FaTrash size={20} />
+                        </button>
                     </div>
                   </div>
                 </div>
