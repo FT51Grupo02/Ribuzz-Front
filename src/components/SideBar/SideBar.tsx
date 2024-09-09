@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { FaHome, FaCalendarAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { BsTicketDetailed } from "react-icons/bs";
 import Image from 'next/image';
 import FetchOrdersButton from './OrdersButton';
 
@@ -20,10 +21,13 @@ const SideBar = () => {
           <FaHome className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/orders">
-          <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
+          <BsTicketDetailed  className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/settings">
           <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
+        </Link>
+        <Link href="/user/orders">
+          <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
       </nav>
       <div className="flex justify-center mt-auto z-10 text-white">

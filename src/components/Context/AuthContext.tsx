@@ -112,6 +112,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setToken(null);
         localStorage.removeItem('authToken');
         localStorage.removeItem('authUser');
+        localStorage.removeItem('cart')
     };
 
     const register = async (registerData: IRegisterProps): Promise<IRegisterResponse | null> => {

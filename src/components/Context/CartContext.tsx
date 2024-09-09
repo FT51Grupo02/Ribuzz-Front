@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { ICartProduct, ICartEvent, ICartService } from '@/interfaces/Cart';
 
 interface CartContextProps {
@@ -18,16 +18,47 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<(ICartProduct | ICartEvent | ICartService)[]>([]);
 
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedCart = localStorage.getItem('cart');
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    }
+  }, []);
+
+  // Guardar el carrito en localStorage cuando cambie
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+  }, [cart]);
+
+
   const addToCart = (item: ICartProduct | ICartEvent | ICartService) => {
-    setCart(prevCart => [...prevCart, item]);
+    setCart(prevCart => {
+      const updatedCart = [...prevCart, item];
+      return updatedCart;
+    });
   };
 
   const removeFromCart = (productId: string) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+    // Filtra el carrito para eliminar el producto con el ID especificado
+    const updatedCart = cart.filter(item => item.id !== productId);
+  
+    // Actualiza el estado del carrito
+    setCart(updatedCart);
+  
+    // Actualiza el carrito en el localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
   const clearCart = () => {
+  
     setCart([]);
+  
+    localStorage.removeItem('cart');
   };
 
   const increaseQuantity = (productId: string) => {
