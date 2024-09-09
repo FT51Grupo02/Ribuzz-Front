@@ -13,7 +13,7 @@ const HomeContainer: React.FC = () => {
       {/* Imagen de fondo */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/10_izka5b.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/10_cebn7l.webp"
           alt="Fondo de página"
           layout="fill"
           objectFit="cover"
@@ -26,7 +26,7 @@ const HomeContainer: React.FC = () => {
         <div className="md:w-1/2 mb-4 md:mb-0 flex justify-center relative">
           {/* Imagen de fondo */}
           <Image
-            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/3_pg8yhj.png"
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/3_tb0ood.webp"
             alt="Imagen descriptiva"
             width={600}
             height={500}
@@ -35,7 +35,7 @@ const HomeContainer: React.FC = () => {
           {/* Imagen de tarjeta */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
-              src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481347/card_bppjep.png"
+              src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918387/card_xmwivc.webp"
               alt="Imagen superpuesta"
               width={300}
               height={200}
@@ -46,7 +46,7 @@ const HomeContainer: React.FC = () => {
         <div className="md:w-1/2 flex flex-col justify-center items-center">
           <div className="w-full flex justify-center mb-4">
             <Image
-              src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/9_wt9yis.png"
+              src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/9_bcgxgy.webp"
               alt="Imagen descriptiva"
               width={600}
               height={500}
@@ -111,7 +111,13 @@ const HomeContainer: React.FC = () => {
             <FaArrowRight className="text-white text-4xl" />
           </div>
           {/* Imagen */}
-          <img src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" alt="Imagen descriptiva" className="my-10 w-44 flex items-center justify-center border-4 border-transparent rounded-full z-20 ml-4"/>
+          <Image 
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/5_yzrcts.webp" 
+          alt="Imagen descriptiva" 
+          className="my-10 w-44 flex items-center justify-center border-4 border-transparent rounded-full z-20 ml-4" 
+          width={176}
+          height={176} 
+        />
         </div>
         <div className="bg-transparent p-6 rounded-lg flex flex-col items-center pt-16">
           <div className="w-36 h-36 flex items-center justify-center border-4 border-white rounded-full">
@@ -139,10 +145,10 @@ const HomeContainer: React.FC = () => {
           <GiSandsOfTime className="text-6xl md:text-8xl lg:text-9xl text-white" />
           <GiReceiveMoney className="text-6xl md:text-8xl lg:text-9xl text-white" />
         </div>
-        <p className="text-center text-2xl md:text-3xl lg:text-3xl font-light text-[#DADDE8]">
-          Empresa - <span className='text-[#00e1d4] font-semibold'>Ahorrar</span> tiempo y costes
+        <p className="text-center text-2xl md:text-3xl lg:text-3xl pt-4 font-light text-[#DADDE8]">
+          Empresa - <span className='text-[#00e1d4] font-semibold'>Ahorrar tiempo y costes </span> 
         </p>
-        <p className="text-center text-2xl md:text-3xl lg:text-3xl font-light text-[#DADDE8]">
+        <p className="text-center text-2xl md:text-3xl lg:text-3xl pt-4 font-light text-[#DADDE8]">
           Soluciones - <span className='text-pink-500 font-semibold'>Confiables y de calidad</span>
         </p>
       </section>
@@ -159,7 +165,13 @@ const HomeContainer: React.FC = () => {
             <p className="text-[#DADDE8] font-light text-2xl text-pink-500">Emprendimiento</p>
             <FaArrowRight className="text-4xl text-[#DADDE8] ml-4" />
           </div>
-          <img src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" alt="Marca" className="w-40 flex items-center justify-center border-4 border-transparent rounded-full z-20 "/>
+          <Image 
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/5_yzrcts.webp" 
+            alt="Marca" 
+            className="w-40 flex items-center justify-center border-4 border-transparent rounded-full z-20" 
+            width={160}
+            height={160}
+          />
           <div className="flex items-center">
             <FaArrowRight className="text-4xl text-[#DADDE8] mr-4" />
             <p className="text-[#DADDE8] font-light text-2xl text-pink-500">Cliente final</p>

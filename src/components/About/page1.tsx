@@ -22,9 +22,9 @@ const Page1 = () => {
             playsInline
             preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
-            poster="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/1_s2zijs.jpg"
+            poster="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/1_cbkjcf.webp"
           >
-            <source src="https://res.cloudinary.com/devnzokpy/video/upload/v1725481350/background_s2hqb4.mp4" type="video/mp4" />
+            <source src="https://res.cloudinary.com/devnzokpy/video/upload/v1725918388/background_bebhwa.webm" type="video/mp4" />
             Tu navegador no soporta el video.
           </video>
         </div>
@@ -53,7 +53,7 @@ const Page1 = () => {
         {/* Image Section */}
         <div className="relative z-10 flex items-center justify-center md:w-1/2 order-1 md:order-2">
           <Image
-            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481347/card_bppjep.png"
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918387/card_xmwivc.webp"
             alt="Card"
             width={300}
             height={300}

@@ -6,7 +6,7 @@ const NotFoundPage = () => {
     <section className="relative flex items-center justify-center h-screen p-8 w-full font-poppins">
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/3_pg8yhj.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/3_tb0ood.webp"
           alt="Background"
           layout="fill"
           objectFit="cover"

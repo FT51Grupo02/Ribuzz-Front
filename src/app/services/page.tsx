@@ -115,7 +115,7 @@ const Services: React.FC = () => {
     <div className="relative">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481346/15_x3wcot.jpg"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/15_p4qtuy.webp"
           alt="Background Image"
           layout="fill"
           objectFit="cover"

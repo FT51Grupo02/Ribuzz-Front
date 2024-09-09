@@ -77,7 +77,7 @@ const Navbar = () => {
             <div>
               {/* Logo para pantallas mayores a 425px */}
               <Image 
-                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/4_pdauvh.png" 
+                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/4_fxsr8a.webp" 
                 alt="Logo" 
                 width={200} 
                 height={60} 
@@ -86,7 +86,7 @@ const Navbar = () => {
               />
               {/* Logo para pantallas menores a 425px */}
               <Image 
-                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481344/5_tom1re.png" 
+                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/5_yzrcts.webp" 
                 alt="Logo" 
                 width={50} 
                 quality={100}
