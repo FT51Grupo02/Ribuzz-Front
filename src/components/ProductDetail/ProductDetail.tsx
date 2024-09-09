@@ -7,6 +7,11 @@ import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import type { Product as ProductType, Review } from '@/components/Cards/types';
 import { ICartProduct } from '@/interfaces/Cart';
+import { useAuth } from '../Context/AuthContext';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const ProductDetail: FC<ProductType> = ({
   id,
@@ -22,6 +27,7 @@ const ProductDetail: FC<ProductType> = ({
 }) => {
   const { addToCart } = useCart();
   const router = useRouter();
+  const { user, token } = useAuth();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -30,12 +36,27 @@ const ProductDetail: FC<ProductType> = ({
   const [currentReviews, setCurrentReviews] = useState<Review[]>(reviews || []);
   const modalRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/products/${id}`);
+        const productData = response.data;
+
+        setCurrentReviews(productData.reviews);
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
+    };
+
+    fetchProductDetails();
+  }, [id]);
+
   const handleAddToCart = () => {
     const productToAdd: ICartProduct = {
       id,
       name,
       price,
-      images: images.slice(0, 1), // Solo toma la primera imagen
+      images: images.slice(0, 1),
       description: description || "", 
       stock: stock || 0,
       categoryId: "", 
@@ -51,16 +72,48 @@ const ProductDetail: FC<ProductType> = ({
     router.push('/cart');
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
+    if (!user || !token) {
+      Swal.fire({
+        title: '¡Inicia sesión para comentar!',
+        text: 'Debes estar autenticado para poder dejar un comentario.',
+        icon: 'warning',
+        confirmButtonText: 'Iniciar sesión',
+        confirmButtonColor: '#cc1184',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#a80054',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/login');
+        }
+      });
+      return;
+    }
+  
     if (selectedRating && comment) {
-      const newReview: Review = {
-        username: 'Anónimo',
+      const newReview = {
+        userId: user.id, 
+        productsId: id,
+        username: user.name,
         comment: comment,
         rating: selectedRating,
       };
-      setCurrentReviews(prevReviews => [...prevReviews, newReview]);
-      setComment('');
-      setSelectedRating(0);
+  
+      try {
+        console.log('Enviando comentario:', newReview);
+        const response = await axios.post(`${API_URL}/reviews/products`, newReview, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('Respuesta de la API:', response.data);
+        setCurrentReviews(prevReviews => [...prevReviews, response.data]);
+        setComment('');
+        setSelectedRating(0);
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
     }
   };
 

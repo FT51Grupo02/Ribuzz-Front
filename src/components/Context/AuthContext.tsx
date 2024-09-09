@@ -117,6 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const register = async (registerData: IRegisterProps): Promise<IRegisterResponse | null> => {
         try {
             const userData = await authRegister(registerData);
+            console.log(userData)
             return userData;
         } catch (error) {
             console.error("Error en el registro", error);

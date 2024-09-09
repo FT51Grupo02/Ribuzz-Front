@@ -134,7 +134,7 @@ const UpdateProfile: React.FC = () => {
                                     }}
                                 />
                                 {errors.name && touched.name ? (
-                                    <div className="text-red-500 text-sm">{errors.name}</div>
+                                    <div className="text-pink-400 text-sm pt-2">{errors.name}</div>
                                 ) : null}
                             </div>
 
@@ -152,7 +152,7 @@ const UpdateProfile: React.FC = () => {
                                     }}
                                 />
                                 {errors.email && touched.email ? (
-                                    <div className="text-red-500 text-sm">{errors.email}</div>
+                                    <div className="text-pink-400 text-sm pt-2">{errors.email}</div>
                                 ) : null}
                             </div>
 
@@ -170,7 +170,7 @@ const UpdateProfile: React.FC = () => {
                                     }}
                                 />
                                 {errors.password && touched.password ? (
-                                    <div className="text-red-500 text-sm">{errors.password}</div>
+                                    <div className="text-pink-400 text-sm pt-2">{errors.password}</div>
                                 ) : null}
                             </div>
                         </div>
