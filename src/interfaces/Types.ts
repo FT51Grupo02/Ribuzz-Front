@@ -42,7 +42,7 @@ export interface IUserSession {
 
 export interface IUser {
     id: string;
-    name?: string;
+    name: string;
     email: string;
     date?: string;
     photo?: string | null;
