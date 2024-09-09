@@ -1,12 +1,17 @@
 'use client';
 
-import React, { FC, useState, useRef } from 'react';
+import React, { FC, useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { useCart } from '../Context/CartContext';
 import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import { Review, Event } from '@/components/Cards/types';
 import { ICartEvent } from '@/interfaces/Cart';
+import { useAuth } from '../Context/AuthContext';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const EventDetail: FC<Event> = ({
     id,
@@ -24,14 +29,31 @@ const EventDetail: FC<Event> = ({
 }) => {
     const { addToCart } = useCart();
     const router = useRouter();
+    const { user, token } = useAuth(); 
+
     const [quantity, setQuantity] = useState(1);
     const [comment, setComment] = useState('');
     const [userReviews, setUserReviews] = useState<Review[]>(reviews);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const [selectedRating, setSelectedRating] = useState<number>(0); // Definir selectedRating
+    const [selectedRating, setSelectedRating] = useState<number>(0);
     const modalRef = useRef<HTMLDivElement>(null);
-    
+
+    useEffect(() => {
+        const fetchEventDetails = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/events/${id}`);
+                const eventData = response.data;
+
+                setUserReviews(eventData.reviews);
+            } catch (error) {
+                console.error('Error fetching event details:', error);
+            }
+        };
+
+        fetchEventDetails();
+    }, [id]);
+
     const handleAddToCart = () => {
         const eventToAdd: ICartEvent = {
             id,
@@ -55,12 +77,48 @@ const EventDetail: FC<Event> = ({
         router.push('/cart');
     };
 
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
+        if (!user || !token) {
+          Swal.fire({
+            title: '¡Inicia sesión para comentar!',
+            text: 'Debes estar autenticado para poder dejar un comentario.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar sesión',
+            confirmButtonColor: '#cc1184',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor: '#a80054',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              router.push('/login');
+            }
+          });
+          return;
+        }
+
         if (comment.trim() && selectedRating > 0) {
-            const newReview: Review = { username: 'Anónimo', comment: comment.trim(), rating: selectedRating };
-            setUserReviews((prevReviews) => [...prevReviews, newReview]);
-            setComment('');
-            setSelectedRating(0);
+            const newReview = {
+                userId: user.id,
+                eventId: id,
+                username: user.name,
+                comment: comment.trim(),
+                rating: selectedRating,
+            };
+
+            try {
+                console.log('Enviando comentario:', newReview);
+                const response = await axios.post(`${API_URL}/reviews/event`, newReview, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log('Respuesta de la API:', response.data);
+                setUserReviews(prevReviews => [...prevReviews, response.data]);
+                setComment('');
+                setSelectedRating(0);
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
         }
     };
 
@@ -73,6 +131,22 @@ const EventDetail: FC<Event> = ({
         setSelectedImage(null);
         setIsModalOpen(false);
     };
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+                closeModal();
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isModalOpen]);
 
     return (
         <div className="relative min-h-screen flex flex-col bg-black text-white">

@@ -7,6 +7,11 @@ import { useRouter } from 'next/navigation';
 import StarRating from '@/components/StarRating/StarRating';
 import type { Service as ServiceType, Review } from '@/components/Cards/types';
 import { ICartService } from '@/interfaces/Cart';
+import { useAuth } from '../Context/AuthContext';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const ServiceDetail: FC<ServiceType> = ({
     id,
@@ -21,6 +26,7 @@ const ServiceDetail: FC<ServiceType> = ({
 }) => {
     const { addToCart } = useCart();
     const router = useRouter();
+    const { user, token } = useAuth(); 
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -29,40 +35,87 @@ const ServiceDetail: FC<ServiceType> = ({
     const [currentReviews, setCurrentReviews] = useState<Review[]>(reviews || []);
     const modalRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        const fetchServiceDetails = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/services/${id}`);
+                const serviceData = response.data;
+
+                setCurrentReviews(serviceData.reviews);
+            } catch (error) {
+                console.error('Error fetching service details:', error);
+            }
+        };
+
+        fetchServiceDetails();
+    }, [id]);
+
     const handleAddToCart = () => {
         const serviceToAdd: ICartService = {
             id,
             name,
             price,
             images: images.slice(0, 1),
-            description, // Asigna la descripción correspondiente
-            providerInfo: { name: "", contact: "" }, // Asigna la información del proveedor correspondiente
-            details: [], // Asigna los detalles correspondientes
-            stock: 0, // No tiene stock
-            quantity: 1, // Asigna la cantidad correspondiente
-            categoryId: 0, // Asigna el ID de categoría correspondiente
-            duration: "", // Asigna la duración correspondiente
-            publicationDate: new Date().toISOString(), // Asigna la fecha de publicación correspondiente
-            location: "", // Asigna la ubicación correspondiente
-            date: "", // Asigna la fecha correspondiente
-            time: [], // Asigna la hora correspondiente
-            type: "service", // Ajusta el tipo a "service"
+            description,
+            providerInfo: providerInfo || { name: "", contact: "" },
+            details: details,
+            stock: 0,
+            quantity: 1,
+            categoryId: 0,
+            duration: "",
+            publicationDate: new Date().toISOString(),
+            location: "", 
+            date: "", 
+            time: [],
+            type: "service", 
         };
     
         addToCart(serviceToAdd);
         router.push('/cart');
     };
 
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
+        if (!user || !token) {
+          Swal.fire({
+            title: '¡Inicia sesión para comentar!',
+            text: 'Debes estar autenticado para poder dejar un comentario.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar sesión',
+            confirmButtonColor: '#cc1184',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor: '#a80054',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              router.push('/login');
+            }
+          });
+          return;
+        }
+
         if (selectedRating && comment) {
-            const newReview: Review = {
-                username: 'Anónimo',
-                comment,
-                rating: selectedRating
+            const newReview = {
+                userId: user.id,
+                serviceId: id,
+                username: user.name,
+                comment: comment,
+                rating: selectedRating,
             };
-            setCurrentReviews(prevReviews => [...prevReviews, newReview]);
-            setComment('');
-            setSelectedRating(0);
+
+            try {
+                console.log('Enviando comentario:', newReview);
+                const response = await axios.post(`${API_URL}/reviews/service`, newReview, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log('Respuesta de la API:', response.data);
+                setCurrentReviews(prevReviews => [...prevReviews, response.data]);
+                setComment('');
+                setSelectedRating(0);
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
         }
     };
 

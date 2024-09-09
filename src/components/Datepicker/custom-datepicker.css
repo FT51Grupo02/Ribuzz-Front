@@ -35,12 +35,51 @@
     gap: 0.5rem; /* Espaciado entre los días */
 }
 
+/* Estilo para los días del calendario */
 .react-datepicker__day {
     color: #e0e0e0; /* Color de los días en gris claro */
     font-size: 1rem; /* Tamaño de fuente ajustado */
     padding: 0.5rem; /* Espaciado interno de los días ajustado */
-    transition: background-color 0.2s ease, color 0.2s ease; /* Transición suave del color y fondo */
+    border-radius: 0.5rem; /* Borde redondeado siempre presente */
     text-align: center; /* Centra el texto de los días */
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; /* Transición suave del color, fondo y otros efectos */
+}
+
+/* Estilo para el hover sobre los días */
+.react-datepicker__day:hover {
+    color: #ffffff; /* Color del texto al hacer hover */
+    background-color: #6246E5; /* Fondo más oscuro al hacer hover en violeta */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra más pronunciada */
+    transform: scale(1.05); /* Efecto de aumento al hacer hover */
+}
+
+/* Estilo para el día seleccionado */
+.react-datepicker__day--selected {
+    background-color: #5238c6; /* Fondo del día seleccionado en violeta */
+    color: #ffffff; /* Color del texto del día seleccionado */
+    border-radius: 0.5rem; /* Radio del borde del día seleccionado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Mantiene la sombra cuando el día está seleccionado */
+}
+
+/* Estilo para el día seleccionado al hacer hover */
+.react-datepicker__day--selected:hover {
+    background-color: #6246E5; /* Fondo del día seleccionado al hacer hover */
+    transform: scale(1.08); /* Aumenta un poco más el tamaño al hacer hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más profunda */
+}
+
+/* Estilo para el día seleccionado por teclado */
+.react-datepicker__day--keyboard-selected {
+    background-color: #4725b0; /* Fondo del día seleccionado por teclado en violeta oscuro */
+    color: #ffffff; /* Color del texto del día seleccionado por teclado */
+    border-radius: 0.5rem; /* Mantiene los bordes redondeados */
+}
+
+/* Estilo para el día actual */
+.react-datepicker__day--today {
+    border-radius: 0.5rem; /* Radio del borde del día actual */
+    background-color: rgba(98, 70, 229, 0.3); /* Fondo del día actual con opacidad menor */
+    color: #ffffff; /* Color del texto del día actual */
 }
 
 /* Estilo para los días de la semana */
@@ -49,26 +88,6 @@
     font-size: 0.875rem; /* Tamaño de fuente ajustado */
     padding: 0.25rem; /* Espaciado interno ajustado */
     text-align: center; /* Centra el texto de los nombres de los días de la semana */
-}
-
-/* Estilo para el día seleccionado */
-.react-datepicker__day--selected {
-    background-color: #5238c6; /* Fondo del día seleccionado en violeta */
-    color: #ffffff; /* Color del texto del día seleccionado */
-    border-radius: 0.5rem; /* Radio del borde del día seleccionado */
-}
-
-/* Estilo para el día seleccionado por teclado */
-.react-datepicker__day--keyboard-selected {
-    background-color: #4725b0; /* Fondo del día seleccionado por teclado en violeta oscuro */
-    color: #ffffff; /* Color del texto del día seleccionado por teclado */
-}
-
-/* Estilo para el día actual */
-.react-datepicker__day--today {
-    border-radius: 0.5rem; /* Radio del borde del día actual */
-    background-color: rgba(98, 70, 229, 0.3); /* Fondo del día actual con opacidad menor */
-    color: #ffffff; /* Color del texto del día actual */
 }
 
 /* Estilo para el triángulo del calendario */
@@ -96,3 +115,24 @@
     border-radius: 0.5rem; /* Radio del borde al hacer hover */
 }
 
+/* Estilo para la cuadrícula de la semana */
+.react-datepicker__week {
+    display: grid; /* Usa grid para una cuadrícula perfecta */
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas, una para cada día de la semana */
+    gap: 0.5rem; /* Espaciado entre los días */
+    align-items: center; /* Alinea verticalmente los días y nombres */
+}
+
+/* Estilo para los días del calendario */
+.react-datepicker__day {
+    color: #e0e0e0; /* Color de los días en gris claro */
+    font-size: 1rem; /* Tamaño de fuente ajustado */
+    padding: 0.5rem; /* Espaciado interno de los días ajustado */
+    border-radius: 0.5rem; /* Borde redondeado siempre presente */
+    text-align: center; /* Centra el texto de los días */
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease; /* Transición suave del color, fondo y otros efectos */
+    display: flex; /* Asegura que el contenido sea flexible */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente el contenido */
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+}
