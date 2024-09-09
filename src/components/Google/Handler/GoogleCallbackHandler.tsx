@@ -16,24 +16,14 @@ const GoogleCallbackHandler = () => {
       const accessToken = urlParams.get('accessToken');
       const role = urlParams.get('rol'); // rol que manda el backend
 
-    /*   if (accessToken && role) {
+    if (accessToken && role) {
         try {
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-          }); */
-
-          if (accessToken && role) {
-            try {
-              const response = await fetch(`http://localhost:3000/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-
+          }); 
 
           if (response.ok) {
             const data = await response.json();
