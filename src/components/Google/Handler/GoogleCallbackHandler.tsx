@@ -14,8 +14,8 @@ const GoogleCallbackHandler = () => {
       
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('accessToken');
-      const role = urlParams.get('rol'); // rol que manda el backend
-
+      const role = urlParams.get('rol'); 
+      
     if (accessToken && role) {
         try {
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {

@@ -66,7 +66,7 @@ export const getAuthenticatedUser = (token: string): IUser | null => {
   try {
       console.log('Token recibido:', token); // Verifica el token recibido
 
-      const decodedToken: { id: string, correo: string, rol: string } = parseJwt(token);
+      const decodedToken: { id: string, correo: string, rol: string , name:string} = parseJwt(token);
       console.log('Token decodificado:', decodedToken); // Verifica el contenido decodificado del token
 
       // Aquí podrías construir el objeto de usuario basado en el token si ya tienes los datos del usuario
@@ -74,6 +74,7 @@ export const getAuthenticatedUser = (token: string): IUser | null => {
           id: decodedToken.id,
           email: decodedToken.correo,
           role: decodedToken.rol,
+          name: decodedToken.name
           // Otros campos necesarios
       };
 
