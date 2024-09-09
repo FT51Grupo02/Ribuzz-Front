@@ -47,9 +47,9 @@ const Page2 = () => {
           playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
-          poster="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/1_s2zijs.jpg"
+          poster="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/1_cbkjcf.webp"
         >
-          <source src="https://res.cloudinary.com/devnzokpy/video/upload/v1725481350/background2_l0vr5x.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/devnzokpy/video/upload/v1725918391/background2_pqywrf.webm" type="video/mp4" />
           Tu navegador no soporta el video.
         </video>
       </div>
@@ -95,7 +95,7 @@ const Page2 = () => {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed mb-4 sm:mb-6 md:mb-8 text-cyan-100">{content[activeIndex]}</p>
             <div className="flex justify-center">
               <Image
-                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/11_quhnta.png"
+                src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/11_glr3g8.webp"
                 alt="Logo"
                 width={200}
                 height={50}

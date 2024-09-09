@@ -117,7 +117,7 @@ const Events: React.FC = () => {
     <div className="relative">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481346/12_vrxcte.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/12_rryish.webp"
           alt="Background Image"
           layout="fill"
           objectFit="cover"

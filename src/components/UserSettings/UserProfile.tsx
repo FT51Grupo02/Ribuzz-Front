@@ -9,11 +9,11 @@ interface UserProfileFormProps {
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSubmit }) => {
   const { user } = useAuth();
-  const [imagePreview, setImagePreview] = useState<string>(user?.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png');
+  const [imagePreview, setImagePreview] = useState<string>(user?.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
 
   useEffect(() => {
     if (user) {
-      setImagePreview(user.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png');
+      setImagePreview(user.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
     }
   }, [user]);
 

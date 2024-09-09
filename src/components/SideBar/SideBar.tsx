@@ -8,7 +8,7 @@ const SideBar = () => {
   return (
     <div className="relative flex flex-col justify-between h-full p-4 text-white">
       <Image
-        src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481345/13_xj9pdg.png"
+        src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/13_vkmbmp.webp"
         alt="Background Image"
         layout="fill"
         objectFit="cover"
