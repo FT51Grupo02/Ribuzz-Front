@@ -1,6 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import CreateProduct from '../Forms/Create/CreateProducts'; 
+import CreateEvent from '../Forms/Create/CreateEvent';
+import CreateService from '../Forms/Create/CreateService';
 
 const CreatePSE = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
@@ -33,7 +35,10 @@ const CreatePSE = () => {
       </div>
 
       {activeForm === 'product' && <CreateProduct />}
-      {/* Aquí puedes agregar condicionalmente los formularios para Evento y Servicio */}
+      {activeForm === 'event' && <CreateEvent />}
+      {activeForm === 'service' && <CreateService/>}
+      
+      
     </div>
   );
 };

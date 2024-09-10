@@ -168,9 +168,13 @@ const Navbar = () => {
               >
                 <CartIcon isActive={isActive('/cart')} />
               </Link>
-              <div className="relative flex items-center justify-center border w-8 h-8 text-2xl bg-black text-white  rounded-full">
-                {user ? getInitials(user.name) : ''}
-              </div>
+              <Link
+              href="/user" >
+                <div className="relative flex items-center justify-center border w-8 h-8 text-2xl bg-black text-white  rounded-full">
+                  {user ? getInitials(user.name) : ''}
+                </div>
+              </Link>
+             
               <button 
                 onClick={handleLogout} 
                 className="hidden md:block text-white focus:outline-none "

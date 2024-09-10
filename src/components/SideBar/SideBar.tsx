@@ -6,6 +6,7 @@ import { BsTicketDetailed } from 'react-icons/bs';
 import { useAuth } from '@/components/Context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Image from 'next/image';
 import FetchOrdersButton from './OrdersButton';
 import Swal from 'sweetalert2'; 
@@ -64,6 +65,11 @@ const handleLogout = () => {
         {user?.role === 'emprendedor' && (
           <Link href="/user/settings">
             <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
+          </Link>
+        )}
+          {user?.role === 'emprendedor' && (
+          <Link href="/user/myevents">
+            <MdOutlineCreateNewFolder className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
         )}
       </nav>

@@ -12,7 +12,7 @@ const defaultEvent: IEvent = {
     description: '',
     price: 0,
     images: [],
-    providerInfo: { name: '', contact: '' },
+    providerInfo: { name: '', contact: ''},
     duration: '',
     location: '',
     reviews: [],
