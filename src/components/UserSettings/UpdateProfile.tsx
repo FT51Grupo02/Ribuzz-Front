@@ -19,13 +19,18 @@ const UpdateProfileSchema = Yup.object().shape({
 });
 
 const UpdateProfile: React.FC = () => {
-    const { token } = useAuth();
+    const { token } = useAuth(); // Obtiene el token del contexto de autenticación
     const [imagePreview, setImagePreview] = useState<string>('https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
     const [userId, setUserId] = useState<string | null>(null);
 
+    // Obtiene el ID de usuario del localStorage
     useEffect(() => {
-        const id = localStorage.getItem('userId');
-        if (id) setUserId(id);
+        const storedUserId = localStorage.getItem('authUser');
+        if (storedUserId) {
+            setUserId(storedUserId);
+        } else {
+            console.error('No se encontró el ID de usuario en el localStorage');
+        }
     }, []);
 
     const handleSubmit = async (values: { email: string; password: string; name: string; }) => {
@@ -40,11 +45,21 @@ const UpdateProfile: React.FC = () => {
 
         if (!confirmUpdate.isConfirmed) return;
 
-        if (!token || !userId) {
+        // Validar si el token o el userId son nulos o indefinidos
+        if (!token) {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'No se ha encontrado el token o ID de usuario.'
+                title: 'Error de autenticación',
+                text: 'No se ha encontrado el token de autenticación. Inicia sesión nuevamente.'
+            });
+            return;
+        }
+
+        if (!userId) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de usuario',
+                text: 'No se ha encontrado el ID de usuario. Por favor, vuelve a iniciar sesión.'
             });
             return;
         }
@@ -56,6 +71,7 @@ const UpdateProfile: React.FC = () => {
         };
 
         try {
+            // Llamada a la API para actualizar el perfil
             await updateUserProfile(userId, profileData, token);
             Swal.fire({
                 icon: 'success',

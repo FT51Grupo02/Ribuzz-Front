@@ -35,7 +35,7 @@ const GoogleCallbackHandler = () => {
               name: data.name,
               date: data.date,
               photo: data.photo,
-              role: data.rol,  // almacenamos el rol si es necesario
+              role: data.rol,  
             };
 
            

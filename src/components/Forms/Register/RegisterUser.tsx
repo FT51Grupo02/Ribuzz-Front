@@ -4,8 +4,8 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext';
-import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
 import { IRegisterProps } from '@/interfaces/Types';
+import Swal from 'sweetalert2';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object().shape({
@@ -40,10 +40,36 @@ const RegisterUser = () => {
       const result = await register(registerData);
 
       if (result) {
-        router.push('/login'); // Redirigir al login después del registro exitoso
+        // Mostrar alerta de éxito con Swal
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: 'Tu cuenta ha sido creada correctamente.',
+          confirmButtonText: 'Iniciar sesión',
+        }).then(() => {
+          router.push('/login'); // Redirigir al login después de que se cierre la alerta
+        });
       }
     } catch (error) {
-      console.error('Error en el registro:', error);
+      // Manejar error de tipo unknown convirtiéndolo a Error y mostrando el mensaje
+      if (error instanceof Error) {
+        if (error.message.includes('Usuario ya registrado')) {
+          // Mostrar alerta con Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Usuario ya registrado',
+            text: 'El correo electrónico ingresado ya está en uso.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error en el registro',
+            text: 'Ocurrió un error inesperado. Por favor intenta nuevamente.',
+          });
+        }
+      } else {
+        console.error('Error inesperado:', error);
+      }
     }
   };
 

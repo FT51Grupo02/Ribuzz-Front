@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { FaHome, FaCalendarAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { BsTicketDetailed } from 'react-icons/bs';
+import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Image from 'next/image';
 import { AuthContext } from '../Context/AuthContext'; // Ajusta la ruta según tu estructura de carpetas
 
@@ -32,6 +33,11 @@ const SideBar = () => {
         {user?.role === 'emprendedor' && (
           <Link href="/user/settings">
             <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
+          </Link>
+        )}
+          {user?.role === 'emprendedor' && (
+          <Link href="/user/myevents">
+            <MdOutlineCreateNewFolder className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
         )}
       </nav>
