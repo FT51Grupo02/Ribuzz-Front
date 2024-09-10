@@ -11,23 +11,22 @@ const GoogleCallbackHandler = () => {
 
   useEffect(() => {
     const fetchToken = async () => {
-      
       const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('accessToken');
-      const role = urlParams.get('rol'); 
+      const accessToken = urlParams.get('token');  // Ajustar nombre del parámetro
+      const role = urlParams.get('role');          // Ajustar nombre del parámetro
       
-    if (accessToken && role) {
+      if (accessToken && role) {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?accessToken=${accessToken}&rol=${role}`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?token=${accessToken}&role=${role}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
-          }); 
-
+          });
+  
           if (response.ok) {
             const data = await response.json();
-
+  
             const token = data.accessToken;
             const user: IUser = {
               id: data.id,
@@ -35,16 +34,15 @@ const GoogleCallbackHandler = () => {
               name: data.name,
               date: data.date,
               photo: data.photo,
-              role: data.rol,  
+              role: data.rol,
             };
-
-           
+  
             localStorage.setItem('authToken', token);
             localStorage.setItem('user', JSON.stringify(user));
             setToken(token);
             setUser(user);
-
-            router.push('/'); 
+  
+            router.push('/');
           } else {
             console.error('Error al obtener la respuesta del backend');
           }
@@ -52,10 +50,10 @@ const GoogleCallbackHandler = () => {
           console.error('Error en la solicitud al backend:', error);
         }
       } else {
-        console.error('No se encontraron accessToken o rol en la URL');
+        console.error('No se encontraron token o role en la URL');
       }
     };
-
+  
     fetchToken();
   }, [router, setToken, setUser]);
 
