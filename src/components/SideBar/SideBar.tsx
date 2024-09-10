@@ -26,7 +26,7 @@ const SideBar = () => {
         <Link href="/user/settings">
           <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
-        <Link href="/user/orders">
+        <Link href="/user/eventsCal">
           <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
       </nav>
