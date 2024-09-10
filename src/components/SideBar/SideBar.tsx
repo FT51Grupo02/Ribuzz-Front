@@ -1,11 +1,14 @@
 'use client';
+import { useContext } from 'react';
 import Link from 'next/link';
 import { FaHome, FaCalendarAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
-import { BsTicketDetailed } from "react-icons/bs";
+import { BsTicketDetailed } from 'react-icons/bs';
 import Image from 'next/image';
-import FetchOrdersButton from './OrdersButton';
+import { AuthContext } from '../Context/AuthContext'; // Ajusta la ruta según tu estructura de carpetas
 
 const SideBar = () => {
+  const { user } = useContext(AuthContext); // Obtener la información del usuario desde el contexto
+
   return (
     <div className="relative flex flex-col justify-between h-full p-4 text-white">
       <Image
@@ -21,14 +24,16 @@ const SideBar = () => {
           <FaHome className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/orders">
-          <BsTicketDetailed  className="text-xl hover:text-pink-400 cursor-pointer" />
-        </Link>
-        <Link href="/user/settings">
-          <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
+          <BsTicketDetailed className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/eventsCal">
           <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
+        {user?.role === 'emprendedor' && (
+          <Link href="/user/settings">
+            <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
+          </Link>
+        )}
       </nav>
       <div className="flex justify-center mt-auto z-10 text-white">
         <FaSignOutAlt className="text-xl hover:text-pink-400 cursor-pointer" />
