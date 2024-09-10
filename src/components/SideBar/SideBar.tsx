@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Image from 'next/image';
+import { TbMapSearch } from "react-icons/tb";
 import FetchOrdersButton from './OrdersButton';
 import Swal from 'sweetalert2'; 
 
@@ -61,6 +62,9 @@ const handleLogout = () => {
         </Link>
         <Link href="/user/eventsCal">
           <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
+        </Link>  
+        <Link href="/user/mapsevent">
+          <TbMapSearch  className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         {user?.role === 'emprendedor' && (
           <Link href="/user/settings">
