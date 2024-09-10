@@ -12,7 +12,7 @@ export interface ICartEvent extends IEvent {
     categoryId: number;
     quantity: number;
     publicationDate: string;
-    providerInfo: { name: string; contact: string };
+    providerInfo: { name: string; contact: string};
     location: string;
     date: string;
     time: string[];

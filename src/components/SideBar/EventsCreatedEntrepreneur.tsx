@@ -10,7 +10,7 @@ const defaultEvent: IEvent = {
     description: '',
     price: 0,
     images: [],
-    providerInfo: { name: '', contact: '', id:'' },
+    providerInfo: { name: '', contact: '' },
     duration: '',
     location: '',
     reviews: [],
@@ -27,7 +27,7 @@ const defaultEvent: IEvent = {
 const fetchEntrepreneurEvents = async (entrepreneurId: string): Promise<IEvent[]> => {
     const response = await fetch('https://ribuzz-backend-ftn4.onrender.com/search/events');
     const allEvents = await response.json();
-    return allEvents.filter((event: IEvent) => event.providerInfo.id === entrepreneurId);
+    return allEvents.filter((event: IEvent) => event.providerInfo.contact === entrepreneurId);
 };
 
 const getDayOfWeek = (dateString: string): string => {

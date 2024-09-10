@@ -71,7 +71,6 @@ export interface IOrder {
 export interface ProviderInfo {
     name: string;
     contact: string;
-    id: string
 }
 
 export interface SellerInfo {
