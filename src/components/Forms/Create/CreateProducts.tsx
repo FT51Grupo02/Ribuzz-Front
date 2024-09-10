@@ -2,7 +2,8 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import Swal from 'sweetalert2'; // Importar SweetAlert2
+import Swal from 'sweetalert2'; 
+import { useAuth } from '@/components/Context/AuthContext'; 
 
 // Definición de los valores iniciales del formulario
 interface FormValues {
@@ -11,6 +12,8 @@ interface FormValues {
   description: string;
   stock: number;
   images: string[];
+  videos: string[];
+  categories: string[];
 }
 
 // Validación del formulario con Yup
@@ -20,14 +23,20 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().required('Descripción es requerida'),
   stock: Yup.number().required('Stock es requerido').min(0, 'El stock no puede ser negativo'),
   images: Yup.array().of(Yup.string().url('URL inválida')).required('Al menos una imagen es requerida'),
+  videos: Yup.array().of(Yup.string().url('URL inválida')).optional(), // Validación opcional para videos
+  categories: Yup.array().of(Yup.string().required('Categoría es requerida')).required('Al menos una categoría es requerida'),
 });
 
 const CreateProduct: React.FC = () => {
-  const handleSubmit = async (values: FormValues) => {
+  const { token } = useAuth(); // Obtener el token del contexto
+
+  const handleSubmit = async (values: FormValues, { resetForm }: any) => {
+    console.log('Datos enviados al backend:', values);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(values),
@@ -48,7 +57,8 @@ const CreateProduct: React.FC = () => {
         confirmButtonText: 'Aceptar'
       });
 
-      // Aquí podrías redirigir al usuario o realizar otras acciones
+      // Limpiar el formulario
+      resetForm();
 
     } catch (error) {
       console.error('Error al crear el producto', error);
@@ -72,7 +82,9 @@ const CreateProduct: React.FC = () => {
           price: 0,
           description: '',
           stock: 0,
-          images: [''] // Iniciar con un campo de imagen vacío
+          images: [], 
+          videos: [],
+          categories: []
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -131,9 +143,33 @@ const CreateProduct: React.FC = () => {
                 name='images'
                 type='text'
                 className='w-full p-2 rounded bg-transparent text-white'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('images', e.target.value.split(','))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('images', e.target.value.split(',').map(url => url.trim()))}
               />
               <ErrorMessage name='images' component='div' className='text-red-500' />
+            </div>
+
+            <div className='mb-4'>
+              <label htmlFor='videos' className='block text-white mb-2'>Videos (URLs separadas por comas, opcional)</label>
+              <Field
+                id='videos'
+                name='videos'
+                type='text'
+                className='w-full p-2 rounded bg-transparent text-white'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('videos', e.target.value.split(',').map(url => url.trim()))}
+              />
+              <ErrorMessage name='videos' component='div' className='text-red-500' />
+            </div>
+
+            <div className='mb-4'>
+              <label htmlFor='categories' className='block text-white mb-2'>Categorías (Separadas por comas)</label>
+              <Field
+                id='categories'
+                name='categories'
+                type='text'
+                className='w-full p-2 rounded bg-transparent text-white'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('categories', e.target.value.split(',').map(cat => cat.trim()))}
+              />
+              <ErrorMessage name='categories' component='div' className='text-red-500' />
             </div>
 
             <button
@@ -150,3 +186,4 @@ const CreateProduct: React.FC = () => {
 };
 
 export default CreateProduct;
+
