@@ -1,8 +1,9 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import Calendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import esLocale from '@fullcalendar/core/locales/es';
 import { useAuth } from '@/components/Context/AuthContext';
 import { IEvent, IOrderDetail } from '@/interfaces/Types';
 
@@ -96,44 +97,42 @@ const EventsCalendar: React.FC = () => {
     return (
         <div className="container mx-auto p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        
                 <div className="col-span-2 lg:col-span-1">
-                    <h3 className="text-2xl font-bold mb-4">Mis Eventos</h3>
+                    <h3 className="text-4xl font-bold mb-4">Mis Eventos</h3>
                     <ul className="list-disc pl-5 mb-4">
                         {events.map(event => (
-                            <li key={event.id} className="mb-2">{event.date}</li>
+                            <li key={event.id} className="mb-2 text-xl text-pink-400">{event.date}</li>
                         ))}
                     </ul>
 
-                
                     {detailsVisible && selectedEvent && (
                         <div className="bg-transparent shadow-md rounded-lg p-4">
-                            <h3 className="text-xl font-bold mb-4">{selectedEvent.name}</h3>
-                            <p><strong>Día:</strong> {getDayOfWeek(selectedEvent.date)}</p>
-                            <p><strong>Fecha:</strong> {selectedEvent.date}</p>
-                            <p><strong>Ubicación:</strong> {selectedEvent.location}</p>
+                            <h3 className="text-2xl font-bold mb-4">{selectedEvent.name}</h3>
+                            <p className='text-xl'><strong className='text-pink-400'>Día:</strong> {getDayOfWeek(selectedEvent.date)}</p>
+                            <p className='text-xl'><strong className='text-pink-400'>Fecha:</strong> {selectedEvent.date}</p>
+                            <p className='text-xl'><strong className='text-pink-400'>Ubicación:</strong> {selectedEvent.location}</p>
                         </div>
-                        
                     )}
-                        {buttonVisible && (
+                    {buttonVisible && (
                         <button
                             className="mt-4 bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-2 px-4 rounded-full"
                             onClick={() => setDetailsVisible(prev => !prev)}
                         >
-                            {detailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles'}
+                                        <span className="inline-block text-white hover:scale-110 transition duration-300">
+                                        {detailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles'}
+                        </span>   
                         </button>
                     )}
                 </div>
 
-    
                 <div className="col-span-2 lg:col-span-1">
                     <Calendar
                         plugins={[dayGridPlugin]}
                         events={calendarEvents}
                         eventClick={handleEventClick}
-                        contentHeight="auto"  // Ajusta el calendario para que crezca o disminuya según el contenido
+                        contentHeight="auto"  
+                        locale={esLocale}   
                     />
-                
                 </div>
             </div>
         </div>
@@ -141,4 +140,3 @@ const EventsCalendar: React.FC = () => {
 };
 
 export default EventsCalendar;
-
