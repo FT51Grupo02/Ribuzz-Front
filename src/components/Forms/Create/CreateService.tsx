@@ -11,6 +11,8 @@ interface FormValues {
   description: string;
   stock: number;
   images: string[];
+  videos: string[];
+  categories: string[];
 }
 
 // Validación del formulario con Yup
@@ -20,12 +22,14 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().required('Descripción es requerida'),
   stock: Yup.number().required('Stock es requerido').min(0, 'El stock no puede ser negativo'),
   images: Yup.array().of(Yup.string().url('URL inválida')).required('Al menos una imagen es requerida'),
+  videos: Yup.array().of(Yup.string().url('URL inválida')).optional(),
+  categories: Yup.array().of(Yup.string().required('Categoría es requerida')).required('Al menos una categoría es requerida'),
 });
 
 const CreateService: React.FC = () => {
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmit = async (values: FormValues, { resetForm }: any) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,29 +38,30 @@ const CreateService: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear el producto');
+        throw new Error('Error al crear el servicio');
       }
 
       const data = await response.json();
-      console.log('Producto creado exitosamente', data);
+      console.log('Servicio creado exitosamente', data);
 
       // Mostrar alerta de éxito
       Swal.fire({
         title: '¡Éxito!',
-        text: 'El producto ha sido creado exitosamente.',
+        text: 'El servicio ha sido creado exitosamente.',
         icon: 'success',
         confirmButtonText: 'Aceptar'
       });
 
-      // Aquí podrías redirigir al usuario o realizar otras acciones
+      // Limpiar el formulario después del envío exitoso
+      resetForm();
 
     } catch (error) {
-      console.error('Error al crear el producto', error);
+      console.error('Error al crear el servicio', error);
 
       // Mostrar alerta de error
       Swal.fire({
         title: 'Error',
-        text: 'Hubo un problema al crear el producto.',
+        text: 'Hubo un problema al crear el servicio.',
         icon: 'error',
         confirmButtonText: 'Aceptar'
       });
@@ -72,7 +77,9 @@ const CreateService: React.FC = () => {
           price: 0,
           description: '',
           stock: 0,
-          images: [''] // Iniciar con un campo de imagen vacío
+          images: [], 
+          videos: [], 
+          categories: []
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -131,16 +138,40 @@ const CreateService: React.FC = () => {
                 name='images'
                 type='text'
                 className='w-full p-2 rounded bg-transparent text-white'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('images', e.target.value.split(','))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('images', e.target.value.split(',').map(url => url.trim()))}
               />
               <ErrorMessage name='images' component='div' className='text-red-500' />
+            </div>
+
+            <div className='mb-4'>
+              <label htmlFor='videos' className='block text-white mb-2'>Videos (URLs separadas por comas)</label>
+              <Field
+                id='videos'
+                name='videos'
+                type='text'
+                className='w-full p-2 rounded bg-transparent text-white'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('videos', e.target.value.split(',').map(url => url.trim()))}
+              />
+              <ErrorMessage name='videos' component='div' className='text-red-500' />
+            </div>
+
+            <div className='mb-4'>
+              <label htmlFor='categories' className='block text-white mb-2'>Categorías (Separadas por comas)</label>
+              <Field
+                id='categories'
+                name='categories'
+                type='text'
+                className='w-full p-2 rounded bg-transparent text-white'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFieldValue('categories', e.target.value.split(',').map(cat => cat.trim()))}
+              />
+              <ErrorMessage name='categories' component='div' className='text-red-500' />
             </div>
 
             <button
               type='submit'
               className='bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-2 px-4 rounded-full'
             >
-              Crear Producto
+              Crear Servicio
             </button>
           </Form>
         )}
