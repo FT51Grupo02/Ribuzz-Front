@@ -48,16 +48,29 @@ const Navbar = () => {
   const handleTouchEnd = () => {
     startY.current = null;
   };
-
   const handleLogout = () => {
     Swal.fire({
-      title: `Hasta luego!`,
-      text: 'Gracias por visitarnos. Te esperamos pronto!',
-      icon: 'info',
-      confirmButtonText: 'OK'
-    }).then(() => {
-      logout();
-      router.push('/');
+      title: '¿Estás seguro?',
+      text: '¿Quieres cerrar sesión?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        Swal.fire({
+          title: 'Hasta luego!',
+          text: 'Gracias por visitarnos. Te esperamos pronto!',
+          icon: 'info',
+          confirmButtonText: 'OK'
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            logout();
+            router.push('/'); 
+          }
+        });
+      }
     });
   };
 

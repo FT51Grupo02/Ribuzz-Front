@@ -3,6 +3,10 @@
 @tailwind utilities;
 @import 'flowbite/dist/flowbite.css';
 
+body {
+    background-color: black;
+}
+
 @font-face {
     font-family: 'Moonhouse';
     src: url('/fonts/moonhouse.ttf') format('truetype');

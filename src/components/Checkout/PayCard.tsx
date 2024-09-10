@@ -102,7 +102,7 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
             className="w-full p-3 mt-1 bg-black border border-pink-400 border-opacity-40 text-white rounded-lg text-sm md:text-base"
           />
           {formik.touched.cardName && formik.errors.cardName ? (
-            <div className="text-pink-300 text-xs md:text-sm mt-1">{formik.errors.cardName}</div>
+            <div className="text-pink-300 text-xs md:text-sm mt-2">{formik.errors.cardName}</div>
           ) : null}
         </div>
 

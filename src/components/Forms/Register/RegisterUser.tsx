@@ -2,10 +2,12 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext';
 import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
 import { IRegisterProps } from '@/interfaces/Types';
+import { useState } from 'react';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object().shape({
@@ -24,6 +26,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegisterUser = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { register } = useAuth();
 
@@ -40,7 +43,7 @@ const RegisterUser = () => {
       const result = await register(registerData);
 
       if (result) {
-        router.push('/login'); // Redirigir al login después del registro exitoso
+        router.push('/login'); 
       }
     } catch (error) {
       console.error('Error en el registro:', error);
@@ -116,19 +119,27 @@ const RegisterUser = () => {
                     <div className="text-pink-300 text-sm pt-2">{errors.email}</div>
                   )}
                 </div>
-                <div className="mb-2 relative">
-                  <Field
-                    type="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    className="w-full p-3 mb-2 text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleChange(e);
-                      setFieldTouched('password', true, true);
-                    }}
-                  />
+                <div className="mb-4 relative">
+                  <div className="relative">
+                    <Field
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Contraseña"
+                      className="w-full p-3 text-base rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300 pr-12"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        handleChange(e);
+                        setFieldTouched('password', true, true);
+                      }}
+                    />
+                    <div
+                      onClick={() => setShowPassword(prev => !prev)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-300 text-xl"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
                   {touched.password && (
-                    <div className="text-pink-300 text-sm">
+                    <div className="text-pink-300 text-sm pt-2">
                       {!values.password.match(/[A-Z]/) && 'Debe incluir al menos una mayúscula. '}
                       {!values.password.match(/[!@#$%^&*]/) && 'Debe incluir al menos un carácter especial. '}
                       {values.password.length < 8 && 'Debe tener al menos 8 caracteres. '}
@@ -174,7 +185,7 @@ const RegisterUser = () => {
                     Registrarse
                   </span>
                 </button>
-               {/*  <p>O registrate con:</p>
+                {/* <p>O regístrate con:</p>
                 <GoogleLoginButton /> */}
               </Form>
             )}

@@ -1,13 +1,45 @@
 'use client';
 import { useContext } from 'react';
-import Link from 'next/link';
+import { AuthContext } from '../Context/AuthContext';
 import { FaHome, FaCalendarAlt, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { BsTicketDetailed } from 'react-icons/bs';
+import { useAuth } from '@/components/Context/AuthContext';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
-import { AuthContext } from '../Context/AuthContext'; // Ajusta la ruta según tu estructura de carpetas
+import FetchOrdersButton from './OrdersButton';
+import Swal from 'sweetalert2'; 
 
 const SideBar = () => {
-  const { user } = useContext(AuthContext); // Obtener la información del usuario desde el contexto
+const { user } = useContext(AuthContext);
+const router = useRouter();
+const { logout } = useAuth(); 
+
+const handleLogout = () => {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: '¿Quieres cerrar sesión?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, cerrar sesión',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      Swal.fire({
+        title: 'Hasta luego!',
+        text: 'Gracias por visitarnos. Te esperamos pronto!',
+        icon: 'info',
+        confirmButtonText: 'OK'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          logout();
+          router.push('/'); 
+        }
+      });
+    }
+  });
+};
 
   return (
     <div className="relative flex flex-col justify-between h-full p-4 text-white">
@@ -20,7 +52,7 @@ const SideBar = () => {
         quality={100}
       />
       <nav className="flex flex-col space-y-10 mt-8 z-10">
-        <Link href="/user">
+      <Link href="/user">
           <FaHome className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/orders">
@@ -36,7 +68,10 @@ const SideBar = () => {
         )}
       </nav>
       <div className="flex justify-center mt-auto z-10 text-white">
-        <FaSignOutAlt className="text-xl hover:text-pink-400 cursor-pointer" />
+        <FaSignOutAlt
+          onClick={handleLogout}
+          className="text-xl hover:text-pink-400 cursor-pointer"
+        />
       </div>
     </div>
   );
