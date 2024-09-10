@@ -114,3 +114,214 @@ body {
 .swal2-shown {
     padding-right: 0 !important;
 }
+
+
+
+/* -----> *******************  Estilos del calendario ********************* <----- */
+
+.fc {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to top, #ff4d9db3, #000000);
+    border-radius: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    overflow: hidden; /* Evitar scroll horizontal y vertical */
+    height: auto; /* Ajustar el alto automáticamente */
+    max-height: 100vh;
+    margin: 0;
+}
+
+.fc .fc-toolbar-title {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.fc .fc-daygrid-day {
+    color: #e0e0e0;
+    background-color: transparent;
+    padding: 0.5rem;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.fc .fc-daygrid-day:hover {
+    background-color: #ff4d9dd7;
+    color: #ffffff;
+    transform: scale(1.05);
+    transition-duration: 0.2s ease;
+}
+
+/* Estilo para las flechas del calendario */
+.fc .fc-prev-button,
+.fc .fc-next-button {
+    color: #ffffff; /* Rosa claro para las flechas */
+    background-color: #ff4d9d00;
+    border-color: rgba(255, 255, 255, 0.549);
+    align-items: center;
+}
+
+/* Estilo para las flechas del calendario al pasar el ratón */
+.fc .fc-prev-button:hover,
+.fc .fc-next-button:hover {
+    color: #ffffff; /* Rosa claro para las flechas */
+    background-color: #ff4d9d;
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.549);
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out;
+}
+
+/* Estilo para el día actual en el calendario */
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: #ff4d9d83; /* Rosa claro para el día actual */
+    color: #ffffff; /* Texto blanco para contraste */
+}
+
+/* Asegurarse de que el color del día actual esté en primer plano */
+.fc .fc-daygrid-day.fc-day-today:hover {
+    background-color: #ffffff; /* Rosa más oscuro para el hover del día actual */
+    color: #ff32b0; /* Texto rosa para contraste en hover */
+}
+
+/* Estilo para el botón "Hoy" */
+.fc .fc-today-button {
+    background-color: #ff4d9d95; /* Rosa claro para el fondo del botón */
+    color: #ffffff; /* Color blanco para el texto del botón */
+    border-color: rgba(255, 255, 255, 0.549);
+    border-radius: 0.25rem; /* Bordes redondeados */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+/* Estilo para el botón "Hoy" al pasar el ratón */
+.fc .fc-today-button:hover {
+    background-color: #ff4d9d;
+    color: #ffffff;
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.549);
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out;
+}
+
+/* Estilo para las flechas del calendario cuando están activas (seleccionadas) */
+.fc .fc-prev-button:active,
+.fc .fc-next-button:active {
+    background-color: #ff4d9d; /* Rosa intenso para el fondo de las flechas al hacer clic */
+    border-color: #ff4d9d; /* Rosa intenso para el borde de las flechas al hacer clic */
+    color: #ffffff; /* Color blanco para las flechas */
+    transform: scale(1.05); /* Efecto de escala al hacer clic */
+}
+
+/* Estilo para el botón "Hoy" cuando está activo (seleccionado) */
+.fc .fc-today-button:active {
+    background-color: #ff4d9d; /* Rosa intenso para el fondo del botón "Hoy" al hacer clic */
+    color: #ffffff; /* Texto blanco para el botón al hacer clic */
+    border-color: #ff4d9d; /* Rosa intenso para el borde del botón al hacer clic */
+    transform: scale(1.05); /* Efecto de escala al hacer clic */
+}
+
+/* Estilo para el botón "Hoy" cuando no está seleccionado (en estado normal) */
+.fc .fc-today-button:not(:active) {
+    background-color: #ff4d9d00; /* Rosa claro para el fondo del botón "Hoy" */
+    color: #ffffff; /* Texto blanco para el botón en estado normal */
+    border-color: rgba(255, 255, 255, 0.549); /* Borde blanco claro para el botón en estado normal */
+}
+
+/* Estilo para el botón "Hoy" cuando no está seleccionado (en estado normal) */
+.fc .fc-today-button:hover {
+    background-color: #ff4d9d; /* Rosa claro para el fondo del botón "Hoy" */
+    color: #ffffff; /* Texto blanco para el botón en estado normal */
+    border-color: rgba(255, 255, 255, 0.549); /* Borde blanco claro para el botón en estado normal */
+}
+
+/* Ajustar el contenedor del calendario para pantallas menores a 768px */
+@media (max-width: 768px) {
+    .fc {
+        font-size: 0.8rem; /* Reducir el tamaño de fuente del calendario */
+        padding: 0.5rem; /* Reducir el padding */
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.25rem; /* Reducir el tamaño de fuente del título del calendario */
+    }
+
+    .fc .fc-daygrid-day {
+        padding: 0.3rem; /* Reducir el padding de los días */
+    }
+
+    .fc .fc-prev-button,
+    .fc .fc-next-button {
+        font-size: 0.75rem; /* Reducir el tamaño de fuente de las flechas */
+        padding: 0.25rem; /* Reducir el padding de las flechas */
+    }
+
+    .fc .fc-today-button {
+        font-size: 0.75rem; /* Reducir el tamaño de fuente del botón "Hoy" */
+        padding: 0.25rem 0.5rem; /* Reducir el padding del botón "Hoy" */
+        align-items: center;
+    }
+
+    .container {
+        padding: 1rem; /* Reducir el padding del contenedor principal */
+    }
+
+    .text-4xl {
+        font-size: 2rem; /* Reducir el tamaño de fuente del título "Mis Eventos" */
+    }
+
+    .text-2xl {
+        font-size: 1.5rem; /* Reducir el tamaño de fuente del título del evento seleccionado */
+    }
+}
+
+/* Alinear el botón "Hoy" con las flechas de navegación en pantallas grandes */
+@media (min-width: 768px) {
+    .fc .fc-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .fc .fc-prev-button,
+    .fc .fc-next-button,
+    .fc .fc-today-button {
+        margin: 0; /* Eliminar márgenes */
+    }
+
+    .fc .fc-today-button {
+        margin-left: 1rem; /* Separar el botón "Hoy" de las flechas */
+    }
+}
+
+/* Ajustar el botón "Hoy" y las flechas en pantallas pequeñas */
+@media (max-width: 425px) {
+    .fc .fc-toolbar {
+        display: flex;
+        flex-direction: column; /* Cambiar a un diseño de bloque en pantallas pequeñas */
+        align-items: center; /* Centrar horizontalmente */
+        text-align: center; /* Centrar el texto */
+    }
+
+    .fc .fc-prev-button,
+    .fc .fc-next-button {
+        margin: 0; /* Eliminar márgenes */
+    }
+}
+
+/* Asegurarse de que el estilo en pantallas de 1024px sea igual que en 768px */
+@media (min-width: 1024px) and (max-width: 1280px) {
+    .fc .fc-toolbar {
+        display: flex;
+        flex-direction: column; /* Cambiar a un diseño de bloque para igualar con pantallas menores a 768px */
+        align-items: center; /* Centrar horizontalmente */
+        text-align: center; /* Centrar el texto */
+    }
+
+    .fc .fc-prev-button,
+    .fc .fc-next-button {
+        margin: 0; /* Eliminar márgenes */
+    }
+}

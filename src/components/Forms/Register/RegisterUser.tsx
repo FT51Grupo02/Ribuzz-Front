@@ -69,7 +69,7 @@ const RegisterUser = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-black overflow-x-hidden font-poppins">
+    <div className="flex flex-col md:flex-row h-screen bg-black font-poppins">
       <div className="hidden md:flex md:w-1/2 flex-shrink-0 relative md:translate-x-3 lg:translate-x-0">
         <Image
           src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/14_ikwddp.webp"
@@ -93,7 +93,7 @@ const RegisterUser = () => {
           />
         </div>
 
-        <div className="w-full max-w-md md:max-w-lg p-6 md:p-8 bg-[#000000] rounded-xl shadow-lg mb-4 overflow-y-auto">
+        <div className="w-full max-w-md md:max-w-lg p-6 md:p-8 bg-[#000000] rounded-xl shadow-lg mb-4 overflow-y-visible">
           <h1 className="text-5xl md:text-6xl font-bold mb-4 md:mb-6 overflow-visible">REGISTRO</h1>
           <h3 className="text-base md:text-lg font-medium mb-4 md:mb-6">
             Crea una nueva cuenta

@@ -11,6 +11,7 @@
   "dependencies": {
     "@cloudinary/react": "^1.13.0",
     "@cloudinary/url-gen": "^1.20.0",
+    "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@material-tailwind/react": "^2.1.9",

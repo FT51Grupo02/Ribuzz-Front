@@ -59,7 +59,7 @@ const handleLogout = () => {
         <Link href="/user/orders">
           <BsTicketDetailed className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
-        <Link href="/user/eventsCal">
+        <Link href="/user/myEvents">
           <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         {user?.role === 'emprendedor' && (
