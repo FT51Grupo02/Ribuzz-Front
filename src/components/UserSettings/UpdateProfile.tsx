@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { useAuth } from '@/components/Context/AuthContext';
 import { updateUserProfile } from '@/helpers/user.helper';
 import Image from 'next/image';
-import { FaCamera } from 'react-icons/fa';
+import { FaCamera, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const UpdateProfileSchema = Yup.object().shape({
     email: Yup.string().email('Email inválido').required('Requerido'),
@@ -22,6 +22,7 @@ const UpdateProfile: React.FC = () => {
     const { token } = useAuth();
     const [imagePreview, setImagePreview] = useState<string>('https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
     const [userId, setUserId] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
 
     useEffect(() => {
         const id = localStorage.getItem('userId');
@@ -156,19 +157,27 @@ const UpdateProfile: React.FC = () => {
                                 ) : null}
                             </div>
 
-                            <div>
+                            <div className="relative">
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-300 pt-4">Contraseña</label>
-                                <Field
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="Introduce tu contraseña"
-                                    className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-md text-gray-300 overflow-hidden text-ellipsis"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        handleChange(e);
-                                        setFieldTouched('password', true, true);
-                                    }}
-                                />
+                                <div className="relative">
+                                    <Field
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"} // Alternar tipo de campo
+                                        placeholder="Introduce tu contraseña"
+                                        className="mt-1 block w-full p-2 bg-transparent border border-gray-600 rounded-md text-gray-300 overflow-hidden text-ellipsis pr-12" // Espacio para el ícono
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                            handleChange(e);
+                                            setFieldTouched('password', true, true);
+                                        }}
+                                    />
+                                    <div
+                                        onClick={() => setShowPassword(prev => !prev)}
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-300 text-xl"
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Alternar entre los íconos */}
+                                    </div>
+                                </div>
                                 {errors.password && touched.password ? (
                                     <div className="text-pink-400 text-sm pt-2">{errors.password}</div>
                                 ) : null}

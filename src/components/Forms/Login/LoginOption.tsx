@@ -2,11 +2,10 @@
 
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from 'next/navigation'; // Asegúrate de que la importación sea correcta
+import { useRouter } from 'next/navigation';
 import { FormValues } from '../../../interfaces/FormValues';
 import Image from 'next/image';
 
-// Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
   userType: Yup.string().oneOf(['emprendedor', 'cliente'], 'Selecciona una opción').required('Selecciona una opción'),
 });
@@ -59,7 +58,6 @@ const LoginOption = () => {
           >
             {({ setFieldValue }) => (
               <Form className="w-full">
-                {/* Cambiamos a diseño de columna para los botones */}
                 <div className="flex flex-col gap-4 mb-4">
                   <button
                     type="submit"

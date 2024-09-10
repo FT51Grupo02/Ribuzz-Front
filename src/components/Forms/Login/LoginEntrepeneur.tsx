@@ -2,44 +2,50 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { FcGoogle } from 'react-icons/fc';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import Image from 'next/image';
-import { useAuth } from '@/components/Context/AuthContext'; // Importar el contexto de autenticación
+import { useAuth } from '@/components/Context/AuthContext'; 
 import { ILoginPropsEntrep } from '@/interfaces/Types';
 import GoogleLoginButton from '@/components/Google/Button/GoogleButton';
+import Swal from 'sweetalert2';
 
 // Definir el esquema de validación usando Yup
 const validationSchema = Yup.object({
-  email: Yup.string().email('Cuenta de email invalida').required('Requerido'),
+  email: Yup.string().email('Cuenta de email inválida').required('Requerido'),
   password: Yup.string()
-    .min(8, 'La contraseña debe poseer 8 caracteres minimo')
-    .matches(/[A-Z]/, 'La contraseña debe poseer al menos una mayuscula')
-    .matches(/[!@#$%^&*]/, 'La contraseña debe poseer al menos un caracter especial')
+    .min(8, 'La contraseña debe poseer 8 caracteres mínimo')
+    .matches(/[A-Z]/, 'La contraseña debe poseer al menos una mayúscula')
+    .matches(/[!@#$%^&*]/, 'La contraseña debe poseer al menos un carácter especial')
     .required('Requerido'),
 });
 
 const LoginEntrepeneur = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { setUser, setToken, loginEntrepeneurE } = useAuth(); // Obtener la función de login del contexto
+  const { loginEntrepeneurE } = useAuth();
 
   const handleSubmit = async (values: ILoginPropsEntrep) => {
     try {
       console.log("Valores enviados al backendEntrepreneur:", values);
       
-      const isSuccess = await loginEntrepeneurE(values); // Llamar a la función de login con los valores del formulario
+      const isSuccess = await loginEntrepeneurE(values);
       if (isSuccess) {
-        router.push('/'); // Redirigir al usuario después de un login exitoso
+        router.push('/'); 
       } else {
-        // Manejar el caso de login fallido aquí (mostrar mensajes, etc.)
-        console.error("Login fallido, no se pudo redirigir");
-        // Puedes agregar aquí código para mostrar un mensaje al usuario, por ejemplo:
-        // alert("Email o contraseña incorrectos");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al iniciar sesión',
+          text: 'El correo o contraseña es incorrecto.',
+        });
       }
     } catch (error) {
       console.error("Error en el login:", error);
-      // Manejar errores de login aquí (mostrar mensajes, etc.)
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al intentar iniciar sesión. Inténtalo de nuevo.',
+      });
     }
   };
 
@@ -94,16 +100,24 @@ const LoginEntrepeneur = () => {
                   )}
                 </div>
                 <div className="mb-4 relative">
-                  <Field
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="●●●●●●●●●"
-                    className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      handleChange(e);
-                      setFieldTouched('password', true, true);
-                    }}
-                  />
+                  <div className="relative">
+                    <Field
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="●●●●●●●●●"
+                      className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300 pr-12"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        handleChange(e);
+                        setFieldTouched('password', true, true);
+                      }}
+                    />
+                    <div
+                      onClick={() => setShowPassword(prev => !prev)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-300 text-xl"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
                   {touched.password && (
                     <div className="text-pink-300 text-sm pt-2">
                       {!values.password.match(/[A-Z]/) && 'Debe incluir al menos una mayúscula. '}
