@@ -1,12 +1,25 @@
-import EventsCreatedEntrepreneur from '@/components/SideBar/EventsCreatedEntrepreneur'
+import EventsCalendar from '@/components/SideBar/EventsCalendar'
 import React from 'react'
+import Image from 'next/image'
 
 const page = () => {
   return (
-    <div className="bg-black min-h-screen text-white p-4">
-         <EventsCreatedEntrepreneur/>
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
+      <div className="absolute inset-0 z-[-1]">
+        <div className="relative w-full h-full">
+          <Image
+            src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/16_hebffn.webp"
+            alt="Background"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+          />
+        </div>
+      </div>
+      <div className="relative flex-1 bg-black bg-opacity-50 text-white">
+        <EventsCalendar />
+      </div>
     </div>
-   
   )
 }
 
