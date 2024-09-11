@@ -18,6 +18,9 @@ const CartItem: React.FC = () => {
     images: product.images?.slice(0, 1) || [], // Validar si `images` existe
   }));
 
+  console.log("Contenido del carrito:", sanitizedCart);
+ 
+
   // Calcular el total
   const total = sanitizedCart.reduce(
     (total, product) => total + product.price * product.quantity,
