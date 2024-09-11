@@ -52,7 +52,7 @@ const OrderButton = () => {
     const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
 
     useEffect(() => {
-        if (user) {
+        if (user && user.id) {
             fetchUserPurchases(user.id).then(fetchedOrders => {
                 setOrders(fetchedOrders); 
             });

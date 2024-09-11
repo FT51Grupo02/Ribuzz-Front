@@ -1,11 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UserProfileForm from './UserProfile';
 import UpdateProfileForm from './UpdateProfile';
 import Image from 'next/image';
+import { useAuth } from '@/components/Context/AuthContext';
+import { getUserProfile } from '@/helpers/user.helper';
 
 const UserSettings: React.FC = () => {
+  const { token, user, updateUser } = useAuth();
+  const [userData, setUserData] = useState(user);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (token) {
+        try {
+          const profile = await getUserProfile(token);
+          setUserData(profile);
+          updateUser(profile); // Actualiza el usuario en el contexto
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [token]);
+
   const handleUserProfileSubmit = (values: { fullName: string; image: File | null }) => {
     console.log('Perfil del usuario enviado:', values);
   };
@@ -30,7 +51,7 @@ const UserSettings: React.FC = () => {
         <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 ">
           <div className="flex-1 border-opacity-50 p-4 border border-pink-400 rounded-md bg-black bg-opacity-80">
             <h3 className="text-xl font-semibold mb-8 flex flex-col items-center">Información de Perfil</h3>
-            <UserProfileForm onSubmit={handleUserProfileSubmit} />
+            <UserProfileForm />
           </div>
 
           <div className="flex-1 border-opacity-50 p-4 border border-pink-400 rounded-md bg-black bg-opacity-80">

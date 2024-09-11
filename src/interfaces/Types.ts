@@ -51,7 +51,7 @@ export interface IUserSession {
 }
 
 export interface IUser {
-    id: string;
+    id?: string;
     name: string;
     email: string;
     date?: string;

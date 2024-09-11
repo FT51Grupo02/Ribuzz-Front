@@ -94,7 +94,7 @@ const MapsEvents: React.FC = () => {
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (user && token) {
+    if (user && user.id && token) {
       fetchUserPurchases(user.id).then(orders => {
         Promise.all(orders.map(async (order) => {
           const details = await fetchOrderDetails(order.id);

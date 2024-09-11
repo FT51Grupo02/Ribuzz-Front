@@ -43,7 +43,7 @@ const EventsCreatedEntrepreneur: React.FC = () => {
     const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
 
     useEffect(() => {
-        if (user && token) {
+        if (user && user.id && token) {
             fetchEntrepreneurEvents(user.id)
                 .then((events: IEvent[]) => setEvents(events))
                 .catch(error => console.error('Error fetching events:', error));

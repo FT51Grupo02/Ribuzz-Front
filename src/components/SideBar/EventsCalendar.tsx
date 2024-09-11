@@ -65,7 +65,7 @@ const EventsCalendar: React.FC = () => {
     const [buttonVisible, setButtonVisible] = useState<boolean>(false);
 
     useEffect(() => {
-        if (user && token) {
+        if (user && user.id && token) {
             fetchUserPurchases(user.id).then(orders => {
                 Promise.all(orders.map(async (order) => {
                     const details = await fetchOrderDetails(order.id);

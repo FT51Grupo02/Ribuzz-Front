@@ -1,13 +1,10 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/components/Context/AuthContext';
 import Image from 'next/image';
 
-interface UserProfileFormProps {
-  onSubmit: (values: { fullName: string; image: File | null }) => void;
-}
-
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSubmit }) => {
+const UserProfileForm: React.FC = () => {
   const { user } = useAuth();
   const [imagePreview, setImagePreview] = useState<string>(user?.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
 
