@@ -1,9 +1,23 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useState, useRef } from 'react';
+import dynamic from 'next/dynamic'; // Importación dinámica para Leaflet en Next.js
 import 'leaflet/dist/leaflet.css'; // Importa los estilos de Leaflet
 import { useAuth } from '@/components/Context/AuthContext';
 import { IEvent, IOrderDetail } from '@/interfaces/Types';
+import L from 'leaflet';
+
+// Importa componentes de react-leaflet dinámicamente (solo se cargan en el cliente)
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+
+// Configura los iconos predeterminados de Leaflet
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 // Valor predeterminado para eventos
 const defaultEvent: IEvent = {
@@ -52,73 +66,120 @@ const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
   return { id: '', date: '', total: 0, products: [], events: [], service: [], pay: null };
 };
 
+// Función para obtener coordenadas desde la ubicación
+const getCoordinates = async (location: string) => {
+  const apiKey = process.env.NEXT_PUBLIC_MAP_API_KEY; // Usar la clave de la API desde las variables de entorno
+  
+  if (!apiKey) {
+    console.error('API key for geocoding service is not defined.');
+    return null;
+  }
+  
+  const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
+  const data = await response.json();
+  
+  if (data.results && data.results.length > 0) {
+    const { lat, lng } = data.results[0].geometry;
+    return { lat, lng };
+  } else {
+    console.error('No se encontraron coordenadas para esta ubicación.');
+    return null;
+  }
+};
+
+// Función para validar si una ubicación es válida
+const isValidLocation = (location: string): boolean => {
+  const [lat, lng] = location.split(',').map(Number);
+  return !isNaN(lat) && !isNaN(lng);
+};
+
 const MapsEvents: React.FC = () => {
   const { token, user } = useAuth();
   const [events, setEvents] = useState<IEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<IEvent>(defaultEvent);
-  const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
-  const [buttonVisible, setButtonVisible] = useState<boolean>(false);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (user && token) {
-      fetchUserPurchases(user.id).then(orders => {
-        Promise.all(orders.map(async (order) => {
-          const details = await fetchOrderDetails(order.id);
-          return details;
-        }))
-        .then((orderDetails: IOrderDetail[]) => {
-          const allEvents = orderDetails.flatMap(details => details.events || []);
-          setEvents(allEvents);
+    if (typeof window !== 'undefined') { // Asegúrate de que el código se ejecute solo en el cliente
+      if (user && token) {
+        fetchUserPurchases(user.id).then(orders => {
+          Promise.all(orders.map(async (order) => {
+            const details = await fetchOrderDetails(order.id);
+            return details;
+          }))
+          .then(async (orderDetails: IOrderDetail[]) => {
+            const allEvents = orderDetails.flatMap(details => details.events || []);
+            // Convertir ubicaciones en coordenadas
+            const updatedEvents = await Promise.all(allEvents.map(async (event) => {
+              if (!isValidLocation(event.location)) {
+                const coords = await getCoordinates(event.location);
+                if (coords) {
+                  return { ...event, location: `${coords.lat},${coords.lng}` };
+                }
+              }
+              return event;
+            }));
+            setEvents(updatedEvents);
+          })
+          .catch(error => console.error('Error fetching order details:', error));
         })
-        .catch(error => console.error('Error fetching order details:', error));
-      })
-      .catch(error => console.error('Error fetching user purchases:', error));
+        .catch(error => console.error('Error fetching user purchases:', error));
+      }
     }
   }, [user, token]);
 
-
+  // Función para manejar clic en el botón de ubicación
+  const handleLocationClick = (location: string) => {
+    if (typeof window !== 'undefined') { // Asegúrate de que el código se ejecute solo en el cliente
+      const [lat, lng] = location.split(',').map(Number);
+      if (!isNaN(lat) && !isNaN(lng) && mapRef.current) {
+        mapRef.current.setView([lat, lng], 13);
+      }
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Mapa de Eventos</h2>
-
-      {/* Grid para dividir los eventos y el mapa */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Columna izquierda: Lista de eventos */}
-        <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-xl font-bold mb-4">Lista de Eventos</h3>
-          <ul>
+    
+        <div className="bg-transparent p-4 rounded-lg shadow-md">
+          <h3 className="text-2xl font-bold mb-4">Mis Eventos</h3>
+          <ul className="list-disc pl-5 mb-4">
             {events.map(event => (
               <li key={event.id} className="mb-4">
-                <strong>{event.name}</strong><br />
-                <span>{event.location}</span><br />
-                <span>{event.date}</span>
+                <button
+                  className="text-purple-500 hover:underline"
+                  onClick={() => handleLocationClick(event.location)}
+                >
+                  {event.name}
+                </button><br />
+                <span>Ubicación: {event.location}</span><br />
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Columna derecha: Mapa */}
+      
         <div className="w-full h-96 lg:h-auto">
-          <MapContainer>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {events.map(event => {
-              const [lat, lng] = event.location.split(',').map(Number);
-              return (
-                <Marker
-                  key={event.id}
-                  position={{ lat, lng }}
-                >
-                  <Popup>
-                    <strong>{event.name}</strong><br />
-                    {event.location}<br />
-                    {event.date}
-                  </Popup>
-                </Marker>
-              );
-            })}
+          <MapContainer
+            center={[51.505, -0.09]}
+            zoom={13}
+            className="h-full"
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {events
+              .filter(event => isValidLocation(event.location)) 
+              .map(event => {
+                const [lat, lng] = event.location.split(',').map(Number);
+                return (
+                  <Marker key={event.id} position={[lat, lng]}>
+                    <Popup>
+                      <strong>{event.name}</strong><br />
+                      {event.location}<br />
+                      {event.date}
+                    </Popup>
+                  </Marker>
+                );
+              })}
           </MapContainer>
         </div>
       </div>

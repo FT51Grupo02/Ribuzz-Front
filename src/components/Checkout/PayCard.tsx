@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
@@ -14,8 +14,9 @@ interface PayCardProps {
 const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { cart, clearCart  } = useCart();
+  const { cart, clearCart } = useCart();
   const { token } = useAuth();
+  const [isProcessing, setIsProcessing] = useState(false); // Estado para controlar el procesamiento
 
   const formik = useFormik({
     initialValues: {
@@ -30,10 +31,13 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
         return;
       }
 
+      setIsProcessing(true); // Comenzar el proceso de pago
+
       const cardElement = elements.getElement(CardElement);
 
       if (!cardElement) {
         console.error('CardElement no encontrado');
+        setIsProcessing(false); // Detener el indicador de proceso
         return;
       }
 
@@ -47,6 +51,7 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
 
       if (error) {
         console.error('Error al crear PaymentMethod:', error);
+        setIsProcessing(false); // Detener el indicador de proceso
         return;
       }
 
@@ -73,15 +78,16 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
 
         if (paymentIntent.error) {
           console.error('Error del backend:', paymentIntent.error);
+          setIsProcessing(false); // Detener el indicador de proceso
           return;
         }
 
         clearCart();
-
         onPaymentSuccess(paymentIntent);
         
       } catch (error) {
         console.error('Error en la solicitud al backend:', error);
+        setIsProcessing(false); // Detener el indicador de proceso
       }
     },
   });
@@ -133,10 +139,9 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
           <button
             type="submit"
             className="w-full p-3 mt-4 bg-gradient-to-r from-[#C87DAB] to-[#C12886] text-white font-bold rounded-full text-sm md:text-base"
+            disabled={isProcessing} // Desactivar el botón mientras procesa
           >
-            <span className="inline-block transition duration-300 hover:scale-110">
-              Realizar Compra
-            </span>
+            {isProcessing ? 'Procesando...' : 'Realizar Compra'}
           </button>
         </div>
       </form>
@@ -144,4 +149,4 @@ const PayCard: React.FC<PayCardProps> = ({ onPaymentSuccess }) => {
   );
 };
 
-export default PayCard; 
+export default PayCard;
