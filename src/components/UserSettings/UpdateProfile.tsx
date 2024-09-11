@@ -19,16 +19,17 @@ const UpdateProfileSchema = Yup.object().shape({
 });
 
 const UpdateProfile: React.FC = () => {
-    const { token } = useAuth(); // Obtiene el token del contexto de autenticación
-    const [imagePreview, setImagePreview] = useState<string>('https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
+    const { token, user, updateUser } = useAuth(); // Obtiene el token y el método updateUser del contexto de autenticación
+    const [imagePreview, setImagePreview] = useState<string>(user?.photo || 'https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp');
     const [userId, setUserId] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
 
     // Obtiene el ID de usuario del localStorage
     useEffect(() => {
-        const storedUserId = localStorage.getItem('authUser');
-        if (storedUserId) {
-            setUserId(storedUserId);
+        const storedUser = localStorage.getItem('authUser');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUserId(parsedUser.id);
         } else {
             console.error('No se encontró el ID de usuario en el localStorage');
         }
@@ -36,66 +37,86 @@ const UpdateProfile: React.FC = () => {
 
     const handleSubmit = async (values: { email: string; password: string; name: string; }) => {
         const confirmUpdate = await Swal.fire({
-            title: '¿Estás seguro?',
-            text: '¿Deseas actualizar tu perfil?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, actualizar',
-            cancelButtonText: 'No, cancelar'
+          title: '¿Estás seguro?',
+          text: '¿Deseas actualizar tu perfil?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, actualizar',
+          cancelButtonText: 'No, cancelar'
         });
-
+      
         if (!confirmUpdate.isConfirmed) return;
-
-        // Validar si el token o el userId son nulos o indefinidos
+      
         if (!token) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de autenticación',
-                text: 'No se ha encontrado el token de autenticación. Inicia sesión nuevamente.'
-            });
-            return;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de autenticación',
+            text: 'No se ha encontrado el token de autenticación. Inicia sesión nuevamente.'
+          });
+          return;
         }
-
+      
         if (!userId) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de usuario',
-                text: 'No se ha encontrado el ID de usuario. Por favor, vuelve a iniciar sesión.'
-            });
-            return;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de usuario',
+            text: 'No se ha encontrado el ID de usuario. Por favor, vuelve a iniciar sesión.'
+          });
+          return;
         }
-
+      
         const profileData = {
-            name: values.name,
-            email: values.email,
-            password: values.password,
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          photo: imagePreview,
         };
-
+      
         try {
-            // Llamada a la API para actualizar el perfil
-            await updateUserProfile(userId, profileData, token);
-            Swal.fire({
-                icon: 'success',
-                title: 'Perfil actualizado',
-                text: 'Tu perfil se ha actualizado correctamente.'
-            });
+          const updatedUser = await updateUserProfile(userId, profileData, token);
+          updateUser(updatedUser); // Actualiza el usuario en el contexto
+          Swal.fire({
+            icon: 'success',
+            title: 'Perfil actualizado',
+            text: 'Tu perfil se ha actualizado correctamente.'
+          });
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al actualizar tu perfil. Inténtalo de nuevo.'
-            });
-            console.error('Error al actualizar perfil:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al actualizar tu perfil. Inténtalo de nuevo.'
+          });
+          console.error('Error al actualizar perfil:', error);
         }
-    };
+      };
 
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
         if (file) {
-            const objectUrl = URL.createObjectURL(file);
-            setImagePreview(objectUrl);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!); // Usa tu upload preset
+            formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!); // Añade la API key
 
-            return () => URL.revokeObjectURL(objectUrl);
+            console.log('Uploading to Cloudinary with preset:', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+            console.log('Cloudinary URL:', `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    setImagePreview(data.secure_url); // Actualiza el estado con la URL de Cloudinary
+                    console.log('Imagen subida a Cloudinary:', data.secure_url); // Imprime la URL de la imagen subida
+                } else {
+                    console.error('Error al subir la imagen:', data);
+                }
+            } catch (error) {
+                console.error('Error al subir la imagen:', error);
+            }
         }
     };
 
@@ -111,16 +132,20 @@ const UpdateProfile: React.FC = () => {
                 <Form className="space-y-4 p-4 sm:p-6 md:p-8 max-w-lg mx-auto">
                     <div className="flex flex-col items-center">
                         <div className="relative">
-                            <Image
-                                src={imagePreview}
-                                alt="Perfil"
-                                width={120}
-                                height={120}
-                                quality={100}
-                                className="object-cover rounded-full border-2 border-gray-300"
-                            />
+                        <Image
+                            src={imagePreview}
+                            alt="Perfil"
+                            width={120}
+                            height={120}
+                            quality={100}
+                            objectFit="cover"
+                            className="rounded-full border-4 border-pink-600"
+                            style={{ aspectRatio: '1 / 1' }}
+                        />
                             <input
                                 type="file"
+                                id="profilePhoto"
+                                name="profilePhoto"
                                 onChange={(event) => {
                                     handleImageChange(event);
                                     handleChange(event);
@@ -188,8 +213,8 @@ const UpdateProfile: React.FC = () => {
                                         }}
                                     />
                                     <div
-                                        onClick={() => setShowPassword(prev => !prev)}
                                         className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-300 text-xl"
+                                        onClick={() => setShowPassword(prev => !prev)}
                                     >
                                         {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Alternar entre los íconos */}
                                     </div>

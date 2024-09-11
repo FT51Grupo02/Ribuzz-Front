@@ -9,6 +9,7 @@ export interface AuthContextProps {
     user: IUser | null;
     setToken: (token: string | null) => void;
     setUser: (user: IUser | null) => void;
+    updateUser: (user: IUser) => void;
     loginEntrepeneurE: (loginData: ILoginPropsEntrep) => Promise<boolean>;
     loginUserC: (loginData: ILoginPropsUSer) => Promise<boolean>;
     logout: () => void;
@@ -20,6 +21,7 @@ export const AuthContext = createContext<AuthContextProps>({
     user: null,
     setToken: () => { throw new Error("setToken no inicializado"); },
     setUser: () => { throw new Error("setUser no inicializado"); },
+    updateUser: () => { throw new Error("updateUser no inicializado"); },
     loginEntrepeneurE: async () => { throw new Error("login no inicializado"); },
     loginUserC: async () => { throw new Error("login no inicializado"); },
     logout: () => { throw new Error("logout no inicializado"); },
@@ -100,6 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const sessionData = await authLoginU(userData);
             setToken(sessionData.token);
             setUser(sessionData.user);
+            console.log(sessionData)
             return true;
         } catch (error) {
             console.error("Error en el login", error);
@@ -112,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setToken(null);
         localStorage.removeItem('authToken');
         localStorage.removeItem('authUser');
-        localStorage.removeItem('cart')
+        localStorage.removeItem('cart');
     };
 
     const register = async (registerData: IRegisterProps): Promise<IRegisterResponse | null> => {
@@ -125,8 +128,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const updateUser = (updatedUser: IUser) => {
+        setUser(updatedUser);
+        localStorage.setItem('authUser', JSON.stringify(updatedUser));
+    };
+
     return (
-        <AuthContext.Provider value={{ token, user, setToken, setUser, loginEntrepeneurE, loginUserC, logout, register }}>
+        <AuthContext.Provider value={{ token, user, setToken, setUser, updateUser, loginEntrepeneurE, loginUserC, logout, register }}>
             {children}
         </AuthContext.Provider>
     );
