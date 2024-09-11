@@ -39,11 +39,16 @@ const RegisterUser = () => {
         date: new Date(values.date),
         rol: values.rol,
       };
-
+  
       const result = await register(registerData);
-
+  
       if (result) {
-        router.push('/login'); // Redirigir al login después del registro exitoso
+        // Redirigir según el rol del usuario
+        if (values.rol === 'emprendedor') {
+          router.push('/register/entrepreneurq');
+        } else if (values.rol === 'cliente') {
+          router.push('/register/clientq');
+        }
       }
     } catch (error) {
       // Manejar error de tipo unknown convirtiéndolo a Error y mostrando el mensaje

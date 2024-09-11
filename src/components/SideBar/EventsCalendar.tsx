@@ -30,12 +30,14 @@ const defaultEvent: IEvent = {
 const fetchUserPurchases = async (userId: string): Promise<{ id: string; date: string; pay: any }[]> => {
     const response = await fetch(`https://ribuzz-backend-ftn4.onrender.com/users/${userId}`);
     const user = await response.json();
+    console.log('User Orders:', user.orders); 
     return user.orders || [];
 };
 
 const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
     const response = await fetch(`https://ribuzz-backend-ftn4.onrender.com/orders/${orderId}`);
     const result = await response.json();
+    console.log('Order Details Result:', result); 
     if (Array.isArray(result) && result.length > 0) {
         const details = result[0].Details || {};
         return {
@@ -73,6 +75,7 @@ const EventsCalendar: React.FC = () => {
                 }))
                 .then((orderDetails: IOrderDetail[]) => {
                     const allEvents = orderDetails.flatMap(details => details.events || []);
+                    console.log('All Events:', allEvents); // Log all events
                     setEvents(allEvents);
                 })
                 .catch(error => console.error('Error fetching order details:', error));
@@ -118,9 +121,9 @@ const EventsCalendar: React.FC = () => {
                             className="mt-4 bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-2 px-4 rounded-full"
                             onClick={() => setDetailsVisible(prev => !prev)}
                         >
-                                        <span className="inline-block text-white hover:scale-110 transition duration-300">
-                                        {detailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles'}
-                        </span>   
+                            <span className="inline-block text-white hover:scale-110 transition duration-300">
+                                {detailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles'}
+                            </span>   
                         </button>
                     )}
                 </div>
