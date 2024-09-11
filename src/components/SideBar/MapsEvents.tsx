@@ -68,24 +68,24 @@ const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
 
 // Función para obtener coordenadas desde la ubicación
 const getCoordinates = async (location: string) => {
-    const apiKey = process.env.NEXT_PUBLIC_MAP_API_KEY; // Usar la clave de la API desde las variables de entorno
-    
-    if (!apiKey) {
-      console.error('API key for geocoding service is not defined.');
-      return null;
-    }
-    
-    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
-    const data = await response.json();
-    
-    if (data.results && data.results.length > 0) {
-      const { lat, lng } = data.results[0].geometry;
-      return { lat, lng };
-    } else {
-      console.error('No se encontraron coordenadas para esta ubicación.');
-      return null;
-    }
-  };
+  const apiKey = process.env.NEXT_PUBLIC_MAP_API_KEY; // Usar la clave de la API desde las variables de entorno
+  
+  if (!apiKey) {
+    console.error('API key for geocoding service is not defined.');
+    return null;
+  }
+  
+  const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
+  const data = await response.json();
+  
+  if (data.results && data.results.length > 0) {
+    const { lat, lng } = data.results[0].geometry;
+    return { lat, lng };
+  } else {
+    console.error('No se encontraron coordenadas para esta ubicación.');
+    return null;
+  }
+};
 
 // Función para validar si una ubicación es válida
 const isValidLocation = (location: string): boolean => {
@@ -99,37 +99,41 @@ const MapsEvents: React.FC = () => {
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (user && token) {
-      fetchUserPurchases(user.id).then(orders => {
-        Promise.all(orders.map(async (order) => {
-          const details = await fetchOrderDetails(order.id);
-          return details;
-        }))
-        .then(async (orderDetails: IOrderDetail[]) => {
-          const allEvents = orderDetails.flatMap(details => details.events || []);
-          // Convertir ubicaciones en coordenadas
-          const updatedEvents = await Promise.all(allEvents.map(async (event) => {
-            if (!isValidLocation(event.location)) {
-              const coords = await getCoordinates(event.location);
-              if (coords) {
-                return { ...event, location: `${coords.lat},${coords.lng}` };
+    if (typeof window !== 'undefined') { // Asegúrate de que el código se ejecute solo en el cliente
+      if (user && token) {
+        fetchUserPurchases(user.id).then(orders => {
+          Promise.all(orders.map(async (order) => {
+            const details = await fetchOrderDetails(order.id);
+            return details;
+          }))
+          .then(async (orderDetails: IOrderDetail[]) => {
+            const allEvents = orderDetails.flatMap(details => details.events || []);
+            // Convertir ubicaciones en coordenadas
+            const updatedEvents = await Promise.all(allEvents.map(async (event) => {
+              if (!isValidLocation(event.location)) {
+                const coords = await getCoordinates(event.location);
+                if (coords) {
+                  return { ...event, location: `${coords.lat},${coords.lng}` };
+                }
               }
-            }
-            return event;
-          }));
-          setEvents(updatedEvents);
+              return event;
+            }));
+            setEvents(updatedEvents);
+          })
+          .catch(error => console.error('Error fetching order details:', error));
         })
-        .catch(error => console.error('Error fetching order details:', error));
-      })
-      .catch(error => console.error('Error fetching user purchases:', error));
+        .catch(error => console.error('Error fetching user purchases:', error));
+      }
     }
   }, [user, token]);
 
   // Función para manejar clic en el botón de ubicación
   const handleLocationClick = (location: string) => {
-    const [lat, lng] = location.split(',').map(Number);
-    if (!isNaN(lat) && !isNaN(lng) && mapRef.current) {
-      mapRef.current.setView([lat, lng], 13);
+    if (typeof window !== 'undefined') { // Asegúrate de que el código se ejecute solo en el cliente
+      const [lat, lng] = location.split(',').map(Number);
+      if (!isNaN(lat) && !isNaN(lng) && mapRef.current) {
+        mapRef.current.setView([lat, lng], 13);
+      }
     }
   };
 
@@ -160,7 +164,6 @@ const MapsEvents: React.FC = () => {
             center={[51.505, -0.09]}
             zoom={13}
             className="h-full"
-         
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {events
