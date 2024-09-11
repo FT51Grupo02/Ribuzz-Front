@@ -123,7 +123,7 @@ const MapsEvents: React.FC = () => {
     if (typeof window !== 'undefined') {
       const [lat, lng] = location.split(',').map(Number);
       if (!isNaN(lat) && !isNaN(lng) && mapRef.current) {
-        mapRef.current.setView([lat, lng], 13);
+        mapRef.current.setView([lat, lng], 10);
       }
     }
   };
@@ -153,8 +153,9 @@ const MapsEvents: React.FC = () => {
       <div className="w-full h-96 lg:h-96">
         <MapContainer
           center={[51.505, -0.09]}
-          zoom={13}
+          zoom={10}
           className="h-full"
+          ref={mapRef}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {events
