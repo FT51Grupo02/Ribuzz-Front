@@ -1,12 +1,15 @@
-import ClientQ from '@/components/Forms/Questions/ClientQ'
-import React from 'react'
+import dynamic from 'next/dynamic';
+import React from 'react';
+
+// Carga dinámica del componente ClientQ solo en el cliente
+const ClientQ = dynamic(() => import('@/components/Forms/Questions/ClientQ'), { ssr: false });
 
 const ClientQue = () => {
   return (
     <div>
-        <ClientQ/>
+      <ClientQ />
     </div>
-  )
-}
+  );
+};
 
-export default ClientQue
+export default ClientQue;
