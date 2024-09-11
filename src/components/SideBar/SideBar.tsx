@@ -63,7 +63,7 @@ const handleLogout = () => {
         <Link href="/user/myevents">
           <FaCalendarAlt className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>  
-        <Link href="/maps">
+        <Link href="/user/eventsmaps">
           <TbMapSearch  className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         {user?.role === 'emprendedor' && (
