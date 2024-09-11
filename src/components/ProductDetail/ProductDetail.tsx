@@ -147,7 +147,7 @@ const ProductDetail: FC<ProductType> = ({
     <div className="relative w-full h-full min-h-screen bg-black text-white font-poppins">
       <div className="absolute inset-0">
         <Image
-          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725481343/0_gytttz.png"
+          src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp"
           alt="Background Image"
           layout="fill"
           objectFit="cover"
