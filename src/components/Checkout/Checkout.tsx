@@ -11,7 +11,6 @@ import { useStripeContext } from '../Context/StripeContext'; // Ajusta la ruta s
 
 interface SelectableItem {
   id: string;
-  // Otros campos opcionales si es necesario
 }
 
 const Checkout: React.FC = () => {
