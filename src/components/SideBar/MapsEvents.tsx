@@ -130,6 +130,7 @@ const MapsEvents: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
+          <h3 className="text-3xl font-bold mb-4">Mis eventos: Ubicación</h3>
         {/* Mapa centrado en Colombia */}
         <div className="w-full h-96 lg:h-96">
           <MapContainer
@@ -156,7 +157,6 @@ const MapsEvents: React.FC = () => {
         </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-rows-2 lg:grid-cols-1">
         <div className="bg-transparent p-4 rounded-lg">
-          <h3 className="text-3xl font-bold mb-4">Mis eventos: Ubicación</h3>
           <ul className="list-disc pl-5 mb-4">
             {events.map(event => (
               <li key={event.id} className="mb-4">

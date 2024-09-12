@@ -57,7 +57,7 @@ const handleLogout = () => {
       />
       <nav className="flex flex-col space-y-10 mt-8 z-10">
       <Link href="/user">
-          <FaHome className="text-xl hover:text-pink-400 cursor-pointer" />
+          <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
         <Link href="/user/orders">
           <BsTicketDetailed className="text-xl hover:text-pink-400 cursor-pointer" />
@@ -68,13 +68,17 @@ const handleLogout = () => {
         <Link href="/user/eventsmaps">
           <TbMapSearch  className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
+
+        {user?.role === 'emprendedor' && (
+          <Link href="/user/create">
         {(user?.role === 'emprendedor' || user?.role === 'admin') && (
-          <Link href="/user/settings">
+          <Link href="/user/create">
             <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
         )}
           {(user?.role === 'emprendedor' || user?.role === 'admin') && (
           <Link href="/user/myevents">
+
             <MdOutlineCreateNewFolder className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
           

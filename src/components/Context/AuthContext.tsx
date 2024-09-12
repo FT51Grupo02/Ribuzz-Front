@@ -1,8 +1,10 @@
 'use client';
+
 import { createContext, useContext, useEffect, useState } from "react";
-import { IUser, IRegisterProps, IRegisterResponse, ILoginPropsUSer, ILoginPropsEntrep } from "@/interfaces/Types";
+import { IUser, IRegisterProps, IRegisterResponse, ILoginPropsUSer, ILoginPropsEntrep, IProduct } from "@/interfaces/Types";
 import { loginEntrepreneurH as authLoginE, loginUserH as authLoginU, register as authRegister } from "@/helpers/auth.helper";
 import { getAuthenticatedUser } from "@/helpers/user.helper";
+import { createProduct } from "@/helpers/products.helper";
 
 export interface AuthContextProps {
     token: string | null;
@@ -14,6 +16,7 @@ export interface AuthContextProps {
     loginUserC: (loginData: ILoginPropsUSer) => Promise<boolean>;
     logout: () => void;
     register: (registerData: IRegisterProps) => Promise<IRegisterResponse | null>;
+    createProduct: (productData: IProduct) => Promise<IProduct>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -26,6 +29,7 @@ export const AuthContext = createContext<AuthContextProps>({
     loginUserC: async () => { throw new Error("login no inicializado"); },
     logout: () => { throw new Error("logout no inicializado"); },
     register: async () => { throw new Error("register no inicializado"); },
+    createProduct: async () => { throw new Error("createProduct no inicializado"); },
 });
 
 export interface AuthProviderProps {
@@ -36,7 +40,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [token, setToken] = useState<string | null>(null);
     const [user, setUser] = useState<IUser | null>(null);
 
-    // Recuperar token y usuario del localStorage al cargar la página
     useEffect(() => {
         const storedToken = localStorage.getItem('authToken');
         const storedUser = localStorage.getItem('authUser');
@@ -48,7 +51,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }, []);
 
-    // Guardar token en localStorage cuando cambia
     useEffect(() => {
         if (token) {
             localStorage.setItem('authToken', token);
@@ -57,7 +59,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }, [token]);
 
-    // Guardar usuario en localStorage cuando cambia
     useEffect(() => {
         if (user) {
             localStorage.setItem('authUser', JSON.stringify(user));
@@ -66,7 +67,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }, [user]);
 
-    // Obtener datos del usuario autenticado
     useEffect(() => {
         const fetchUserData = async () => {
             if (token) {
@@ -133,8 +133,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('authUser', JSON.stringify(updatedUser));
     };
 
+    const createProductContext = async (productData: IProduct): Promise<IProduct> => {
+        if (!token) {
+            throw new Error('No hay token de autenticación');
+        }
+        try {
+            return await createProduct(token, productData);
+        } catch (error) {
+            console.error("Error al crear el producto", error);
+            throw error;
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ token, user, setToken, setUser, updateUser, loginEntrepeneurE, loginUserC, logout, register }}>
+        <AuthContext.Provider value={{ 
+            token, 
+            user, 
+            setToken, 
+            setUser, 
+            updateUser, 
+            loginEntrepeneurE, 
+            loginUserC, 
+            logout, 
+            register,
+            createProduct: createProductContext 
+        }}>
             {children}
         </AuthContext.Provider>
     );
