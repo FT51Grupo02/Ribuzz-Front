@@ -15,6 +15,17 @@ const CardEvents: React.FC<CardEventsProps> = ({ events, eventsLoaded }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric'
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, options);
+};
+
+
   useEffect(() => {
     if (eventsLoaded) {
       setLoading(false);
@@ -67,7 +78,7 @@ const CardEvents: React.FC<CardEventsProps> = ({ events, eventsLoaded }) => {
                 {event.name}
               </h2>
               <p className="text-white mt-2 text-sm md:text-base lg:text-lg">
-                {event.date} | {event.location}
+                  {formatDate(event.date)} | {event.location}
               </p>
               <p className="text-gray-200 mt-4 text-sm md:text-base lg:text-lg leading-relaxed flex-grow overflow-hidden text-ellipsis">
                 {event.description}

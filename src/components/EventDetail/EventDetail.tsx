@@ -77,6 +77,17 @@ const EventDetail: FC<Event> = ({
         router.push('/cart');
     };
 
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        };
+        const date = new Date(dateString);
+        return date.toLocaleDateString(undefined, options);
+    };
+
+
     const handleAddComment = async () => {
         if (!user || !token) {
           Swal.fire({
@@ -198,7 +209,7 @@ const EventDetail: FC<Event> = ({
                     <div className="lg:w-2/5">
                         <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-cyan-400 text-center lg:text-left">Locación:</h2>
                         <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Ubicación:</strong> {location}</p>
-                        <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Fecha:</strong> {date}</p>
+                        <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Fecha:</strong> {formatDate(date)}</p>
                         <p className="mb-6 text-base sm:text-lg text-center lg:text-left"><strong>Horario:</strong> {time.join(', ')}</p>
 
                         {providerInfo && (
