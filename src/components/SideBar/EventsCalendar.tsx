@@ -64,6 +64,17 @@ const EventsCalendar: React.FC = () => {
     const [detailsVisible, setDetailsVisible] = useState<boolean>(false);
     const [buttonVisible, setButtonVisible] = useState<boolean>(false);
 
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        };
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', options);
+    };
+    
+
     useEffect(() => {
         if (user && user.id && token) {
             fetchUserPurchases(user.id).then(orders => {
@@ -101,7 +112,7 @@ const EventsCalendar: React.FC = () => {
                     <h3 className="text-4xl font-bold mb-4">Mis Eventos</h3>
                     <ul className="list-disc pl-5 mb-4">
                         {events.map(event => (
-                            <li key={event.id} className="mb-2 text-xl text-pink-400">{event.date}</li>
+                            <li key={event.id} className="mb-2 text-xl text-pink-400">{formatDate(event.date)}</li>
                         ))}
                     </ul>
 
@@ -109,7 +120,7 @@ const EventsCalendar: React.FC = () => {
                         <div className="bg-transparent shadow-md rounded-lg p-4">
                             <h3 className="text-2xl font-bold mb-4">{selectedEvent.name}</h3>
                             <p className='text-xl'><strong className='text-pink-400'>Día:</strong> {getDayOfWeek(selectedEvent.date)}</p>
-                            <p className='text-xl'><strong className='text-pink-400'>Fecha:</strong> {selectedEvent.date}</p>
+                            <p className='text-xl'><strong className='text-pink-400'>Fecha:</strong> {formatDate(selectedEvent.date)}</p>
                             <p className='text-xl'><strong className='text-pink-400'>Ubicación:</strong> {selectedEvent.location}</p>
                         </div>
                     )}
