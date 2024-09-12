@@ -39,7 +39,7 @@ export const fetchUsers = async (token: string, page: number = 1, limit: number 
           throw new Error('Error al recuperar los usuarios');
       }
       const users = await response.json();
-      console.log('Usuarios obtenidos en fetchUsers:', users); // Verifica la lista de usuarios
+     
       return users;
   } catch (error) {
       console.error('Error en la solicitud de usuarios:', error);

@@ -1,9 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { IUser } from '../../interfaces/Types'; // Importa la interfaz de usuario
-import { fetchUsers } from '../../helpers/user.helper'; // Importa la función fetchUsers
-import { FaUserCircle, FaTrash, FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa'; // Importa los iconos
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import { fetchUsers } from '../../helpers/user.helper'; 
+import { FaUserCircle, FaTrash, FaPencilAlt, FaCheck, FaTimes, FaCamera } from 'react-icons/fa'; 
+import Swal from 'sweetalert2'; 
+
+export interface IUser {
+  id?: string;
+  name: string;
+  email: string;
+  date?: string;
+  photo?: string | null;
+  rol?: string
+}
 
 interface GestionDeUsuariosProps {
   token: string; // El token se pasará como prop
@@ -17,6 +25,7 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
   const [error, setError] = useState<string | null>(null); // Estado para manejar errores
   const [editingUserId, setEditingUserId] = useState<string | null>(null); // Estado para almacenar el usuario que se está editando
   const [updatedRole, setUpdatedRole] = useState<string>(''); // Estado para almacenar el rol editado
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // Estado para almacenar la vista previa de la imagen
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,14 +98,14 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, role: updatedRole }),
+        body: JSON.stringify({ email}),
       });
 
       if (response.ok) {
         // Actualizamos el rol del usuario en la lista
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user.id === editingUserId ? { ...user, role: updatedRole } : user
+            user.id === editingUserId ? { ...user, rol: updatedRole } : user
           )
         );
         setEditingUserId(null);
@@ -106,6 +115,57 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
       }
     } catch (error) {
       Swal.fire('Error', 'No se pudo actualizar el rol.', 'error');
+    }
+  };
+
+  // Función para manejar el cambio de imagen
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>, userId: string) => {
+    const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!); // Usa tu upload preset
+      formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!); // Añade la API key
+
+      console.log('Uploading to Cloudinary with preset:', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+      console.log('Cloudinary URL:', `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`);
+
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          const newPhotoUrl = data.secure_url;
+          setImagePreview(newPhotoUrl); // Actualiza el estado con la URL de Cloudinary
+          // Actualiza la imagen del usuario en la base de datos
+          const updateResponse = await fetch(`${API_URL}/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ photo: newPhotoUrl }),
+          });
+
+          if (updateResponse.ok) {
+            setUsers((prevUsers) =>
+              prevUsers.map((user) =>
+                user.id === userId ? { ...user, photo: newPhotoUrl } : user
+              )
+            );
+            Swal.fire('¡Imagen actualizada!', 'La imagen del usuario ha sido actualizada.', 'success');
+          } else {
+            throw new Error('Error al actualizar la imagen');
+          }
+        } else {
+          console.error('Error al subir la imagen:', data);
+        }
+      } catch (error) {
+        console.error('Error al subir la imagen:', error);
+      }
     }
   };
 
@@ -155,8 +215,8 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
                   </>
                 ) : (
                   <>
-                    <span className="ml-2">{user.role || 'Sin rol definido'}</span>
-                    <button className="ml-2 text-blue-500" onClick={() => handleEditRole(user.id as string, user.role || '')}>
+                    <span className="ml-2">{user.rol || 'Sin rol definido'}</span>
+                    <button className="ml-2 text-blue-500" onClick={() => handleEditRole(user.id as string, user.rol || '')}>
                       <FaPencilAlt />
                     </button>
                   </>
@@ -164,13 +224,26 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
               </p>
               <p><strong>Fecha:</strong> {user.date || 'Fecha no disponible'}</p>
             </div>
-            {/* Icono de basura para eliminar el usuario */}
-            <button 
-              className="absolute right-0 top-0 mt-2 mr-2 text-red-500 hover:text-red-700"
-              onClick={() => handleDelete(user.id as string)}
-            >
-              <FaTrash className="w-6 h-6" />
-            </button>
+            <div className="flex items-center">
+              {/* Campo para subir una nueva foto */}
+              <label htmlFor={`upload-photo-${user.id}`} className="cursor-pointer text-blue-500">
+                <FaCamera className="w-6 h-6" />
+              </label>
+              <input 
+                type="file" 
+                id={`upload-photo-${user.id}`} 
+                accept="image/*" 
+                className="hidden"
+                onChange={(e) => handleImageChange(e, user.id as string)}
+              />
+              {/* Icono de basura para eliminar el usuario */}
+              <button 
+                className="ml-2 text-red-500 hover:text-red-700"
+                onClick={() => handleDelete(user.id as string)}
+              >
+                <FaTrash className="w-6 h-6" />
+              </button>
+            </div>
           </li>
         ))}
       </ul>
