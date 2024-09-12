@@ -4,7 +4,7 @@ import React from 'react'
 const UsersEdit = () => {
   return (
     <div>
-      <GestionDeUsuarios/>
+      <GestionDeUsuarios token={''}/>
     </div>
   )
 }
