@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { ICartProduct, ICartEvent, ICartService } from '@/interfaces/Cart';
+import { useAuth } from '@/components/Context/AuthContext';
+import Swal from 'sweetalert2';
 
 interface CartContextProps {
   cart: (ICartProduct | ICartEvent | ICartService)[];
@@ -17,6 +19,7 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<(ICartProduct | ICartEvent | ICartService)[]>([]);
+  const { token } = useAuth();
 
 
   useEffect(() => {
@@ -37,8 +40,18 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
   const addToCart = (item: ICartProduct | ICartEvent | ICartService) => {
+    if (!token) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Debes loguearte para comprar',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return;
+    }
     setCart(prevCart => {
       const updatedCart = [...prevCart, item];
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
