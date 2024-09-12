@@ -1,4 +1,4 @@
-import { /* ILoginProps,  */ILoginPropsEntrep, ILoginPropsUSer, IRegisterResponse, IUserSession } from "@/interfaces/Types";
+import { /* ILoginProps,  */ILoginPropsEntrep, ILoginPropsUser, IRegisterResponse, IUserSession } from "@/interfaces/Types";
 import { IRegisterProps } from "@/interfaces/Types";
 
 
@@ -28,7 +28,7 @@ export async function register(registerData: IRegisterProps): Promise<IRegisterR
 }
 
 
-export async function loginUserH(userData: ILoginPropsUSer): Promise<IUserSession> {
+export async function loginUserH(userData: ILoginPropsUser): Promise<IUserSession> {
   try {
     console.log('Datos de usuario a enviar:', userData); // Verificar datos de usuario
 

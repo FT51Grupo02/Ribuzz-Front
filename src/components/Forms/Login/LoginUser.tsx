@@ -7,7 +7,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/components/Context/AuthContext'; 
-import { ILoginPropsUSer } from '@/interfaces/Types';
+import { ILoginPropsUser } from '@/interfaces/Types';
 import GoogleLoginButton from '../../Google/Button/GoogleButton';
 import Swal from 'sweetalert2';
 
@@ -25,7 +25,7 @@ const LoginUser = () => {
   const router = useRouter();
   const { loginUserC } = useAuth();
 
-  const handleSubmit = async (values: ILoginPropsUSer) => {
+  const handleSubmit = async (values: ILoginPropsUser) => {
     try {
       console.log("Valores enviados al backendCliente:", values);
       const isSuccess = await loginUserC(values);

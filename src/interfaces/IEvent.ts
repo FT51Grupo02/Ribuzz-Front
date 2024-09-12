@@ -6,7 +6,7 @@ export interface IEvent {
     description: string;
     price: number;
     images: string[];
-    providerInfo: ProviderInfo;
+    ProviderInfo: ProviderInfo;
     duration: string;
     location: string;
     reviews?: Review[];

@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const Maps: React.FC = () => {
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full min-h-screen overflow-x-hidden">
       <Image
         src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/19_wolnfl.webp"
         alt="Background"

@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { FaStar, FaTrashAlt } from 'react-icons/fa'; // Importa el ícono de estrella y el ícono de tacho de basura
-import { IService } from '../../interfaces/Types'; // Ajusta la ruta según corresponda
+import { FaStar, FaTrashAlt } from 'react-icons/fa';
+import { IService } from '../../interfaces/Types';
 
 const GestionDeServicios: React.FC = () => {
   const [services, setServices] = useState<IService[]>([]);
@@ -10,7 +10,6 @@ const GestionDeServicios: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Cambia el URL al endpoint correcto
     fetch('https://ribuzz-backend-ftn4.onrender.com/search/services')
       .then(response => {
         if (!response.ok) {
@@ -28,7 +27,12 @@ const GestionDeServicios: React.FC = () => {
       });
   }, []);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | undefined) => {
+    if (!id) {
+      Swal.fire('Error', 'No se puede eliminar un servicio sin ID', 'error');
+      return;
+    }
+
     Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás recuperar este servicio después de eliminarlo!",
@@ -87,7 +91,7 @@ const GestionDeServicios: React.FC = () => {
             <p className="text-gray-300">{service.description}</p>
             <p className="font-bold mt-2">${service.price}</p>
             <div className="mt-2">
-              {service.images.length > 0 && (
+              {service.images && service.images.length > 0 && (
                 <img
                   src={service.images[0]}
                   alt={service.name}

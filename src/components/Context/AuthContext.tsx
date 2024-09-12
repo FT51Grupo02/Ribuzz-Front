@@ -1,10 +1,12 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { IUser, IRegisterProps, IRegisterResponse, ILoginPropsUSer, ILoginPropsEntrep, IProduct } from "@/interfaces/Types";
+import { IUser, IRegisterProps, IRegisterResponse, ILoginPropsUser, ILoginPropsEntrep, IProduct, IService, IEvent } from "@/interfaces/Types";
 import { loginEntrepreneurH as authLoginE, loginUserH as authLoginU, register as authRegister } from "@/helpers/auth.helper";
 import { getAuthenticatedUser } from "@/helpers/user.helper";
 import { createProduct } from "@/helpers/products.helper";
+import { createService } from "@/helpers/services.helper";
+import { createEvent } from "@/helpers/events.helper";
 
 export interface AuthContextProps {
     token: string | null;
@@ -13,10 +15,12 @@ export interface AuthContextProps {
     setUser: (user: IUser | null) => void;
     updateUser: (user: IUser) => void;
     loginEntrepeneurE: (loginData: ILoginPropsEntrep) => Promise<boolean>;
-    loginUserC: (loginData: ILoginPropsUSer) => Promise<boolean>;
+    loginUserC: (loginData: ILoginPropsUser) => Promise<boolean>;
     logout: () => void;
     register: (registerData: IRegisterProps) => Promise<IRegisterResponse | null>;
     createProduct: (productData: IProduct) => Promise<IProduct>;
+    createService: (serviceData: IService) => Promise<IService>;
+    createEvent: (eventData: Omit<IEvent, 'id'>) => Promise<IEvent>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -30,6 +34,8 @@ export const AuthContext = createContext<AuthContextProps>({
     logout: () => { throw new Error("logout no inicializado"); },
     register: async () => { throw new Error("register no inicializado"); },
     createProduct: async () => { throw new Error("createProduct no inicializado"); },
+    createService: async () => { throw new Error("createService no inicializado"); },
+    createEvent: async () => { throw new Error("createEvent no inicializado"); },
 });
 
 export interface AuthProviderProps {
@@ -97,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
-    const loginUserC = async (userData: ILoginPropsUSer): Promise<boolean> => {
+    const loginUserC = async (userData: ILoginPropsUser): Promise<boolean> => {
         try {
             const sessionData = await authLoginU(userData);
             setToken(sessionData.token);
@@ -145,6 +151,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const createServiceContext = async (serviceData: IService): Promise<IService> => {
+        if (!token) {
+            throw new Error('No hay token de autenticación');
+        }
+        try {
+            return await createService(token, serviceData);
+        } catch (error) {
+            console.error("Error al crear el servicio", error);
+            throw error;
+        }
+    };
+
+    const createEventContext = async (eventData: Omit<IEvent, 'id'>): Promise<IEvent> => {
+        if (!token) {
+            throw new Error('No hay token de autenticación');
+        }
+        try {
+            return await createEvent(token, eventData);
+        } catch (error) {
+            console.error("Error al crear el evento", error);
+            throw error;
+        }
+    };
+
     return (
         <AuthContext.Provider value={{ 
             token, 
@@ -156,7 +186,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             loginUserC, 
             logout, 
             register,
-            createProduct: createProductContext 
+            createProduct: createProductContext,
+            createService: createServiceContext,
+            createEvent: createEventContext
         }}>
             {children}
         </AuthContext.Provider>

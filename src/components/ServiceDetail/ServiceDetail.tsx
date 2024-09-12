@@ -188,8 +188,15 @@ const ServiceDetail: FC<ServiceType> = ({
                     </div>
                     <div className="lg:w-2/5">
                         <h2 className="text-3xl font-semibold mb-4 text-cyan-400">Proveedor:</h2>
+                        {providerInfo ? (
+              <>
                         <p className="mb-4 text-lg"><strong>Nombre:</strong> {providerInfo?.name || 'No disponible'}</p>
-                        <p className="mb-8 text-lg"><strong>Contacto:</strong> {providerInfo?.contact || 'No disponible'}</p>
+                        <p className="mb-4 text-lg"><strong>Contacto:</strong> {providerInfo?.contact || 'No disponible'}</p>
+                        <p className="mb-8 text-lg"><strong>Ubicación:</strong> {providerInfo?.location || 'No disponible'}</p>
+                        </>
+                        ) : (
+                            <p className="mb-8 text-lg">Información del proveedor no disponible.</p>
+                        )}
                         {details?.length > 0 && (
                             <div className="mb-8">
                                 <h2 className="text-3xl font-semibold mb-4 text-cyan-400">Detalles:</h2>
