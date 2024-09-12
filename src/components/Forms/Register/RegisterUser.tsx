@@ -43,6 +43,7 @@ const RegisterUser = () => {
       const result = await register(registerData);
   
       if (result) {
+        console.log('User ID:', result.id);
         // Redirigir según el rol del usuario
         if (values.rol === 'emprendedor') {
           router.push('/register/entrepreneurq');
