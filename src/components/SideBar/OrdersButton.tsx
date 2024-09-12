@@ -81,32 +81,34 @@ const OrderButton = () => {
                         className="relative flex flex-col md:flex-row justify-between items-center py-4"
                     >
                         <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-[#C87DAB] to-[#C12886]"></div>
-                        <span className="text-lg font-medium text-white z-10">Orden ID: {order.id}</span>
+                        <span className="text-lg font-medium text-white z-10 ">ID de su pedido: {order.id}</span>
                         <button 
                             onClick={() => handleViewDetails(order.id)}
                             className="bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-2 px-4 rounded-full"
                         >
-                            Ver Detalles
+                        <span className="inline-block text-white hover:scale-110 transition duration-300">
+                            Ver detalles
+                        </span>
                         </button>
                     </li>
                 ))}
             </ul>
             
             {!detailsVisible && (
-                <div className="mt-6 bg-transparent shadow-md rounded-lg p-4 text-center">
+                <div className="mt-6 bg-transparent shadow-md rounded-lg p-4 text-center text-pink-300">
                     <p>Aquí verás tus compras</p>
                 </div>
             )}
             
             {detailsVisible && selectedOrder && (
                 <div className="mt-6 bg-transparent shadow-md rounded-lg p-4">
-                    <h3 className="text-2xl font-bold mb-4">Detalles de la Orden</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-pink-400">Detalles de la Orden</h3>
                     <p>ID: {selectedOrder.id}</p>
                     <p>Total: ${selectedOrder.total.toFixed(2)}</p>
                     
                     {selectedOrder.products && selectedOrder.products.length > 0 && (
                         <div className="mt-4">
-                            <h4 className="text-xl font-semibold mb-2">Productos</h4>
+                            <h4 className="text-xl font-semibold mb-2 text-pink-400">Productos</h4>
                             <ul className="list-disc pl-5">
                                 {selectedOrder.products.map(product => (
                                     <li key={product.id} className="mb-2">{product.name} - ${product.price}</li>
@@ -116,7 +118,7 @@ const OrderButton = () => {
                     )}
                     {selectedOrder.events && selectedOrder.events.length > 0 && (
                         <div className="mt-4">
-                            <h4 className="text-xl font-semibold mb-2">Eventos</h4>
+                            <h4 className="text-xl font-semibold mb-2 text-pink-400">Eventos</h4>
                             <ul className="list-disc pl-5">
                                 {selectedOrder.events.map(event => (
                                     <li key={event.id} className="mb-2">{event.name}</li>
@@ -126,7 +128,7 @@ const OrderButton = () => {
                     )}
                     {selectedOrder.service && selectedOrder.service.length > 0 && (
                         <div className="mt-4">
-                            <h4 className="text-xl font-semibold mb-2">Servicios</h4>
+                            <h4 className="text-xl font-semibold mb-2 text-pink-400">Servicios</h4>
                             <ul className="list-disc pl-5">
                                 {selectedOrder.service.map(service => (
                                     <li key={service.id} className="mb-2">{service.name} - ${service.price}</li>
