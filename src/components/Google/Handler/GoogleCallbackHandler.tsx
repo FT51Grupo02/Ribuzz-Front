@@ -2,47 +2,41 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/Context/AuthContext';
+import { useAuth } from '@/components/Context/AuthContext'; // Importa el contexto
 import { IUser } from '@/interfaces/Types';
 
 const GoogleCallbackHandler = () => {
   const router = useRouter();
-  const { setToken, setUser } = useAuth();
+  const { setToken, setUser } = useAuth(); // Usa el contexto de autenticación
 
   useEffect(() => {
     const handleAuth = async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('token');  // Captura el token de la URL
-      const role = urlParams.get('role');          // Captura el rol de la URL
+      const accessToken = urlParams.get('token'); // Captura el token de la URL
+      const role = urlParams.get('role');         // Captura el rol de la URL
 
       if (accessToken && role) {
         try {
-          // Si es necesario, podrías realizar una solicitud adicional al backend para verificar el token, pero aquí lo omito
-          // Suponiendo que ya tienes toda la información necesaria del token JWT
-
-          // Almacena el token en localStorage
+          // Almacena el token en localStorage y el contexto
           localStorage.setItem('authToken', accessToken);
+          setToken(accessToken);
 
-          // Decodifica el token si es necesario
+          // Decodifica el token para extraer la información del usuario
           const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
-
           const user: IUser = {
             id: decodedToken.id,
-            email: decodedToken.correo,
-            name: '',  
-            date: '',  
-            photo: '',  
-            role: role,  
+            email: decodedToken.email,
+            name: decodedToken.name || '',
+            date: decodedToken.date || '',
+            photo: decodedToken.picture || '',
+            role: role,  // Asigna el rol capturado en la URL
           };
 
-          // Almacena el usuario en localStorage
-          localStorage.setItem('user', JSON.stringify(user));
-          
-          // Actualiza el contexto de autenticación
-          setToken(accessToken);
+          // Almacena el usuario en localStorage y el contexto
+          localStorage.setItem('authUser', JSON.stringify(user));
           setUser(user);
 
-          // Redirige a la página principal
+          // Redirige a la página principal o donde prefieras
           router.push('/');
         } catch (error) {
           console.error('Error al procesar el token:', error);
@@ -57,7 +51,7 @@ const GoogleCallbackHandler = () => {
     handleAuth();
   }, [router, setToken, setUser]);
 
-  return <div>Procesando autenticación...</div>; // Puedes reemplazar esto con un componente de carga o loader
+  return <div>Procesando autenticación...</div>;
 };
 
 export default GoogleCallbackHandler;
