@@ -10,24 +10,21 @@ const defaultEvent: IEvent = {
     description: '',
     price: 0,
     images: [],
-    providerInfo: { name: '', contact: '' },
+    ProviderInfo: { name: '', contact: '', location: '' },
     duration: '',
-    location: '',
-    reviews: [],
-    publicationDate: '',
     date: '',
     time: [],
     stock: 0,
-    videos: [],
-    rating: 0,
-    popularity: '',
-    type: 'event'
+    publicationDate: '',
+    type: 'event',
+    location: '',
+    videos: []
 };
 
 const fetchEntrepreneurEvents = async (entrepreneurId: string): Promise<IEvent[]> => {
     const response = await fetch('https://ribuzz-backend-ftn4.onrender.com/search/events');
     const allEvents = await response.json();
-    return allEvents.filter((event: IEvent) => event.providerInfo.contact === entrepreneurId);
+    return allEvents.filter((event: IEvent) => event.ProviderInfo.contact === entrepreneurId);
 };
 
 const getDayOfWeek = (dateString: string): string => {
@@ -80,6 +77,11 @@ const EventsCreatedEntrepreneur: React.FC = () => {
                     <p><strong>Fecha:</strong> {selectedEvent.date}</p>
                     <p><strong>Ubicación:</strong> {selectedEvent.location}</p>
                     <p><strong>Descripción:</strong> {selectedEvent.description}</p>
+                    <p><strong>Precio:</strong> ${selectedEvent.price}</p>
+                    <p><strong>Duración:</strong> {selectedEvent.duration}</p>
+                    <p><strong>Stock:</strong> {selectedEvent.stock}</p>
+                    <p><strong>Proveedor:</strong> {selectedEvent.ProviderInfo.name}</p>
+                    <p><strong>Contacto del Proveedor:</strong> {selectedEvent.ProviderInfo.contact}</p>
                 </div>
             )}
         </div>

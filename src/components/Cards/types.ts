@@ -6,6 +6,7 @@ export interface SellerInfo {
 export interface ProviderInfo {
     name: string;
     contact: string;
+    location: string;
 }
 
 export interface Review {
@@ -54,7 +55,7 @@ export interface Event {
     description: string;
     price: number;
     images: string[];
-    providerInfo: ProviderInfo;
+    ProviderInfo: ProviderInfo;
     duration: string;
     location: string;
     reviews?: Review[];

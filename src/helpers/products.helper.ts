@@ -2,74 +2,57 @@ import { IProduct } from "@/interfaces/IProduct";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
+// Función auxiliar para manejar las respuestas de fetch
+async function handleResponse<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+
+// Función auxiliar para realizar peticiones fetch
+async function fetchWithErrorHandling<T>(url: string, options?: RequestInit): Promise<T> {
+  try {
+    const response = await fetch(url, options);
+    return handleResponse<T>(response);
+  } catch (error: any) {
+    console.error(`Error en la petición a ${url}:`, error);
+    throw new Error(`Error en la petición: ${error.message}`);
+  }
+}
+
 export async function getProductsDB(): Promise<IProduct[]> {
-    try {
-        const res = await fetch(`${APIURL}/api/products`, {
-            next: { revalidate: 3600 }
-        });
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const products: IProduct[] = await res.json();
-        return products;
-    } catch (error: any) {
-        console.error("Error fetching products:", error);
-        throw new Error(`Failed to fetch products: ${error.message}`);
-    }
+  return fetchWithErrorHandling<IProduct[]>(`${APIURL}/api/products`, {
+    next: { revalidate: 3600 }
+  });
 }
 
 export async function getProductById(id: string): Promise<IProduct> {
-    try {
-        const res = await fetch(`${APIURL}/api/products/${id}`, {
-            next: { revalidate: 3600 }
-        });
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const product: IProduct = await res.json();
-        return product;
-    } catch (error: any) {
-        console.error(`Error fetching product with id ${id}:`, error);
-        throw new Error(`Failed to fetch product: ${error.message}`);
-    }
+  return fetchWithErrorHandling<IProduct>(`${APIURL}/api/products/${id}`, {
+    next: { revalidate: 3600 }
+  });
 }
 
 export async function getProductsByCategory(categoryId: string): Promise<IProduct[]> {
-    try {
-        const res = await fetch(`${APIURL}/api/products?category=${categoryId}`, {
-            next: { revalidate: 3600 }
-        });
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        const products: IProduct[] = await res.json();
-        if (!products.length) {
-            throw new Error(`No se encontraron productos para la categoría ${categoryId}`);
-        }
-        return products;
-    } catch (error: any) {
-        console.error(`Error fetching products for category ${categoryId}:`, error);
-        throw new Error(`Failed to fetch products by category: ${error.message}`);
-    }
+  const products = await fetchWithErrorHandling<IProduct[]>(`${APIURL}/api/products?category=${categoryId}`, {
+    next: { revalidate: 3600 }
+  });
+
+  if (!products.length) {
+    throw new Error(`No se encontraron productos para la categoría ${categoryId}`);
+  }
+
+  return products;
 }
 
 export async function createProduct(token: string, productData: IProduct): Promise<IProduct> {
-    try {
-        const res = await fetch(`${APIURL}/api/products`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(productData),
-        });
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.message || 'Error al crear el producto');
-        }
-        return res.json();
-    } catch (error: any) {
-        console.error("Error creating product:", error);
-        throw new Error(`Failed to create product: ${error.message}`);
-    }
+  return fetchWithErrorHandling<IProduct>(`${APIURL}/api/products`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(productData),
+  });
 }

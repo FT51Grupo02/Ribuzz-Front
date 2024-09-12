@@ -23,18 +23,15 @@ const defaultEvent: IEvent = {
   description: '',
   price: 0,
   images: [],
-  providerInfo: { name: '', contact: '' },
+  ProviderInfo: { name: '', contact: '', location: '' },
   duration: '',
-  location: '',
-  reviews: [],
-  publicationDate: '',
   date: '',
   time: [],
   stock: 0,
-  videos: [],
-  rating: 0,
-  popularity: '',
-  type: 'event'
+  publicationDate: '',
+  type: 'event',
+  location: '',
+  videos: []
 };
 
 const fetchUserPurchases = async (userId: string): Promise<{ id: string; date: string; pay: any }[]> => {
@@ -54,11 +51,11 @@ const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
       total: details.total || 0,
       products: details.products || [],
       events: details.events || [],
-      service: details.service || [],
+      services: details.services || [],
       pay: details.pay || null
     };
   }
-  return { id: '', date: '', total: 0, products: [], events: [], service: [], pay: null };
+  return { id: '', date: '', total: 0, products: [], events: [], services: [], pay: null };
 };
 
 const getCoordinates = async (location: string) => {
@@ -68,10 +65,10 @@ const getCoordinates = async (location: string) => {
       console.error('API key for geocoding service is not defined.');
       return null;
     }
-    
+
     const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
     const data = await response.json();
-    
+
     if (data.results && data.results.length > 0) {
       const { lat, lng } = data.results[0].geometry;
       return { lat, lng };
@@ -83,9 +80,25 @@ const getCoordinates = async (location: string) => {
   return null;
 };
 
+const reverseGeocode = async (lat: number, lng: number) => {
+  const apiKey = process.env.NEXT_PUBLIC_MAP_API_KEY;
+  const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`);
+  const data = await response.json();
+
+  if (data.results && data.results.length > 0) {
+    return data.results[0].formatted;
+  }
+  return `${lat},${lng}`;
+};
+
 const isValidLocation = (location: string): boolean => {
   const [lat, lng] = location.split(',').map(Number);
   return !isNaN(lat) && !isNaN(lng);
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
 };
 
 const MapsEvents: React.FC = () => {
@@ -100,22 +113,23 @@ const MapsEvents: React.FC = () => {
           const details = await fetchOrderDetails(order.id);
           return details;
         }))
-        .then(async (orderDetails: IOrderDetail[]) => {
-          const allEvents = orderDetails.flatMap(details => details.events || []);
-          const updatedEvents = await Promise.all(allEvents.map(async (event) => {
-            if (!isValidLocation(event.location)) {
-              const coords = await getCoordinates(event.location);
-              if (coords) {
-                return { ...event, location: `${coords.lat},${coords.lng}` };
+          .then(async (orderDetails: IOrderDetail[]) => {
+            const allEvents = orderDetails.flatMap(details => details.events || []);
+            const updatedEvents = await Promise.all(allEvents.map(async (event) => {
+              if (!isValidLocation(event.location)) {
+                const coords = await getCoordinates(event.location);
+                if (coords) {
+                  const address = await reverseGeocode(coords.lat, coords.lng);
+                  return { ...event, location: address };
+                }
               }
-            }
-            return event;
-          }));
-          setEvents(updatedEvents);
-        })
-        .catch(error => console.error('Error fetching order details:', error));
+              return event;
+            }));
+            setEvents(updatedEvents);
+          })
+          .catch(error => console.error('Error fetching order details:', error));
       })
-      .catch(error => console.error('Error fetching user purchases:', error));
+        .catch(error => console.error('Error fetching user purchases:', error));
     }
   }, [user, token]);
 
@@ -130,10 +144,9 @@ const MapsEvents: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-          <h3 className="text-3xl font-bold mb-4">Mis eventos: Ubicación</h3>
-        {/* Mapa centrado en Colombia */}
-        <div className="w-full h-96 lg:h-96">
-          <MapContainer
+      <h3 className="text-3xl font-bold mb-4">Mis eventos: Ubicación</h3>
+      <div className="w-full h-96 lg:h-96">
+      <MapContainer
             center={[4.7709, -70.2973]}  // Coordenadas de Colombia
             zoom={5}  // Zoom más alejado para abarcar más área
             className="h-full border-4 border-cyan-500 rounded-lg"
@@ -154,24 +167,25 @@ const MapsEvents: React.FC = () => {
                 );
               })}
           </MapContainer>
-        </div>
+      </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-rows-2 lg:grid-cols-1">
-        <div className="bg-transparent p-4 rounded-lg">
-          <ul className="list-disc pl-5 mb-4">
+        <div className="p-4 rounded-lg bg-black bg-opacity-50">
+          <ul className="list-disc pl-5">
             {events.map(event => (
-              <li key={event.id} className="mb-4">
+              <li key={event.id} className="">
                 <button
                   className="text-cyan-500 hover:underline text-xl"
                   onClick={() => handleLocationClick(event.location)}
                 >
                   {event.name}
                 </button><br />
-                <span>Ubicación: {event.location}</span><br />
+                <h3 className='p-2'>Ubicación: {event.location}</h3>
+                <h3 className='p-2'>Fecha: {formatDate(event.date)}</h3>
+                <h3 className='p-2'>Horario: {event.time.join(', ')}</h3>
               </li>
             ))}
           </ul>
         </div>
-
       </div>
     </div>
   );

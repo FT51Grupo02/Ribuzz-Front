@@ -6,11 +6,11 @@ export interface IOrderDetail {
     total: number;
     products?: IProduct[];
     events?: IEvent[];
-    service?: IService[];
-    pay?: any; // Ajusta según el tipo de datos de 'pay'
+    services?: IService[];
+    pay?: any;
 }
 
-export interface ILoginPropsUSer {
+export interface ILoginPropsUser {
     email: string;
     password: string;
 }
@@ -30,7 +30,7 @@ export interface IRegisterProps {
     email: string;
     password: string;
     date: Date;
-    rol: UserRole; // Hacerlo opcional si el rol no siempre es requerido
+    rol?: UserRole;
 }
 
 export type UserRole = 'emprendedor' | 'cliente' | 'admin';
@@ -46,7 +46,7 @@ export interface IRegisterResponse {
 }
 
 export interface IUserSession {
-    token: string;  // Token JWT
+    token: string;
     user: IUser; 
 }
 
@@ -56,7 +56,7 @@ export interface IUser {
     email: string;
     date?: string;
     photo?: string | null;
-    role?: string
+    role?: UserRole;
 }
 
 export interface IOrder {
@@ -66,11 +66,10 @@ export interface IOrder {
     products: ICartProduct[];
 }
 
-// Nuevas interfaces basadas en la información proporcionada
-
 export interface ProviderInfo {
     name: string;
     contact: string;
+    location?: string;
 }
 
 export interface SellerInfo {
@@ -92,25 +91,28 @@ export interface Category {
 export interface IEvent {
     id: string;
     name: string;
-    description: string;
     price: number;
+    description: string;
     images: string[];
-    providerInfo: ProviderInfo;
-    duration: string;
+    videos: string[];
+    ProviderInfo: {
+    name: string;
+    contact: string;
     location: string;
-    reviews?: Review[];
-    publicationDate: string;
+    };
+    duration: string;
     date: string;
     time: string[];
     stock: number;
-    videos?: string[];
-    rating?: number;
-    popularity?: string;
+    publicationDate: string;
     type: 'event';
+    location: string;
+    reviews?: Review[];
+    rating?: number;
 }
 
 export interface IService {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     price: number;
@@ -122,6 +124,7 @@ export interface IService {
     publicationDate: string;
     rating?: number;
     type: 'service';
+    categories?: string[];
 }
 
 export interface IProduct {
@@ -140,7 +143,6 @@ export interface IProduct {
     type: 'product';
 }
 
-// Función para calcular el rating promedio
 export function calculateAverageRating(reviews: Review[]): number {
     if (reviews.length === 0) return 0;
     
@@ -148,7 +150,6 @@ export function calculateAverageRating(reviews: Review[]): number {
     return totalRating / reviews.length;
 }
 
-// Funciones para actualizar el rating
 export function updateProductRating(product: IProduct): void {
     if (product.reviews) {
         product.rating = calculateAverageRating(product.reviews);

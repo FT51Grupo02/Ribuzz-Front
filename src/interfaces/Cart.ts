@@ -1,6 +1,7 @@
 import { IEvent } from '@/interfaces/IEvent';
 import { IService } from '@/interfaces/IService';
 import { IProduct } from '@/interfaces/IProduct';
+import { ProviderInfo } from './Types';
 
 export interface ICartEvent extends IEvent {
     id: string;
@@ -12,7 +13,7 @@ export interface ICartEvent extends IEvent {
     categoryId: number;
     quantity: number;
     publicationDate: string;
-    providerInfo: { name: string; contact: string};
+    ProviderInfo: ProviderInfo;
     location: string;
     date: string;
     time: string[];

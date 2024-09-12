@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { useAuth } from '@/components/Context/AuthContext';
@@ -40,6 +40,18 @@ const validationSchema = Yup.object().shape({
   }),
 });
 
+const initialValues: FormValues = {
+  name: '',
+  price: 0,
+  description: '',
+  stock: 0,
+  images: [],
+  videos: [],
+  categories: [],
+  details: [],
+  sellerInfo: { name: '', contact: '' },
+};
+
 const CreateProduct: React.FC = () => {
   const { token } = useAuth();
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -72,7 +84,19 @@ const CreateProduct: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (values: FormValues, { resetForm }: any) => {
+  const handleSubmit = async (values: FormValues, { setSubmitting, resetForm }: FormikHelpers<FormValues>) => {
+    Swal.fire({
+      title: 'Subiendo producto',
+      text: 'Por favor, espera mientras se sube el producto...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
     try {
       const uploadedImages = await Promise.all(values.images.map(file => handleFileUpload(file, 'image')));
       const uploadedVideos = await Promise.all(values.videos.map(file => handleFileUpload(file, 'video')));
@@ -123,6 +147,8 @@ const CreateProduct: React.FC = () => {
         icon: 'error',
         confirmButtonText: 'Aceptar'
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -138,6 +164,12 @@ const CreateProduct: React.FC = () => {
       setImageError('Debes seleccionar exactamente 4 imágenes.');
       setImagePreviews([]);
       setFieldValue('images', []);
+      Swal.fire({
+        title: 'Error en la selección de imágenes',
+        text: 'Debes seleccionar exactamente 4 imágenes para el producto.',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      });
     }
   };
 
@@ -153,27 +185,23 @@ const CreateProduct: React.FC = () => {
       setVideoError('Debes seleccionar al menos un video.');
       setVideoPreviews([]);
       setFieldValue('videos', []);
+      Swal.fire({
+        title: 'Error en la selección de video',
+        text: 'Debes seleccionar al menos un video para el producto.',
+        icon: 'error',
+        confirmButtonText: 'Entendido'
+      });
     }
   };
 
   return (
     <div className='min-h-screen flex flex-col items-center lg:w-10/12'>
       <Formik
-        initialValues={{
-          name: '',
-          price: 0,
-          description: '',
-          stock: 0,
-          images: [],
-          videos: [],
-          categories: [],
-          details: [],
-          sellerInfo: { name: '', contact: '' },
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, isSubmitting, validateForm, values }) => (
           <Form className='w-full max-w-3xl bg-black bg-opacity-50 p-8 rounded-xl shadow-lg border border-pink-500 border-opacity-50'>
             <h1 className='text-white text-3xl font-bold mb-6 text-center'>Publicar un Producto</h1>
             <div className="relative mb-6">
@@ -246,7 +274,7 @@ const CreateProduct: React.FC = () => {
             </div>
 
             <div className='mb-6'>
-              <label htmlFor='name' className='block text-white text-lg mb-2'>Nombre</label>
+              <label htmlFor='name' className='block text-white text-lg mb-2'>Nombre del Producto</label>
               <Field
                 id='name'
                 name='name'
@@ -280,7 +308,7 @@ const CreateProduct: React.FC = () => {
             </div>
 
             <div className='mb-6'>
-              <label htmlFor='stock' className='block text-white text-lg mb-2'>Stock</label>
+              <label htmlFor='stock' className='block text-white text-lg mb-2'>Cantidad (Stock)</label>
               <Field
                 id='stock'
                 name='stock'
@@ -291,18 +319,18 @@ const CreateProduct: React.FC = () => {
             </div>
 
             <div className='mb-6'>
-              <label htmlFor='categories' className='block text-white text-lg mb-2'>Categorías (Selecciona una)</label>
+              <label htmlFor='categories' className='block text-white text-lg mb-2'>Categorías</label>
               <Field
-                as="select"
+                as='select'
                 id='categories'
                 name='categories'
                 multiple
                 className='w-full p-3 rounded bg-black text-white border border-pink-400 border-opacity-50 focus:outline-none focus:ring-2 focus:ring-pink-500'
               >
-                <option value="Electrónica">Electrónica</option>
-                <option value="Moda">Moda</option>
-                <option value="Hogar">Hogar</option>
-                <option value="Libros">Libros</option>
+                <option value='Electrónica'>Electrónica</option>
+                <option value='Moda'>Moda</option>
+                <option value='Hogar'>Hogar</option>
+                <option value='Libros'>Libros</option>
               </Field>
               <ErrorMessage name='categories' component='div' className='text-pink-400 mt-1' />
             </div>
@@ -344,10 +372,11 @@ const CreateProduct: React.FC = () => {
             <div className="flex justify-center mt-6">
               <button
                 type='submit'
-                className='bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-3 px-6 rounded-full transition-colors'
+                disabled={isSubmitting}
+                className='bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-3 px-6 rounded-full transition-colors disabled:opacity-50'
               >
                 <span className="inline-block text-white hover:scale-110 transition duration-300">
-                  Crear Producto
+                  {isSubmitting ? 'Creando Producto...' : 'Crear Producto'}
                 </span>
               </button>
             </div>

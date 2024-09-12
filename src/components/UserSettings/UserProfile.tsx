@@ -33,7 +33,7 @@ const UserProfileForm: React.FC = () => {
             </label>
             <p className="mt-2 text-lg text-gray-300">{user?.name || 'Nombre de Usuario'}</p>
             <label className="block text-xl font-semibold text-pink-500 mt-4">
-              Email:
+              <span className="block truncate">Email:</span>
             </label>
             <p className="mt-2 text-lg text-gray-300">{user?.email || 'Email de Usuario'}</p>
           </div>

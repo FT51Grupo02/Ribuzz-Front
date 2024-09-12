@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/Context/AuthContext';
-import { IUser } from '@/interfaces/Types';
+import { IUser, UserRole } from '@/interfaces/Types';
 
 const GoogleCallbackHandler = () => {
   const router = useRouter();
@@ -12,52 +12,63 @@ const GoogleCallbackHandler = () => {
   useEffect(() => {
     const handleAuth = async () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('token');  // Captura el token de la URL
-      const role = urlParams.get('role');          // Captura el rol de la URL
+      const accessToken = urlParams.get('token');
+      const roleString = urlParams.get('role');
 
-      if (accessToken && role) {
+      if (accessToken && roleString) {
         try {
-          // Si es necesario, podrías realizar una solicitud adicional al backend para verificar el token, pero aquí lo omito
-          // Suponiendo que ya tienes toda la información necesaria del token JWT
-
-          // Almacena el token en localStorage
           localStorage.setItem('authToken', accessToken);
 
-          // Decodifica el token si es necesario
           const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
 
-          const user: IUser = {
-            id: decodedToken.id,
-            email: decodedToken.correo,
-            name: '',  
-            date: '',  
-            photo: '',  
-            role: role,  
+          // Función para validar si el role es válido
+          const isValidUserRole = (role: string): role is UserRole => {
+            return ['emprendedor', 'cliente', 'admin'].includes(role);
           };
 
-          // Almacena el usuario en localStorage
-          localStorage.setItem('user', JSON.stringify(user));
-          
-          // Actualiza el contexto de autenticación
-          setToken(accessToken);
-          setUser(user);
+          if (isValidUserRole(roleString)) {
+            const role = roleString as UserRole;
 
-          // Redirige a la página principal
-          router.push('/');
+            const user: IUser = {
+              id: decodedToken.id,
+              email: decodedToken.correo,
+              name: decodedToken.name || '',
+              date: decodedToken.date || '',
+              photo: decodedToken.photo || '',
+              role: role,
+            };
+
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            setToken(accessToken);
+            setUser(user);
+
+            router.push('/');
+          } else {
+            console.error('Rol inválido');
+            router.push('/login');
+          }
         } catch (error) {
           console.error('Error al procesar el token:', error);
-          router.push('/login'); // Redirigir a login si hay un error
+          router.push('/login');
         }
       } else {
         console.error('No se encontraron token o role en la URL');
-        router.push('/login'); // Redirigir a login si no hay token o role
+        router.push('/login');
       }
     };
 
     handleAuth();
   }, [router, setToken, setUser]);
 
-  return <div>Procesando autenticación...</div>; // Puedes reemplazar esto con un componente de carga o loader
+  return (
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="text-2xl font-bold text-gray-700 p-8 bg-white rounded-lg shadow-md">
+        <span className="inline-block animate-spin mr-3">🔄</span>
+        Procesando autenticación...
+      </div>
+    </div>
+  );
 };
 
 export default GoogleCallbackHandler;

@@ -13,18 +13,15 @@ const defaultEvent: IEvent = {
     description: '',
     price: 0,
     images: [],
-    providerInfo: { name: '', contact: ''},
+    ProviderInfo: { name: '', contact: '', location: '' },
     duration: '',
-    location: '',
-    reviews: [],
-    publicationDate: '',
     date: '',
     time: [],
     stock: 0,
-    videos: [],
-    rating: 0,
-    popularity: '',
-    type: 'event'
+    publicationDate: '',
+    type: 'event',
+    location: '',
+    videos: []
 };
 
 const fetchUserPurchases = async (userId: string): Promise<{ id: string; date: string; pay: any }[]> => {
@@ -46,11 +43,11 @@ const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
             total: details.total || 0,
             products: details.products || [],
             events: details.events || [],
-            service: details.service || [],
+            services: details.services || [],
             pay: details.pay || null
         };
     }
-    return { id: '', date: '', total: 0, products: [], events: [], service: [], pay: null };
+    return { id: '', date: '', total: 0, products: [], events: [], services: [], pay: null };
 };
 
 const getDayOfWeek = (dateString: string): string => {
@@ -76,7 +73,6 @@ const EventsCalendar: React.FC = () => {
         return date.toLocaleDateString('es-ES', options);
     };
     
-
     useEffect(() => {
         if (user && user.id && token) {
             fetchUserPurchases(user.id).then(orders => {
@@ -86,7 +82,7 @@ const EventsCalendar: React.FC = () => {
                 }))
                 .then((orderDetails: IOrderDetail[]) => {
                     const allEvents = orderDetails.flatMap(details => details.events || []);
-                    console.log('All Events:', allEvents); // Log all events
+                    console.log('All Events:', allEvents);
                     setEvents(allEvents);
                 })
                 .catch(error => console.error('Error fetching order details:', error));

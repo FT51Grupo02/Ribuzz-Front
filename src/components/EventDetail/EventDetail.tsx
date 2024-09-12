@@ -19,7 +19,7 @@ const EventDetail: FC<Event> = ({
     description,
     images = [],
     videos = [],
-    providerInfo,
+    ProviderInfo,
     reviews = [],
     price,
     location,
@@ -69,7 +69,7 @@ const EventDetail: FC<Event> = ({
             location,
             date,
             time,
-            providerInfo,
+            ProviderInfo,
             type: "event"
         };
     
@@ -160,7 +160,7 @@ const EventDetail: FC<Event> = ({
     }, [isModalOpen]);
 
     return (
-        <div className="relative min-h-screen flex flex-col bg-black text-white">
+        <div className="relative min-h-screen flex flex-col bg-black text-white w-full">
             <div className="absolute inset-0">
                 <Image
                     src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918379/0_vh4jdp.webp"
@@ -171,7 +171,7 @@ const EventDetail: FC<Event> = ({
                     className="z-0"
                 />
             </div>
-            <div className="relative z-10 flex-grow p-4 sm:p-8 bg-black bg-opacity-80 rounded-lg shadow-lg max-w-5xl mx-auto">
+            <div className="relative z-10 flex-grow p-4 sm:p-8 bg-black bg-opacity-80 rounded-lg shadow-lg max-w-5xl mx-auto w-full">
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
                     <div className="lg:w-3/5">
                         <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-cyan-400 lg:text-left">{name}</h1>
@@ -207,18 +207,18 @@ const EventDetail: FC<Event> = ({
                     </div>
                     
                     <div className="lg:w-2/5">
-                        <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-cyan-400 text-center lg:text-left">Locación:</h2>
-                        <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Ubicación:</strong> {location}</p>
-                        <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Fecha:</strong> {formatDate(date)}</p>
-                        <p className="mb-6 text-base sm:text-lg text-center lg:text-left"><strong>Horario:</strong> {time.join(', ')}</p>
+    <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-cyan-400 text-center lg:text-left">Locación:</h2>
+    <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Ubicación:</strong> {location}</p>
+    <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Fecha:</strong> {formatDate(date)}</p>
+    <p className="mb-6 text-base sm:text-lg text-center lg:text-left"><strong>Horario:</strong> {time}</p>
 
-                        {providerInfo && (
-                            <>
-                                <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-cyan-400 text-center lg:text-left mt-10">Organizador:</h2>
-                                <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Nombre:</strong> {providerInfo.name}</p>
-                                <p className="mb-6 text-base sm:text-lg text-center lg:text-left"><strong>Contacto:</strong> {providerInfo.contact}</p>
-                            </>
-                        )}
+    {ProviderInfo && (
+        <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-cyan-400 text-center lg:text-left">Organizador:</h2>
+            <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Nombre:</strong> {ProviderInfo.name}</p>
+            <p className="mb-4 text-base sm:text-lg text-center lg:text-left"><strong>Contacto:</strong> {ProviderInfo.contact}</p>
+        </div>
+    )}
 
                         <div className="mb-6 sm:mb-8">
                             <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-cyan-400 text-center lg:text-left mt-10">Reseñas:</h2>

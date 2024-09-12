@@ -1,39 +1,40 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
-import { IUser } from '../../interfaces/Types'; // Importa la interfaz de usuario
-import { fetchUsers } from '../../helpers/user.helper'; // Importa la función fetchUsers
-import { FaUserCircle, FaTrash, FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa'; // Importa los iconos
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import { IUser, UserRole } from '../../interfaces/Types';
+import { fetchUsers } from '../../helpers/user.helper';
+import { FaUserCircle, FaTrash, FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 interface GestionDeUsuariosProps {
-  token: string; // El token se pasará como prop
+  token: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
-  const [users, setUsers] = useState<IUser[]>([]); // Estado para almacenar usuarios
-  const [loading, setLoading] = useState<boolean>(true); // Estado para manejar la carga
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
-  const [editingUserId, setEditingUserId] = useState<string | null>(null); // Estado para almacenar el usuario que se está editando
-  const [updatedRole, setUpdatedRole] = useState<string>(''); // Estado para almacenar el rol editado
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [updatedRole, setUpdatedRole] = useState<UserRole | ''>('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const usersData = await fetchUsers(token);
         setUsers(usersData);
-        setLoading(false); // Ya no está cargando
+        setLoading(false);
       } catch (error) {
         setError('Error al cargar los usuarios');
-        setLoading(false); // Detenemos la carga incluso si hay error
+        setLoading(false);
+        Swal.fire('Error', 'No se pudieron cargar los usuarios.', 'error');
       }
     };
 
     fetchData();
-  }, [token]); // Se ejecuta cuando se monte el componente o cambie el token
+  }, [token]);
 
-  // Función para eliminar un usuario
   const handleDelete = (userId: string) => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -46,7 +47,6 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
       cancelButtonColor: '#3085d6',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        // Si el usuario confirma la eliminación
         try {
           const response = await fetch(`${API_URL}/users/${userId}`, {
             method: 'DELETE',
@@ -55,7 +55,6 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
             },
           });
           if (response.ok) {
-            // Si la eliminación fue exitosa, actualizamos la lista de usuarios eliminando el usuario
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
             Swal.fire('¡Eliminado!', 'El usuario ha sido eliminado.', 'success');
           } else {
@@ -68,20 +67,22 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
     });
   };
 
-  // Función para iniciar la edición del rol
-  const handleEditRole = (userId: string, currentRole: string) => {
+  const handleEditRole = (userId: string, currentRole: UserRole | undefined) => {
     setEditingUserId(userId);
-    setUpdatedRole(currentRole);
+    setUpdatedRole(currentRole || '');
   };
 
-  // Función para cancelar la edición del rol
   const handleCancelEdit = () => {
     setEditingUserId(null);
     setUpdatedRole('');
   };
 
-  // Función para guardar el nuevo rol
   const handleSaveRole = async (email: string) => {
+    if (!updatedRole) {
+      Swal.fire('Error', 'Por favor, selecciona un rol válido.', 'error');
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/authadmin/admin`, {
         method: 'PUT',
@@ -93,7 +94,6 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
       });
 
       if (response.ok) {
-        // Actualizamos el rol del usuario en la lista
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.id === editingUserId ? { ...user, role: updatedRole } : user
@@ -110,66 +110,73 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
   };
 
   if (loading) {
-    return <div>Cargando usuarios...</div>; // Mensaje mientras se cargan los datos
+    return <div className="text-white text-center py-4">Cargando usuarios...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Muestra el error si lo hay
+    return <div className="text-red-500 text-center py-4">{error}</div>;
   }
 
   return (
     <div className="text-white">
-      <h2 className="text-white mb-4 text-lg">Lista de Usuarios</h2>
-      <ul className="divide-y divide-gray-600"> {/* Aplica una línea horizontal entre cada usuario */}
+      <h2 className="text-white mb-4 text-2xl font-bold">Lista de Usuarios</h2>
+      <ul className="divide-y divide-gray-600">
         {users.map((user) => (
-          <li key={user.id} className="flex items-center py-2 relative"> {/* Cada usuario se renderiza en una línea horizontal */}
-            {/* Si el usuario tiene foto, la muestra. Si no, muestra el icono FaUserCircle */}
+          <li key={user.id} className="flex items-center py-4 relative">
             {user.photo ? (
               <img src={user.photo} alt={user.name} className="w-12 h-12 rounded-full mr-4" />
             ) : (
-              <FaUserCircle className="w-12 h-12 text-gray-400 mr-4" /> // Icono si no hay foto
+              <FaUserCircle className="w-12 h-12 text-gray-400 mr-4" />
             )}
             <div className="flex-1">
-              <p><strong>Nombre:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p>
-                <strong>Rol:</strong> 
+              <p className="font-semibold">{user.name}</p>
+              <p className="text-gray-300">{user.email}</p>
+              <p className="mt-1">
+                <span className="font-semibold">Rol:</span> 
                 {editingUserId === user.id ? (
                   <>
                     <select 
                       value={updatedRole} 
-                      onChange={(e) => setUpdatedRole(e.target.value)} 
+                      onChange={(e) => setUpdatedRole(e.target.value as UserRole)} 
                       className="bg-gray-800 text-white p-1 ml-2 rounded"
                     >
+                      <option value="">Seleccionar rol</option>
                       <option value="admin">Admin</option>
                       <option value="cliente">Cliente</option>
                       <option value="emprendedor">Emprendedor</option>
                     </select>
-                    {/* Botones de Guardar (✓) y Cancelar (✗) */}
-                    <button className="ml-2 text-green-500" onClick={() => handleSaveRole(user.email)}>
+                    <button 
+                      className="ml-2 text-green-500 hover:text-green-400 transition-colors" 
+                      onClick={() => handleSaveRole(user.email)}
+                    >
                       <FaCheck />
                     </button>
-                    <button className="ml-2 text-red-500" onClick={handleCancelEdit}>
+                    <button 
+                      className="ml-2 text-red-500 hover:text-red-400 transition-colors" 
+                      onClick={handleCancelEdit}
+                    >
                       <FaTimes />
                     </button>
                   </>
                 ) : (
                   <>
                     <span className="ml-2">{user.role || 'Sin rol definido'}</span>
-                    <button className="ml-2 text-blue-500" onClick={() => handleEditRole(user.id as string, user.role || '')}>
+                    <button 
+                      className="ml-2 text-blue-500 hover:text-blue-400 transition-colors" 
+                      onClick={() => handleEditRole(user.id as string, user.role)}
+                    >
                       <FaPencilAlt />
                     </button>
                   </>
                 )}
               </p>
-              <p><strong>Fecha:</strong> {user.date || 'Fecha no disponible'}</p>
+              <p className="text-sm text-gray-400 mt-1">Registrado: {user.date ? new Date(user.date).toLocaleDateString() : 'Fecha no disponible'}</p>
             </div>
-            {/* Icono de basura para eliminar el usuario */}
             <button 
-              className="absolute right-0 top-0 mt-2 mr-2 text-red-500 hover:text-red-700"
+              className="absolute right-0 top-0 mt-4 mr-4 text-red-500 hover:text-red-400 transition-colors"
               onClick={() => handleDelete(user.id as string)}
             >
-              <FaTrash className="w-6 h-6" />
+              <FaTrash className="w-5 h-5" />
             </button>
           </li>
         ))}
