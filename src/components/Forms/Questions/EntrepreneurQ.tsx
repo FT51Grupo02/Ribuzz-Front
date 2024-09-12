@@ -2,9 +2,12 @@
 import { useRouter } from 'next/navigation';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useState } from 'react';
+import { register } from '@/helpers/auth.helper';
 
 const EntrepreneurQ = () => {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const initialValues = {
     progressStage: '',
@@ -38,11 +41,26 @@ const EntrepreneurQ = () => {
     mentorshipInterest: Yup.string().required('Este campo es obligatorio')
   });
 
-  const handleSubmit = (values: typeof initialValues) => {
-    // Aquí puedes manejar la lógica para enviar los datos al backend
-    console.log('Formulario enviado:', values);
-    // Después de enviar, podrías redirigir al usuario a otra página
-    router.push('/login/option'); // Cambia la ruta según tu preferencia
+  const handleSubmit = async (values: typeof initialValues) => {
+    setIsSubmitting(true);
+    const registerData = JSON.parse(localStorage.getItem('registerData') || '{}'); // Recuperar los datos del registro
+    
+    const combinedData = {
+      ...registerData, // Datos del registro
+      questions: values  // Respuestas del formulario de preguntas
+    };
+  
+    try {
+      const result = await register(combinedData); // Enviar datos combinados al backend
+      if (result) {
+        router.push('/login/option'); // Redirigir después de enviar
+      }
+    } catch (error) {
+      console.error('Error al registrar:', error);
+      // Aquí puedes mostrar un mensaje de error
+    }finally {
+      setIsSubmitting(false); // Desactiva el estado de envío
+    }
   };
 
   return (
@@ -227,8 +245,9 @@ const EntrepreneurQ = () => {
           <button
             type="submit"
             className="w-full p-3 mb-6 text-white font-semibold rounded-full bg-gradient-to-r from-[#110c0f] to-[#6d0445] shadow-md hover:shadow-lg transition-shadow"
+            disabled={isSubmitting} // Desactiva el botón mientras se está enviando
           >
-            Enviar
+            {isSubmitting ? 'Procesando...' : 'Enviar'}
           </button>
         </Form>
       )}
