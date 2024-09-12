@@ -1,9 +1,12 @@
 'use client';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { register } from '@/helpers/auth.helper';
+import { useState } from 'react';
 
 const ClientQ: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const formik = useFormik({
@@ -37,18 +40,35 @@ const ClientQ: React.FC = () => {
       essentialServices: Yup.string().required('Campo obligatorio'),
       openToConsulting: Yup.string().required('Campo obligatorio'),
     }),
-    onSubmit: (values) => {
-      console.log(values);
-      router.push('/login/option'); // Redirige después de enviar el formulario
+    onSubmit: async (values) => {
+      setLoading(true);
+      const registerData = JSON.parse(localStorage.getItem('registerData') || '{}'); // Recuperar los datos del registro
+      
+      const combinedData = {
+        ...registerData, // Datos del registro
+        questions: values  // Respuestas del formulario de preguntas
+      };
+  
+      try {
+        const result = await register(combinedData); // Enviar datos combinados al backend
+        if (result) {
+          router.push('/login/option'); // Redirigir después de enviar
+        }
+      } catch (error) {
+        console.error('Error al registrar:', error);
+        // Aquí puedes mostrar un mensaje de error
+      }finally {
+        setLoading(false); // Restablece el estado de carga
+      }
     },
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md">
+    <form onSubmit={formik.handleSubmit} className="max-w-lg mx-auto p-6 bg-gradient-to-r from-[#C87DAB] to-[#C12886]shadow-md rounded-md">
       <h2 className="text-xl font-semibold mb-4">Preguntas para Clientes</h2>
 
       <div className="mb-4">
-        <label htmlFor="businessStage" className="block text-sm font-medium text-gray-700">¿En qué etapa se encuentra tu empresa?</label>
+        <label htmlFor="businessStage" className="block text-sm font-medium text-white">¿En qué etapa se encuentra tu empresa?</label>
         <select
           id="businessStage"
           name="businessStage"
@@ -69,7 +89,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="budget" className="block text-sm font-medium text-gray-700">¿Cuál es el presupuesto mensual que puedes destinar a la adquisición de servicios/productos?</label>
+        <label htmlFor="budget" className="block text-sm font-medium text-white">¿Cuál es el presupuesto mensual que puedes destinar a la adquisición de servicios/productos?</label>
         <select
           id="budget"
           name="budget"
@@ -90,7 +110,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="investmentWillingness" className="block text-sm font-medium text-gray-700">¿Cuánto estás dispuesto a invertir en la solución de tus problemas actuales?</label>
+        <label htmlFor="investmentWillingness" className="block text-sm font-medium text-white">¿Cuánto estás dispuesto a invertir en la solución de tus problemas actuales?</label>
         <select
           id="investmentWillingness"
           name="investmentWillingness"
@@ -111,7 +131,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="externalProviders" className="block text-sm font-medium text-gray-700">¿Has trabajado anteriormente con proveedores externos? Si es así, ¿cuál fue tu experiencia?</label>
+        <label htmlFor="externalProviders" className="block text-sm font-medium text-white">¿Has trabajado anteriormente con proveedores externos? Si es así, ¿cuál fue tu experiencia?</label>
         <select
           id="externalProviders"
           name="externalProviders"
@@ -132,7 +152,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="currentChallenges" className="block text-sm font-medium text-gray-700">¿Cuáles son los principales desafíos que enfrenta tu empresa actualmente?</label>
+        <label htmlFor="currentChallenges" className="block text-sm font-medium text-white">¿Cuáles son los principales desafíos que enfrenta tu empresa actualmente?</label>
         <select
           id="currentChallenges"
           name="currentChallenges"
@@ -153,7 +173,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="specificProblems" className="block text-sm font-medium text-gray-700">¿Qué problemas específicos estás buscando resolver con nuestros productos/servicios?</label>
+        <label htmlFor="specificProblems" className="block text-sm font-medium text-white">¿Qué problemas específicos estás buscando resolver con nuestros productos/servicios?</label>
         <select
           id="specificProblems"
           name="specificProblems"
@@ -174,7 +194,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="businessBarriers" className="block text-sm font-medium text-gray-700">¿Qué barreras encuentras en tu negocio para crecer o mejorar?</label>
+        <label htmlFor="businessBarriers" className="block text-sm font-medium text-white">¿Qué barreras encuentras en tu negocio para crecer o mejorar?</label>
         <select
           id="businessBarriers"
           name="businessBarriers"
@@ -195,7 +215,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="serviceQuality" className="block text-sm font-medium text-gray-700">¿Cómo valoras la calidad del servicio o producto que has recibido hasta ahora?</label>
+        <label htmlFor="serviceQuality" className="block text-sm font-medium text-white">¿Cómo valoras la calidad del servicio o producto que has recibido hasta ahora?</label>
         <select
           id="serviceQuality"
           name="serviceQuality"
@@ -216,7 +236,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="qualityVsCost" className="block text-sm font-medium text-gray-700">¿Qué tan importante es para ti la relación calidad-precio en los productos/servicios?</label>
+        <label htmlFor="qualityVsCost" className="block text-sm font-medium text-white">¿Qué tan importante es para ti la relación calidad-precio en los productos/servicios?</label>
         <select
           id="qualityVsCost"
           name="qualityVsCost"
@@ -237,7 +257,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="serviceProviderValues" className="block text-sm font-medium text-gray-700">¿Qué valores o principios buscas en un proveedor de servicios?</label>
+        <label htmlFor="serviceProviderValues" className="block text-sm font-medium text-white">¿Qué valores o principios buscas en un proveedor de servicios?</label>
         <select
           id="serviceProviderValues"
           name="serviceProviderValues"
@@ -258,7 +278,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="integratedPackages" className="block text-sm font-medium text-gray-700">¿Te interesan paquetes integrales que combinen varios servicios?</label>
+        <label htmlFor="integratedPackages" className="block text-sm font-medium text-white">¿Te interesan paquetes integrales que combinen varios servicios?</label>
         <select
           id="integratedPackages"
           name="integratedPackages"
@@ -279,7 +299,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="essentialServices" className="block text-sm font-medium text-gray-700">¿Qué servicios consideras esenciales para tu negocio?</label>
+        <label htmlFor="essentialServices" className="block text-sm font-medium text-white">¿Qué servicios consideras esenciales para tu negocio?</label>
         <select
           id="essentialServices"
           name="essentialServices"
@@ -300,7 +320,7 @@ const ClientQ: React.FC = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="openToConsulting" className="block text-sm font-medium text-gray-700">¿Estás abierto a recibir consultoría para mejorar tus procesos de negocio?</label>
+        <label htmlFor="openToConsulting" className="block text-sm font-medium text-white">¿Estás abierto a recibir consultoría para mejorar tus procesos de negocio?</label>
         <select
           id="openToConsulting"
           name="openToConsulting"
@@ -320,8 +340,8 @@ const ClientQ: React.FC = () => {
         ) : null}
       </div>
 
-      <button type="submit" className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Enviar
+      <button type="submit" className="w-full p-3 mb-6 text-white font-semibold rounded-full bg-gradient-to-r from-[#110c0f] to-[#6d0445] shadow-md hover:shadow-lg transition-shadow" disabled={loading}>
+        {loading ? 'Procesando...' : 'Enviar'}
       </button>
     </form>
   );

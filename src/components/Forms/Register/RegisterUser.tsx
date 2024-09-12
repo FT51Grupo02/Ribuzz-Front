@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
   rol: Yup.string().oneOf(['emprendedor', 'cliente', 'admin'], 'Rol inválido').optional(),
 });
 
-const RegisterUser = () => {
+/* const RegisterUser = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { register } = useAuth();
@@ -72,7 +72,38 @@ const RegisterUser = () => {
         console.error('Error inesperado:', error);
       }
     }
-  };
+  }; */
+
+  const RegisterUser = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false); 
+    const [userData, setUserData] = useState<IRegisterProps | null>(null); // Estado para guardar los datos temporalmente
+  
+    const handleSubmit = async (values: IRegisterProps) => {
+      // Guardar los datos temporalmente en el estado
+      setIsSubmitting(true);
+      localStorage.setItem('registerData', JSON.stringify(values));
+  
+      // Redirigir al formulario de preguntas según el rol
+      try { 
+  
+        if (values.rol === 'emprendedor') {
+          router.push('/register/entrepreneurq'); // Redirige al formulario de emprendedores
+        } else if (values.rol === 'cliente') {
+          router.push('/register/clientq'); // Redirige al formulario de clientes
+        }
+      } catch (error) {
+        // Manejo de errores
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el registro',
+          text: 'Ocurrió un error inesperado. Por favor intenta nuevamente.',
+        });
+      } finally {
+        setIsSubmitting(false); // Finalizar el estado de carga
+      }
+    };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-black font-poppins">
@@ -204,9 +235,10 @@ const RegisterUser = () => {
                 <button
                   type="submit"
                   className="w-full p-3 mb-6 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow"
+                  disabled={isSubmitting} 
                 >
                   <span className="transition duration-300 hover:scale-110 inline-block text-lg">
-                    Registrarse
+                    {isSubmitting ? 'Procesando...' : 'Registrarse'}
                   </span>
                 </button>
                 {/* <p>O regístrate con:</p>
