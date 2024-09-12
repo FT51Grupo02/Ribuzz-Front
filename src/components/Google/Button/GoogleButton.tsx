@@ -7,9 +7,9 @@ import { FcGoogle } from 'react-icons/fc';
 const GoogleLoginButton = () => {
   const router = useRouter();
 
- const handleGoogleLogin = () => {
+  const handleGoogleLogin = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/login`;
-  }; 
+};
  
   return (
     <button
