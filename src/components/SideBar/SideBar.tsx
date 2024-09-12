@@ -9,10 +9,10 @@ import Link from 'next/link';
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import Image from 'next/image';
 import { TbMapSearch } from "react-icons/tb";
+import FetchOrdersButton from './OrdersButton';
 import Swal from 'sweetalert2'; 
 import { GrUserAdmin } from "react-icons/gr";
 import { FaUserShield } from "react-icons/fa6";
-
 
 const SideBar = () => {
 const { user } = useContext(AuthContext);
@@ -68,22 +68,12 @@ const handleLogout = () => {
         <Link href="/user/eventsmaps">
           <TbMapSearch  className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
-
-        {user?.role === 'emprendedor' && (
-          <Link href="/user/create">
         {(user?.role === 'emprendedor' || user?.role === 'admin') && (
           <Link href="/user/create">
-            <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
-          </Link>
-        )}
-          {(user?.role === 'emprendedor' || user?.role === 'admin') && (
-          <Link href="/user/myevents">
-
             <MdOutlineCreateNewFolder className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
-          
         )}
-        {user?.role === 'admin' && (
+                {user?.role === 'admin' && (
           <Link href="/user/admin">
             <GrUserAdmin  className="text-xl hover:text-pink-400 cursor-pointer" />
           </Link>
