@@ -103,6 +103,7 @@ export interface IEvent {
     duration: string;
     date: string;
     time: string[];
+    popularity?: string;
     stock: number;
     publicationDate: string;
     type: 'event';
