@@ -21,6 +21,7 @@ interface FormValues {
     location: string;
   };
   duration: string;
+  popularity?: string;
   date: string;
   time: string;
   stock: number;
@@ -139,6 +140,7 @@ const CreateEvent: React.FC = () => {
           date: values.date,
           time: [values.time],
           stock: values.stock,
+          popularity: values.popularity,
           publicationDate: new Date().toISOString(),
           type: 'event' as const,
           location: values.ProviderInfo.location,
