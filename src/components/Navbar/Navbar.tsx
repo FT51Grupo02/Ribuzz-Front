@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { FaUser, FaTimes } from 'react-icons/fa';
 import { FiLogOut } from 'react-icons/fi';
 import CartIcon from '../Cart/CartIcon/CartIcon';
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -33,12 +34,10 @@ const Navbar = () => {
     const currentY = e.touches[0].clientY;
     const deltaY = currentY - startY.current;
 
-    // Abrir el menú al deslizar hacia abajo
     if (deltaY > 30 && !isMenuOpen) {
       setIsMenuOpen(true);
       e.preventDefault();
     }
-    // Cerrar el menú al deslizar hacia arriba
     else if (deltaY < -30 && isMenuOpen) {
       setIsMenuOpen(false);
       e.preventDefault();
@@ -48,6 +47,7 @@ const Navbar = () => {
   const handleTouchEnd = () => {
     startY.current = null;
   };
+
   const handleLogout = () => {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -58,7 +58,6 @@ const Navbar = () => {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-
         Swal.fire({
           title: 'Hasta luego!',
           text: 'Gracias por visitarnos. Te esperamos pronto!',
@@ -67,6 +66,9 @@ const Navbar = () => {
         }).then(async (result) => {
           if (result.isConfirmed) {
             logout();
+            Cookies.remove('authToken');
+            setUser(null);
+            setToken(null);
             router.push('/'); 
           }
         });
@@ -74,43 +76,38 @@ const Navbar = () => {
     });
   };
 
-  // Extraer las iniciales del nombre del usuario
   const getInitials = (name: string) => {
     const nameParts = name.split(' ');
     const initials = nameParts.map(part => part[0].toUpperCase()).join('');
-    return initials.slice(0, 2); // Tomar solo las primeras dos letras
+    return initials.slice(0, 2);
   };
 
   return (
     <>
       <nav className="bg-black font-poppins text-white flex items-center justify-between p-5 w-full sticky top-0 z-50 overflow-x-hidden">
-        {/* Logo */}
         <div className="flex-shrink-0">
           <Link href="/" passHref>
             <div>
-              {/* Logo para pantallas mayores a 425px */}
               <Image 
                 src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/4_fxsr8a.webp" 
                 alt="Logo" 
                 width={200} 
                 height={60} 
                 quality={100}
-                className="hidden md:block" // Mostrar en pantallas mayores a 425px
+                className="hidden md:block"
               />
-              {/* Logo para pantallas menores a 425px */}
               <Image 
                 src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/5_yzrcts.webp" 
                 alt="Logo" 
                 width={50} 
                 quality={100}
                 height={30} 
-                className="md:hidden" // Mostrar en pantallas menores a 425px
+                className="md:hidden"
               />
             </div>
           </Link>
         </div>
 
-        {/* Desktop Menu */}
         <div className="flex-grow justify-center space-x-2 hidden lg:flex">
           <Link 
             href="/" 
@@ -144,7 +141,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Iconos de perfil, carrito y menú */}
         <div className="flex-shrink-0 flex items-center space-x-2 ml-auto">
           {token ? (
             <>
@@ -168,8 +164,7 @@ const Navbar = () => {
               >
                 <CartIcon isActive={isActive('/cart')} />
               </Link>
-              <Link
-              href="/user" >
+              <Link href="/user" >
                 <div className="relative flex items-center justify-center border w-8 h-8 text-2xl bg-black text-white  rounded-full">
                   {user ? getInitials(user.name) : ''}
                 </div>
@@ -198,7 +193,6 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Menu Desplegable */}
           <button 
             onClick={toggleMenu} 
             className="block lg:hidden relative text-white focus:outline-none"
