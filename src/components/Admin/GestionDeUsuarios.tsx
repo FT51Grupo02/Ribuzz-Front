@@ -5,6 +5,7 @@ import { IUser, UserRole } from '../../interfaces/Types';
 import { fetchUsers } from '../../helpers/user.helper';
 import { FaUserCircle, FaTrash, FaPencilAlt, FaCheck, FaTimes } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import Loader from '../Loader/Loader';
 
 interface GestionDeUsuariosProps {
   token: string;
@@ -110,7 +111,7 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
   };
 
   if (loading) {
-    return <div className="text-white text-center py-4">Cargando usuarios...</div>;
+    return <Loader/>;
   }
 
   if (error) {

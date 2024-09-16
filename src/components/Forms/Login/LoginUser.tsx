@@ -2,7 +2,6 @@
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
 import Image from 'next/image';
@@ -10,6 +9,7 @@ import { useAuth } from '@/components/Context/AuthContext';
 import { ILoginPropsUser } from '@/interfaces/Types';
 import GoogleLoginButton from '../../Google/Button/GoogleButton';
 import Swal from 'sweetalert2';
+import Link from 'next/link';
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Cuenta de email inválida').required('Requerido'),
@@ -27,15 +27,14 @@ const LoginUser = () => {
 
   const handleSubmit = async (values: ILoginPropsUser) => {
     try {
-      console.log("Valores enviados al backendCliente:", values);
-      const isSuccess = await loginUserC(values);
-      if (isSuccess) {
+      const result = await loginUserC(values);
+      if (result.success) {
         router.push('/');
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error al iniciar sesión',
-          text: 'El correo o contraseña es incorrecto.',
+          text: result.message || 'El correo o contraseña es incorrecto.',
         });
       }
     } catch (error) {
@@ -61,7 +60,6 @@ const LoginUser = () => {
       </div>
      
       <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black text-white relative z-10">
-        {/* Imagen en la parte superior solo en móviles */}
         <div className="md:hidden relative w-full mb-6">
           <Image 
             src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918380/5_yzrcts.webp" 
@@ -76,11 +74,11 @@ const LoginUser = () => {
           <h1 className="text-5xl md:text-6xl font-bold mb-4 md:mb-6 lg:text-7xl">INGRESAR</h1>
           <h3 className="text-base md:text-lg font-medium mb-4 md:mb-6">Ingresa con tu cuenta de usuario</h3>
           <Formik
-            initialValues={{ email: '', password: '', rol: 'cliente' }}
+            initialValues={{ email: '', password: '' }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ errors, touched, handleChange, values, setFieldTouched }) => (
+            {({ errors, touched, handleChange, values, setFieldTouched, isSubmitting }) => (
               <Form className="w-full">
                 <div className="mb-4">
                   <Field
@@ -90,7 +88,7 @@ const LoginUser = () => {
                     className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       handleChange(e);
-                      setFieldTouched('email', true, true);
+                      setFieldTouched('email', true, false);
                     }}
                   />
                   {errors.email && touched.email && (
@@ -106,7 +104,7 @@ const LoginUser = () => {
                       className="w-full p-3 text-base md:text-lg rounded-lg bg-[#303030] text-white border border-[#303030] placeholder-gray-300 pr-12"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         handleChange(e);
-                        setFieldTouched('password', true, true);
+                        setFieldTouched('password', true, false);
                       }}
                     />
                     <div
@@ -116,7 +114,7 @@ const LoginUser = () => {
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </div>
                   </div>
-                  {touched.password && (
+                  {touched.password && isSubmitting && (
                     <div className="text-pink-300 text-sm pt-2">
                       {!values.password.match(/[A-Z]/) && 'Debe incluir al menos una mayúscula. '}
                       {!values.password.match(/[!@#$%^&*]/) && 'Debe incluir al menos un carácter especial. '}
@@ -127,11 +125,17 @@ const LoginUser = () => {
                 <button
                   type="submit"
                   className="w-full p-3 mb-6 text-white font-semibold rounded-full bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow"
+                  disabled={isSubmitting}
                 >
                   <span className="transition duration-300 hover:scale-110 inline-block text-lg md:text-xl">
-                    Ingresar
+                    {isSubmitting ? 'Ingresando...' : 'Ingresar'}
                   </span>
                 </button>
+                <div className="text-center mb-4">
+                  <Link href="/forgot-password" className="text-pink-300 hover:text-pink-400 transition-colors">
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
                 <hr className="border-t-1 border-pink-400 border-opacity-60 mb-2 pb-4" />
               </Form>
             )}

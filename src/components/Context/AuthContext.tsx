@@ -7,6 +7,7 @@ import { getAuthenticatedUser } from "@/helpers/user.helper";
 import { createProduct } from "@/helpers/products.helper";
 import { createService } from "@/helpers/services.helper";
 import { createEvent } from "@/helpers/events.helper";
+import Cookies from 'js-cookie';
 
 export interface AuthContextProps {
     token: string | null;
@@ -14,13 +15,14 @@ export interface AuthContextProps {
     setToken: (token: string | null) => void;
     setUser: (user: IUser | null) => void;
     updateUser: (user: IUser) => void;
-    loginEntrepeneurE: (loginData: ILoginPropsEntrep) => Promise<boolean>;
-    loginUserC: (loginData: ILoginPropsUser) => Promise<boolean>;
+    loginEntrepeneurE: (loginData: ILoginPropsEntrep) => Promise<{ success: boolean; message?: string }>;
+    loginUserC: (loginData: ILoginPropsUser) => Promise<{ success: boolean; message?: string }>;
     logout: () => void;
     register: (registerData: IRegisterProps) => Promise<IRegisterResponse | null>;
     createProduct: (productData: IProduct) => Promise<IProduct>;
     createService: (serviceData: IService) => Promise<IService>;
     createEvent: (eventData: Omit<IEvent, 'id'>) => Promise<IEvent>;
+    isAuthenticated: () => boolean;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -36,6 +38,7 @@ export const AuthContext = createContext<AuthContextProps>({
     createProduct: async () => { throw new Error("createProduct no inicializado"); },
     createService: async () => { throw new Error("createService no inicializado"); },
     createEvent: async () => { throw new Error("createEvent no inicializado"); },
+    isAuthenticated: () => false,
 });
 
 export interface AuthProviderProps {
@@ -47,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<IUser | null>(null);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
+        const storedToken = Cookies.get('authToken');
         const storedUser = localStorage.getItem('authUser');
         if (storedToken) {
             setToken(storedToken);
@@ -59,9 +62,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            localStorage.setItem('authToken', token);
+            Cookies.set('authToken', token, { expires: 7 }); // Cookie expira en 7 días
         } else {
-            localStorage.removeItem('authToken');
+            Cookies.remove('authToken');
         }
     }, [token]);
 
@@ -91,35 +94,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         fetchUserData();
     }, [token]);
 
-    const loginEntrepeneurE = async (userData: ILoginPropsEntrep): Promise<boolean> => {
+    const loginEntrepeneurE = async (userData: ILoginPropsEntrep): Promise<{ success: boolean; message?: string }> => {
         try {
             const sessionData = await authLoginE(userData);
             setToken(sessionData.token);
             setUser(sessionData.user);
-            return true;
+            return { success: true };
         } catch (error) {
             console.error("Error en el login", error);
-            return false;
+            return { success: false, message: 'Error en el inicio de sesión' };
         }
     };
 
-    const loginUserC = async (userData: ILoginPropsUser): Promise<boolean> => {
+    const loginUserC = async (userData: ILoginPropsUser): Promise<{ success: boolean; message?: string }> => {
         try {
             const sessionData = await authLoginU(userData);
             setToken(sessionData.token);
             setUser(sessionData.user);
-            console.log(sessionData)
-            return true;
+            return { success: true };
         } catch (error) {
             console.error("Error en el login", error);
-            return false;
+            return { success: false, message: 'Error en el inicio de sesión' };
         }
     };
 
     const logout = () => {
         setUser(null);
         setToken(null);
-        localStorage.removeItem('authToken');
+        Cookies.remove('authToken');
         localStorage.removeItem('authUser');
         localStorage.removeItem('cart');
     };
@@ -175,6 +177,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const isAuthenticated = () => {
+        return !!token && !!user;
+    };
+
     return (
         <AuthContext.Provider value={{ 
             token, 
@@ -188,7 +194,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             register,
             createProduct: createProductContext,
             createService: createServiceContext,
-            createEvent: createEventContext
+            createEvent: createEventContext,
+            isAuthenticated
         }}>
             {children}
         </AuthContext.Provider>
