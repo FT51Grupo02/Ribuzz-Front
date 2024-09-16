@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar/Navbar';
-import { FooterWithSitemap } from '@/components/Footer/Footer';
 import { AuthProvider } from '@/components/Context/AuthContext';
 import { CartProvider } from '@/components/Context/CartContext';
 import Script from 'next/script';
+import ConditionalFooter from '@/components/ConditionalFooter'
 
 export const metadata: Metadata = {
   title: 'RiBuzz',
@@ -29,7 +29,7 @@ export default function RootLayout({
             <main className="flex-grow">
               {children}
             </main>
-            <FooterWithSitemap />
+            <ConditionalFooter />
           </CartProvider>
         </AuthProvider>
         <Script src="/node_modules/flowbite/dist/flowbite.min.js" strategy="beforeInteractive" />

@@ -118,7 +118,7 @@ const GestionDeUsuarios: React.FC<GestionDeUsuariosProps> = ({ token }) => {
   }
 
   return (
-    <div className="text-white">
+    <div className="text-white px-2">
       <h2 className="text-white mb-4 text-2xl font-bold">Lista de Usuarios</h2>
       <ul className="divide-y divide-gray-600">
         {users.map((user) => (

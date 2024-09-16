@@ -52,10 +52,10 @@ const handleLogout = () => {
         alt="Background Image"
         layout="fill"
         objectFit="cover"
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-40"
         quality={100}
       />
-      <nav className="flex flex-col space-y-10 mt-8 z-10">
+      <nav className="flex flex-col space-y-10 mt-8 z-50">
       <Link href="/user">
           <FaCog className="text-xl hover:text-pink-400 cursor-pointer" />
         </Link>
@@ -86,7 +86,7 @@ const handleLogout = () => {
           
         )}
       </nav>
-      <div className="flex justify-center mt-auto z-10 text-white">
+      <div className="flex justify-center mt-auto z-40 text-white">
         <FaSignOutAlt
           onClick={handleLogout}
           className="text-xl hover:text-pink-400 cursor-pointer"
