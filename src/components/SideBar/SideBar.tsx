@@ -46,7 +46,7 @@ const handleLogout = () => {
 };
 
   return (
-    <div className="relative flex flex-col justify-between h-full p-4 text-white">
+    <div className="relative flex flex-col justify-between h-full p-4 text-white z-40">
       <Image
         src="https://res.cloudinary.com/devnzokpy/image/upload/v1725918381/13_vkmbmp.webp"
         alt="Background Image"

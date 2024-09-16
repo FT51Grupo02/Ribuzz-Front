@@ -202,7 +202,7 @@ const CreateProduct: React.FC = () => {
         onSubmit={handleSubmit}
       >
         {({ setFieldValue, isSubmitting, validateForm, values }) => (
-          <Form className='w-full max-w-3xl bg-black bg-opacity-50 p-8 rounded-xl shadow-lg border border-pink-500 border-opacity-50'>
+          <Form className='w-full max-w-3xl bg-black bg-opacity-50 p-8 rounded-xl shadow-lg border border-pink-500 border-opacity-50 mb-10'>
             <h1 className='text-white text-3xl font-bold mb-6 text-center'>Publicar un Producto</h1>
             <div className="relative mb-6">
               <div className="flex justify-center space-x-4 mb-4">

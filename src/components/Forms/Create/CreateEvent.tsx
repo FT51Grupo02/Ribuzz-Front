@@ -21,7 +21,6 @@ interface FormValues {
     location: string;
   };
   duration: string;
-  popularity?: string;
   date: string;
   time: string;
   stock: number;
@@ -140,7 +139,6 @@ const CreateEvent: React.FC = () => {
           date: values.date,
           time: [values.time],
           stock: values.stock,
-          popularity: values.popularity,
           publicationDate: new Date().toISOString(),
           type: 'event' as const,
           location: values.ProviderInfo.location,
@@ -252,7 +250,7 @@ const CreateEvent: React.FC = () => {
         onSubmit={handleSubmit}
       >
         {({ setFieldValue, isSubmitting, validateForm, values }) => (
-          <Form className='w-full max-w-3xl bg-black bg-opacity-50 p-8 rounded-xl shadow-lg border border-pink-500 border-opacity-50'>
+          <Form className='w-full max-w-3xl bg-black bg-opacity-50 p-8 rounded-xl shadow-lg border border-pink-500 border-opacity-50 mb-10'>
             <h1 className='text-white text-3xl font-bold mb-6 text-center'>Publicar un Evento</h1>
             
             <div className="relative mb-6">
