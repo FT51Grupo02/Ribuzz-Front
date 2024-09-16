@@ -2,11 +2,10 @@
 
 import { ReactNode, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import SideBar from '@/components/SideBar/SideBar'
 import { useAuth } from '@/components/Context/AuthContext'
 import Loader from '@/components/Loader/Loader'
 
-const UserLayout = ({ children }: { children: ReactNode }) => {
+const CartLayout = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated } = useAuth()
   const router = useRouter()
 
@@ -21,13 +20,10 @@ const UserLayout = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <SideBar />
-      <div className="flex-1 p-0 overflow-y-auto h-full">
-        {children}
-      </div>
+    <div className="relative min-h-screen">
+      {children}
     </div>
   )
 }
 
-export default UserLayout
+export default CartLayout

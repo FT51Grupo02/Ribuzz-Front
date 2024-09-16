@@ -1,42 +1,33 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("authToken");
+  const token = request.cookies.get('authToken')?.value
 
-  // Rutas públicas que no requieren autenticación
-  const publicRoutes = ["/login", "/register", "/"];
+  // Rutas protegidas
+  const protectedPaths = ['/user', '/cart']
 
-  // Rutas protegidas que requieren autenticación
-  const protectedRoutes = ["/user", "/user/:path*"];
+  // Verifica si la ruta actual comienza con alguna de las rutas protegidas
+  const isProtectedRoute = protectedPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path)
+  )
 
-  const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname === route);
-  const isProtectedRoute = protectedRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route.replace(":path*", ""))
-  );
+  console.log('Current path:', request.nextUrl.pathname)
+  console.log('Is protected route:', isProtectedRoute)
+  console.log('Token:', token)
 
-  // Si es una ruta protegida y no hay token, redirigir al login
+  // Si es una ruta protegida y no hay token, redirige al login
   if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    console.log('Redirecting to login')
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Si es una ruta pública y hay token, redirigir al dashboard del usuario
-  if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL("/user", request.url));
-  }
-
-  // En cualquier otro caso, permitir la solicitud
-  return NextResponse.next();
+  // Si no es una ruta protegida o el usuario tiene un token, permite el acceso
+  console.log('Allowing access')
+  return NextResponse.next()
 }
 
+// Configura el matcher para incluir todas las subrutas de /user y /cart
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-};
+  matcher: ['/user/:path*', '/cart/:path*'],
+}

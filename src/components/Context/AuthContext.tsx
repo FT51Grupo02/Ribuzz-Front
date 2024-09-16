@@ -22,6 +22,7 @@ export interface AuthContextProps {
     createProduct: (productData: IProduct) => Promise<IProduct>;
     createService: (serviceData: IService) => Promise<IService>;
     createEvent: (eventData: Omit<IEvent, 'id'>) => Promise<IEvent>;
+    isAuthenticated: () => boolean;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -37,6 +38,7 @@ export const AuthContext = createContext<AuthContextProps>({
     createProduct: async () => { throw new Error("createProduct no inicializado"); },
     createService: async () => { throw new Error("createService no inicializado"); },
     createEvent: async () => { throw new Error("createEvent no inicializado"); },
+    isAuthenticated: () => false,
 });
 
 export interface AuthProviderProps {
@@ -175,6 +177,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     };
 
+    const isAuthenticated = () => {
+        return !!token && !!user;
+    };
+
     return (
         <AuthContext.Provider value={{ 
             token, 
@@ -188,7 +194,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             register,
             createProduct: createProductContext,
             createService: createServiceContext,
-            createEvent: createEventContext
+            createEvent: createEventContext,
+            isAuthenticated
         }}>
             {children}
         </AuthContext.Provider>

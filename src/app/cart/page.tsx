@@ -1,8 +1,7 @@
 import CartItem from '@/components/Cart/CartItem/CartItem'
 import Image from 'next/image'
-import React from 'react'
 
-const Cart: React.FC = () => {
+const Cart = () => {
   return (
     <div className="relative min-h-screen text-white">
       {/* Imagen de fondo */}
