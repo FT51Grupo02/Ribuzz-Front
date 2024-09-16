@@ -23,15 +23,18 @@ const defaultEvent: IEvent = {
   description: '',
   price: 0,
   images: [],
-  ProviderInfo: { name: '', contact: '', location: '' },
+  ProviderInfo: { name: '', contact: '',  location: '' },
   duration: '',
+  reviews: [],
+  publicationDate: '',
   date: '',
   time: [],
   stock: 0,
-  publicationDate: '',
-  type: 'event',
   location: '',
-  videos: []
+  videos: [],
+  rating: 0,
+  popularity: '',
+  type: 'event'
 };
 
 const fetchUserPurchases = async (userId: string): Promise<{ id: string; date: string; pay: any }[]> => {
@@ -51,7 +54,7 @@ const fetchOrderDetails = async (orderId: string): Promise<IOrderDetail> => {
       total: details.total || 0,
       products: details.products || [],
       events: details.events || [],
-      services: details.services || [],
+      services: details.service || [],
       pay: details.pay || null
     };
   }
@@ -65,10 +68,10 @@ const getCoordinates = async (location: string) => {
       console.error('API key for geocoding service is not defined.');
       return null;
     }
-
+    
     const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${apiKey}`);
     const data = await response.json();
-
+    
     if (data.results && data.results.length > 0) {
       const { lat, lng } = data.results[0].geometry;
       return { lat, lng };
@@ -113,23 +116,22 @@ const MapsEvents: React.FC = () => {
           const details = await fetchOrderDetails(order.id);
           return details;
         }))
-          .then(async (orderDetails: IOrderDetail[]) => {
-            const allEvents = orderDetails.flatMap(details => details.events || []);
-            const updatedEvents = await Promise.all(allEvents.map(async (event) => {
-              if (!isValidLocation(event.location)) {
-                const coords = await getCoordinates(event.location);
-                if (coords) {
-                  const address = await reverseGeocode(coords.lat, coords.lng);
-                  return { ...event, location: address };
-                }
+        .then(async (orderDetails: IOrderDetail[]) => {
+          const allEvents = orderDetails.flatMap(details => details.events || []);
+          const updatedEvents = await Promise.all(allEvents.map(async (event) => {
+            if (!isValidLocation(event.location)) {
+              const coords = await getCoordinates(event.location);
+              if (coords) {
+                return { ...event, location: `${coords.lat},${coords.lng}` };
               }
-              return event;
-            }));
-            setEvents(updatedEvents);
-          })
-          .catch(error => console.error('Error fetching order details:', error));
+            }
+            return event;
+          }));
+          setEvents(updatedEvents);
+        })
+        .catch(error => console.error('Error fetching order details:', error));
       })
-        .catch(error => console.error('Error fetching user purchases:', error));
+      .catch(error => console.error('Error fetching user purchases:', error));
     }
   }, [user, token]);
 
@@ -146,27 +148,28 @@ const MapsEvents: React.FC = () => {
     <div className="container mx-auto p-4">
       <h3 className="text-3xl font-bold mb-4">Mis eventos: Ubicación</h3>
       <div className="w-full h-96 lg:h-96">
-      <MapContainer
-            center={[4.7709, -70.2973]}  // Coordenadas de Colombia
-            zoom={5}  // Zoom más alejado para abarcar más área
-            className="h-full border-4 border-cyan-500 rounded-lg"
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {events
-              .filter(event => isValidLocation(event.location))
-              .map(event => {
-                const [lat, lng] = event.location.split(',').map(Number);
-                return (
-                  <Marker key={event.id} position={[lat, lng]}>
-                    <Popup>
-                      <strong>{event.name}</strong><br />
-                      {event.location}<br />
-                      {event.date}
-                    </Popup>
-                  </Marker>
-                );
-              })}
-          </MapContainer>
+        <MapContainer
+          center={[4.7709, -70.2973]}  // Coordenadas de Colombia
+          zoom={5}  // Zoom más alejado para abarcar más área
+          className="h-full border-4 border-cyan-500 rounded-lg"
+          ref={mapRef}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {events
+            .filter(event => isValidLocation(event.location))
+            .map(event => {
+              const [lat, lng] = event.location.split(',').map(Number);
+              return (
+                <Marker key={event.id} position={[lat, lng]}>
+                  <Popup>
+                    <strong>{event.name}</strong><br />
+                    {event.location}<br />
+                    {event.date}
+                  </Popup>
+                </Marker>
+              );
+            })}
+        </MapContainer>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-rows-2 lg:grid-cols-1">
         <div className="p-4 rounded-lg bg-black bg-opacity-50">
@@ -179,7 +182,7 @@ const MapsEvents: React.FC = () => {
                 >
                   {event.name}
                 </button><br />
-                <h3 className='p-2'>Ubicación: {event.location}</h3>
+                <LocationDisplay location={event.location} />
                 <h3 className='p-2'>Fecha: {formatDate(event.date)}</h3>
                 <h3 className='p-2'>Horario: {event.time.join(', ')}</h3>
               </li>
@@ -189,6 +192,24 @@ const MapsEvents: React.FC = () => {
       </div>
     </div>
   );
+};
+
+const LocationDisplay: React.FC<{ location: string }> = ({ location }) => {
+  const [address, setAddress] = useState<string>(location);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (isValidLocation(location)) {
+        const [lat, lng] = location.split(',').map(Number);
+        const result = await reverseGeocode(lat, lng);
+        setAddress(result);
+      }
+    };
+
+    fetchAddress();
+  }, [location]);
+
+  return <h3 className='p-2'>Ubicación: {address}</h3>;
 };
 
 export default MapsEvents;
