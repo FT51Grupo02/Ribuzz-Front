@@ -8,7 +8,6 @@ import GestionDeServicios from './GestionDeServicios';
 type ComponentName = 'eventos' | 'productos' | 'servicios';
 
 const VariosComponentesAdmin: React.FC = () => {
-  // Estado para mantener la visibilidad de cada componente
   const [activeComponents, setActiveComponents] = useState<Record<ComponentName, boolean>>({
     eventos: false,
     productos: false,
@@ -16,7 +15,6 @@ const VariosComponentesAdmin: React.FC = () => {
   });
 
   const handleIconClick = (componentName: ComponentName) => {
-    // Toggle visibility for the clicked component
     setActiveComponents((prevState) => ({
       ...prevState,
       [componentName]: !prevState[componentName],
@@ -25,32 +23,30 @@ const VariosComponentesAdmin: React.FC = () => {
 
   return (
     <div className="p-4 flex flex-col items-center">
-      {/* Iconos alineados horizontalmente y centrados */}
-      <div className="flex space-x-6 mb-4 text-white">
-        <div
-          className="text-xl hover:text-pink-400 cursor-pointer"
-          onClick={() => handleIconClick('eventos')}
-        >
-          <FaCalendarAlt size={24} />
-          <span className="ml-2">Gestión de Eventos</span>
-        </div>
-        <div
-          className="text-xl hover:text-pink-400 cursor-pointer"
-          onClick={() => handleIconClick('productos')}
-        >
-          <FaBoxOpen size={24} />
-          <span className="ml-2">Gestión de Productos</span>
-        </div>
-        <div
-          className="text-xl hover:text-pink-400 cursor-pointer"
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mb-4 text-white">
+        <button
+          className="flex items-center justify-center text-xl hover:text-pink-400 cursor-pointer w-full sm:w-auto"
           onClick={() => handleIconClick('servicios')}
         >
-          <FaUsers size={24} />
-          <span className="ml-2">Gestión de Servicios</span>
-        </div>
-      </div>
+          <FaUsers size={35} className="mr-2 sm:mr-0 sm:mb-2" />
+          <span className="sm:mt-2 xl:ml-2">Gestión de Servicios</span>
+        </button>
+        <button
+          className="flex items-center justify-center text-xl hover:text-pink-400 cursor-pointer w-full sm:w-auto"
+          onClick={() => handleIconClick('productos')}
+        >
+          <FaBoxOpen size={35} className="mr-2 sm:mr-0 sm:mb-2" />
+          <span className="sm:mt-2 xl:ml-2">Gestión de Productos</span>
+        </button>
+        <button
+          className="flex items-center justify-center text-xl hover:text-pink-400 cursor-pointer w-full sm:w-auto"
+          onClick={() => handleIconClick('eventos')}
+          >
+          <FaCalendarAlt size={30} className="mr-2 sm:mr-0 sm:mb-2" />
+          <span className="sm:mt-2 xl:ml-2">Gestión de Eventos</span>
+        </button>
+          </div>
 
-      {/* Contenido desplegable */}
       {activeComponents.eventos && <GestionDeEventos />}
       {activeComponents.productos && <GestionDeProductos />}
       {activeComponents.servicios && <GestionDeServicios />}

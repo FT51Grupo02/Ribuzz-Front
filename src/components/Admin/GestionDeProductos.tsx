@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { IProduct } from '../../interfaces/Types';
-import { FaEdit, FaTimes, FaCheck } from 'react-icons/fa'; // Importar los íconos
+import { FaEdit, FaTimes, FaCheck, FaTrash } from 'react-icons/fa';
+import Loader from '../Loader/Loader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -123,67 +124,72 @@ const GestionDeProductos: React.FC = () => {
     setNewStock(null);
   };
 
-  if (loading) return <p className="text-white">Loading...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p className="text-white">{error}</p>;
 
   return (
-    <div className="p-4 text-white">
-      <h1 className="text-xl font-bold mb-4">Gestión de Productos</h1>
-      <ul>
+    <div className="p-4 text-white max-w-4xl mx-auto">
+      <h1 className="font-bold mb-4 text-center text-pink-500 text-3xl">Gestión de Productos</h1>
+      <ul className="space-y-4">
         {products.map(product => (
-          <li key={product.id} className="mb-4 p-4 border border-gray-300 rounded">
-            <h2 className="text-lg font-semibold">{product.name}</h2>
-            <p>{product.description}</p>
-            <p className="font-semibold">Price: ${product.price}</p>
-            <p className="font-semibold">
-              Stock: 
-              {editingStock === product.id ? (
-                <span>
-                  <input
-                    type="number"
-                    value={newStock ?? ''}
-                    onChange={(e) => setNewStock(Number(e.target.value))}
-                    className="ml-2 w-20 text-black"
-                  />
-                  <button
-                    onClick={() => handleStockSave(product.id)}
-                    className="ml-2 bg-violet-500 text-white px-2 py-1 rounded hover:bg-violet-600"
-                  >
-                    <FaCheck /> {/* Ícono de guardar (tic) */}
-                  </button>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-gray-600"
-                  >
-                    <FaTimes />
-                  </button>
-                </span>
-              ) : (
-                <span className="ml-2">{product.stock}</span>
-              )}
-              {editingStock !== product.id && (
-                <button
-                  onClick={() => handleStockEdit(product.id, product.stock)}
-                  className="ml-2 bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600"
-                >
-                  <FaEdit />
-                </button>
-              )}
-            </p>
+          <li key={product.id} className="p-4 border border-gray-300 rounded bg-black bg-opacity-90">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+              <h2 className="text-lg font-semibold mb-2 sm:mb-0">{product.name}</h2>
+              <button
+                onClick={() => handleDelete(product.id)}
+                className="text-red-500 hover:text-red-700"
+                aria-label="Eliminar producto"
+              >
+                <FaTrash />
+              </button>
+            </div>
+            <p className="text-sm mb-2">{product.description}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+              <p className="font-semibold">Precio: ${product.price}</p>
+              <div className="font-semibold flex items-center">
+                <span className="mr-2">Stock:</span>
+                {editingStock === product.id ? (
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      value={newStock ?? ''}
+                      onChange={(e) => setNewStock(Number(e.target.value))}
+                      className="w-20 text-black px-2 py-1 rounded mr-2"
+                    />
+                    <button
+                      onClick={() => handleStockSave(product.id)}
+                      className="bg-violet-500 text-white px-2 py-1 rounded hover:bg-violet-600 mr-2"
+                    >
+                      <FaCheck />
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <span className="mr-2">{product.stock}</span>
+                    <button
+                      onClick={() => handleStockEdit(product.id, product.stock)}
+                      className="bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600"
+                    >
+                      <FaEdit />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
             <div>
-              <strong>Images:</strong>
-              <div className="flex space-x-2">
+              <strong>Imágenes:</strong>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
                 {product.images.map((image, index) => (
-                  <img key={index} src={image} alt={product.name} className="w-20 h-20 object-cover" />
+                  <img key={index} src={image} alt={product.name} className="w-full h-24 object-cover rounded" />
                 ))}
               </div>
             </div>
-            <button
-              onClick={() => handleDelete(product.id)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Eliminar
-            </button>
           </li>
         ))}
       </ul>
@@ -192,4 +198,3 @@ const GestionDeProductos: React.FC = () => {
 };
 
 export default GestionDeProductos;
-

@@ -5,9 +5,14 @@ import { FooterWithSitemap } from '@/components/Footer/Footer'
 
 export default function ConditionalFooter() {
   const pathname = usePathname()
-  const hideFooterPaths = ['/register', '/login', '/login/entrepeneur', '/login/user', '/services', '/products', '/events' ]
+  const hideFooterPaths = ['/register', '/login', '/login/entrepeneur', '/login/user', '/services', '/products', '/events']
+  const hideFooterPrefixes = ['/user', '/cart']
 
-  if (hideFooterPaths.includes(pathname)) {
+  const shouldHideFooter = 
+    hideFooterPaths.includes(pathname) || 
+    hideFooterPrefixes.some(prefix => pathname.startsWith(prefix))
+
+  if (shouldHideFooter) {
     return null
   }
 

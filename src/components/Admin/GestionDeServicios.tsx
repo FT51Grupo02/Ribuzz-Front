@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { FaStar, FaTrashAlt } from 'react-icons/fa';
 import { IService } from '../../interfaces/Types';
+import Loader from '../Loader/Loader';
 
 const GestionDeServicios: React.FC = () => {
   const [services, setServices] = useState<IService[]>([]);
@@ -72,13 +73,13 @@ const GestionDeServicios: React.FC = () => {
     });
   };
 
-  if (loading) return <div className="text-white">Loading...</div>;
+  if (loading) return <Loader/>;
   if (error) return <div className="text-white">Error: {error}</div>;
 
   return (
     <div className="p-4 text-white">
-      <h1 className="text-xl font-bold mb-4">Servicios Disponibles</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <h1 className="font-bold mb-4 text-center text-pink-500 text-3xl">Gestión de Servicios</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-black bg-opacity-90">
         {services.map(service => (
           <div key={service.id} className="border rounded-lg p-4 relative">
             <button
@@ -89,7 +90,7 @@ const GestionDeServicios: React.FC = () => {
             </button>
             <h2 className="text-lg font-semibold">{service.name}</h2>
             <p className="text-gray-300">{service.description}</p>
-            <p className="font-bold mt-2">${service.price}</p>
+            <p className="font-bold mt-2">Precio: ${service.price}</p>
             <div className="mt-2">
               {service.images && service.images.length > 0 && (
                 <img
@@ -102,7 +103,7 @@ const GestionDeServicios: React.FC = () => {
             <div className="mt-2">
               <h3 className="text-md font-semibold">Proveedor:</h3>
               <p>{service.providerInfo.name}</p>
-              <p>{service.providerInfo.contact}</p>
+              <p className='overflow-hidden text-ellipsis'>{service.providerInfo.contact}</p>
             </div>
             {service.details && (
               <div className="mt-2">
@@ -117,7 +118,7 @@ const GestionDeServicios: React.FC = () => {
             {service.rating && (
               <div className="mt-2 flex items-center">
                 <h3 className="text-md font-semibold mr-2">Calificación:</h3>
-                <div className="flex items-center">
+                <div className="flex items-center overflow-hidden text-ellipsis">
                   {[...Array(service.rating)].map((_, index) => (
                     <FaStar key={index} className="text-yellow-500" />
                   ))}

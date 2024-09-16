@@ -21,7 +21,7 @@ const NewsletterSection = () => {
                         <input 
                             type="email" 
                             placeholder="tucorreo@mail.com" 
-                            className="p-2 rounded-l-lg outline-none bg-black border border-pink-400 border-opacity-50 w-full"
+                            className="p-2 text-white placeholder:text-gray-400 rounded-l-lg outline-none bg-black border border-pink-400 border-opacity-50 w-full"
                         />
                         <button 
                             className="p-2 text-sm md:text-base text-white font-light rounded-r-lg bg-gradient-to-r from-[#C87DAB] to-[#C12886] shadow-md hover:shadow-lg transition-shadow w-full md:w-auto"

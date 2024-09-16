@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { IEvent } from '../../interfaces/Types';
 import Swal from 'sweetalert2';
-import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa'; // Importa los íconos necesarios
+import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
+import Loader from '../Loader/Loader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -118,67 +119,71 @@ const GestionDeEventos: React.FC = () => {
     setNewStock(null);
   };
 
-  if (loading) return <p className="text-white">Loading...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p className="text-white">{error}</p>;
 
   return (
-    <div className="p-4 text-white">
-      <h1 className="text-xl font-bold mb-4">Gestión de Eventos</h1>
-      <ul>
+    <div className="p-4 text-white max-w-4xl mx-auto">
+      <h1 className="font-bold mb-4 text-center text-pink-500 text-3xl">Gestión de Eventos</h1>
+      <ul className="space-y-4">
         {events.map(event => (
-          <li key={event.id} className="mb-4 p-4 border border-gray-300 rounded relative">
-            <button
-              onClick={() => handleDelete(event.id)}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-              aria-label="Eliminar evento"
-            >
-              <FaTrash />
-            </button>
-            <h2 className="text-lg font-semibold">{event.name}</h2>
-            <p>{event.description}</p>
-            <p className="font-semibold">Price: ${event.price}</p>
-            <p className="font-semibold">Date: {new Date(event.date).toLocaleDateString()}</p>
-            <p className="font-semibold">Location: {event.location}</p>
-            <p className="font-semibold">
-              Stock:
-              {editingStock === event.id ? (
-                <span>
-                  <input
-                    type="number"
-                    value={newStock ?? ''}
-                    onChange={(e) => setNewStock(Number(e.target.value))}
-                    className="ml-2 w-20 text-black"
-                  />
-                  <button
-                    onClick={() => handleStockSave(event.id)}
-                    className="ml-2 bg-violet-500 text-white px-2 py-1 rounded hover:bg-violet-600"
-                  >
-                    <FaCheck />
-                  </button>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-gray-600"
-                  >
-                    <FaTimes />
-                  </button>
-                </span>
-              ) : (
-                <span className="ml-2">{event.stock}</span>
-              )}
-              {editingStock !== event.id && (
-                <button
-                  onClick={() => handleStockEdit(event.id, event.stock)}
-                  className="ml-2 bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600"
-                >
-                  <FaEdit />
-                </button>
-              )}
-            </p>
+          <li key={event.id} className="p-4 border border-gray-300 rounded bg-black bg-opacity-90">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+              <h2 className="text-lg font-semibold mb-2 sm:mb-0">{event.name}</h2>
+              <button
+                onClick={() => handleDelete(event.id)}
+                className="text-red-500 hover:text-red-700"
+                aria-label="Eliminar evento"
+              >
+                <FaTrash />
+              </button>
+            </div>
+            <p className="text-sm mb-2">{event.description}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+              <p className="font-semibold">Precio: ${event.price}</p>
+              <p className="font-semibold">Fecha: {new Date(event.date).toLocaleDateString()}</p>
+              <p className="font-semibold">Ubicación: {event.location}</p>
+              <div className="font-semibold flex items-center">
+                <span className="mr-2">Stock:</span>
+                {editingStock === event.id ? (
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      value={newStock ?? ''}
+                      onChange={(e) => setNewStock(Number(e.target.value))}
+                      className="w-20 text-black px-2 py-1 rounded mr-2"
+                    />
+                    <button
+                      onClick={() => handleStockSave(event.id)}
+                      className="bg-violet-500 text-white px-2 py-1 rounded hover:bg-violet-600 mr-2"
+                    >
+                      <FaCheck />
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <span className="mr-2">{event.stock}</span>
+                    <button
+                      onClick={() => handleStockEdit(event.id, event.stock)}
+                      className="bg-orange-500 text-white px-2 py-1 rounded hover:bg-orange-600"
+                    >
+                      <FaEdit />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
             <div>
-              <strong>Images:</strong>
-              <div className="flex space-x-2">
+              <strong>Imágenes:</strong>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
                 {event.images.map((image, index) => (
-                  <img key={index} src={image} alt={event.name} className="w-20 h-20 object-cover" />
+                  <img key={index} src={image} alt={event.name} className="w-full h-24 object-cover rounded" />
                 ))}
               </div>
             </div>
