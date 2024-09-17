@@ -29,7 +29,7 @@ const CreatePSE = () => {
       
       {/* Botones en la parte superior */}
       <div className="relative z-10 w-full flex justify-center py-8">
-        <div className="flex space-x-4">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
           <button
             onClick={() => handleButtonClick('service')}
             className="bg-gradient-to-r from-[#C87DAB] to-[#C12886] hover:shadow-lg text-white font-bold py-2 px-4 rounded-full"
